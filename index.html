@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Toko Online App</title>
-  <!-- Library Scan Barcode -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -732,18 +731,15 @@
       if (!blob) return;
       statusElem.textContent = 'Mendeteksi kode dari foto...';
       try {
-        // Buat instance Html5Qrcode sementara (tanpa render ke DOM)
         const tempScanner = new Html5Qrcode("temp-scan-file");
-        // Ubah blob menjadi File
         const file = new File([blob], "temp.jpg", { type: "image/jpeg" });
-        const result = await tempScanner.scanFile(file, /* showImage */ false);
+        const result = await tempScanner.scanFile(file, false);
         if (result && result.decodedText) {
           document.getElementById('kodeProduk').value = result.decodedText;
           statusElem.textContent = '✅ Kode produk terdeteksi: ' + result.decodedText;
         } else {
           statusElem.textContent = 'ℹ️ Tidak ada barcode terdeteksi di foto.';
         }
-        // Hentikan scanner sementara
         await tempScanner.clear();
       } catch (err) {
         console.warn('Scan otomatis gagal:', err);
@@ -839,7 +835,8 @@
         await simpanGambarKeDB(newId, currentPreviewBlob);
       }
       hideFormProduk();
-      renderProduk();
+      // Langsung arahkan ke halaman Dasbor (etalase)
+      navigateToko('dasbor');
     }
 
     async function hapusProduk(id) {
@@ -859,7 +856,6 @@
       if (!html5QrCode) {
         html5QrCode = new Html5Qrcode("reader");
       }
-      // Hentikan jika sedang scanning sebelumnya
       if (html5QrCode.isScanning) {
         html5QrCode.stop().then(() => startLiveScan()).catch(() => {});
       } else {
@@ -876,9 +872,7 @@
           document.getElementById('kodeProduk').value = decodedText;
           stopScan(true);
         },
-        (errorMessage) => {
-          // Error bisa diabaikan (frame no barcode)
-        }
+        (errorMessage) => {}
       ).catch(err => {
         alert('Gagal mengakses kamera: ' + err + '\n\nGunakan tombol "Pilih Gambar" untuk scan dari file.');
         stopScan(false);
@@ -890,7 +884,7 @@
         html5QrCode.stop().then(() => {
           document.getElementById('scanModal').classList.add('hidden');
           if (success) {
-            showFormProduk(); // buka form produk setelah scan
+            showFormProduk();
           }
         }).catch(err => console.error(err));
       } else {
@@ -900,7 +894,6 @@
     }
 
     function scanFromFile() {
-      // Trigger input file tersembunyi
       document.getElementById('scanFileInput').click();
     }
 
@@ -913,7 +906,6 @@
         if (result && result.decodedText) {
           document.getElementById('kodeProduk').value = result.decodedText;
           document.getElementById('scanResult').textContent = 'Hasil: ' + result.decodedText;
-          // Sembunyikan modal dan buka form produk
           document.getElementById('scanModal').classList.add('hidden');
           showFormProduk();
         } else {
