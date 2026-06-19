@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TOKO ONLINE APP</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+    <title>TOKO ONLINE APP - Superadmin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -44,7 +42,6 @@
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
         }
-        #reader { width: 100%; max-width: 400px; margin: 0 auto; border-radius: 1rem; overflow: hidden; }
         .modal {
             position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex;
             align-items: center; justify-content: center; z-index: 50; backdrop-filter: blur(4px);
@@ -68,37 +65,12 @@
                     superadmin: {
                         username: 'admin',
                         password: 'admin123',
-                        email: 'admin@toko.com',
-                        nomorHp: '081111111111'
+                        nama: 'apptokoonline',
+                        nomorHp: '081220285226',
+                        email: 'dedesugiono.ai@gmail.com'
                     },
-                    toko: [
-                        {
-                            id: 'toko1',
-                            namaToko: 'Toko Raisya',
-                            alamatToko: 'Jl. Melati No. 12',
-                            nomorHp: '081234567890',
-                            email: 'pemilik@toko.com',
-                            sewa: {
-                                paket: 'trial',
-                                masaAktif: new Date(Date.now() + 30*24*60*60*1000).toISOString().split('T')[0],
-                                status: 'active'
-                            },
-                            users: [
-                                { id: 'owner1', username: 'pemilik', password: '123456', role: 'OWNER' }
-                            ],
-                            products: [
-                                { id: 'p1', kode: '899123456001', nama: 'Beras Premium 1kg', stok: 25, harga: 15000 },
-                                { id: 'p2', kode: '899123456002', nama: 'Minyak Goreng 2L', stok: 8, harga: 25000 },
-                                { id: 'p3', kode: '899123456003', nama: 'Gula Pasir 1kg', stok: 40, harga: 13000 }
-                            ],
-                            stockLogs: [],
-                            transaksi: [],
-                            permissions: [],
-                            nextId: 4,
-                            kodeCounter: 1000
-                        }
-                    ],
-                    nextTokoId: 2
+                    toko: [],  // kosong dulu
+                    nextTokoId: 1
                 };
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
                 return initial;
@@ -112,48 +84,30 @@
         let state = {
             currentUser: null,
             isSuperadmin: false,
-            activeMenu: 'stok',
-            selectedTokoId: null,
+            activeMenu: 'manajemen',
             showModal: false,
             modalType: '',
-            selectedProduct: null,
-            keranjang: [],
-            // lupa password
             lupaStep: 1,
             lupaUsername: '',
-            lupaType: '', // 'superadmin' atau 'owner'
-            lupaTokoId: null,
         };
-
-        function getCurrentTokoData() {
-            const data = getData();
-            if (state.isSuperadmin && state.selectedTokoId) return data.toko.find(t => t.id === state.selectedTokoId);
-            if (state.currentUser?.tokoId) return data.toko.find(t => t.id === state.currentUser.tokoId);
-            return null;
-        }
 
         // ==================== RENDER UTAMA ====================
         function render() {
             const app = document.getElementById('app');
-            if (!state.currentUser && !state.isSuperadmin) {
+            if (!state.isSuperadmin) {
                 document.body.className = 'flex items-center justify-center p-4';
                 app.className = 'w-full max-w-md';
                 app.innerHTML = renderLoginPage();
                 attachLoginEvents();
-            } else if (state.isSuperadmin) {
+            } else {
                 document.body.className = '';
                 app.className = '';
                 app.innerHTML = renderSuperadminDashboard();
                 attachSuperadminEvents();
-            } else {
-                document.body.className = '';
-                app.className = '';
-                app.innerHTML = renderTokoDashboard();
-                attachTokoEvents();
             }
         }
 
-        // ==================== HALAMAN LOGIN (UNIVERSAL) ====================
+        // ==================== LOGIN ====================
         function renderLoginPage() {
             return `
                 <div class="card p-8">
@@ -162,7 +116,7 @@
                         <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
                             TOKO ONLINE APP
                         </h1>
-                        <p class="text-gray-600 mt-2 font-medium">Login untuk memulai</p>
+                        <p class="text-gray-600 mt-2 font-medium">Login Superadmin</p>
                     </div>
                     <form id="loginForm" class="space-y-5">
                         <input type="text" id="username" placeholder="Username" class="input-field" required>
@@ -184,33 +138,13 @@
                 const password = document.getElementById('password').value.trim();
                 const data = getData();
 
-                // Cek superadmin
                 if (username === data.superadmin.username && password === data.superadmin.password) {
                     state.isSuperadmin = true;
-                    state.currentUser = null;
-                    state.activeMenu = 'daftartoko';
+                    state.activeMenu = 'manajemen';
                     render();
-                    return;
+                } else {
+                    document.getElementById('loginError').textContent = 'Username atau password salah.';
                 }
-
-                // Cek di semua toko
-                for (let toko of data.toko) {
-                    const user = toko.users.find(u => u.username === username && u.password === password);
-                    if (user) {
-                        // Cek masa sewa
-                        if (toko.sewa.status !== 'active' || new Date(toko.sewa.masaAktif) < new Date()) {
-                            document.getElementById('loginError').textContent = 'Masa sewa toko telah berakhir atau dinonaktifkan.';
-                            return;
-                        }
-                        state.currentUser = { ...user, tokoId: toko.id };
-                        state.isSuperadmin = false;
-                        state.activeMenu = 'stok';
-                        render();
-                        return;
-                    }
-                }
-
-                document.getElementById('loginError').textContent = 'Username atau password salah.';
             });
 
             document.getElementById('lupaPasswordLink')?.addEventListener('click', function(e) {
@@ -220,7 +154,7 @@
             });
         }
 
-        // ==================== LUPA PASSWORD (UNIVERSAL) ====================
+        // ==================== LUPA PASSWORD ====================
         function showLupaPasswordModal() {
             state.showModal = true;
             renderLupaModal();
@@ -238,7 +172,7 @@
                 content = `
                     <div class="card p-6 w-full max-w-sm mx-4">
                         <h2 class="text-xl font-bold mb-4">Lupa Password</h2>
-                        <p class="mb-4">Masukkan username Anda.</p>
+                        <p class="mb-4">Masukkan username superadmin.</p>
                         <input type="text" id="lupaUsername" class="input-field mb-4" placeholder="Username">
                         <div class="flex gap-3">
                             <button id="cariAkunBtn" class="btn bg-blue-600 text-white px-4 py-2">Cari</button>
@@ -248,11 +182,11 @@
                     </div>
                 `;
             } else if (state.lupaStep === 2) {
-                const kontak = state.lupaType === 'superadmin' ? getData().superadmin.email : getCurrentTokoData()?.email;
+                const kontak = getData().superadmin.email + ' / ' + getData().superadmin.nomorHp;
                 content = `
                     <div class="card p-6 w-full max-w-sm mx-4">
                         <h2 class="text-xl font-bold mb-4">Verifikasi Kontak</h2>
-                        <p class="mb-4">Token reset akan dikirim ke <b>${kontak}</b> (simulasi: <b>123456</b>).</p>
+                        <p class="mb-4">Token reset dikirim ke <b>${kontak}</b> (simulasi: <b>123456</b>).</p>
                         <input type="text" id="tokenLupa" class="input-field mb-4" placeholder="Masukkan token">
                         <div class="flex gap-3">
                             <button id="verifTokenBtn" class="btn bg-blue-600 text-white px-4 py-2">Verifikasi</button>
@@ -282,29 +216,14 @@
                 document.getElementById('cariAkunBtn')?.addEventListener('click', () => {
                     const username = document.getElementById('lupaUsername').value.trim();
                     const data = getData();
-                    // Cek superadmin
                     if (username === data.superadmin.username) {
                         state.lupaUsername = username;
-                        state.lupaType = 'superadmin';
                         state.lupaStep = 2;
                         document.getElementById('lupaModal').remove();
                         renderLupaModal();
-                        return;
+                    } else {
+                        document.getElementById('lupaError').textContent = 'Username tidak ditemukan.';
                     }
-                    // Cek pemilik toko
-                    for (let toko of data.toko) {
-                        const owner = toko.users.find(u => u.username === username && u.role === 'OWNER');
-                        if (owner) {
-                            state.lupaUsername = username;
-                            state.lupaType = 'owner';
-                            state.lupaTokoId = toko.id;
-                            state.lupaStep = 2;
-                            document.getElementById('lupaModal').remove();
-                            renderLupaModal();
-                            return;
-                        }
-                    }
-                    document.getElementById('lupaError').textContent = 'Username tidak ditemukan.';
                 });
                 document.getElementById('batalLupaBtn')?.addEventListener('click', closeLupaModal);
             } else if (state.lupaStep === 2) {
@@ -326,16 +245,10 @@
                         return;
                     }
                     const data = getData();
-                    if (state.lupaType === 'superadmin') {
-                        data.superadmin.password = newPass;
-                    } else {
-                        const toko = data.toko.find(t => t.id === state.lupaTokoId);
-                        const owner = toko.users.find(u => u.role === 'OWNER');
-                        owner.password = newPass;
-                    }
+                    data.superadmin.password = newPass;
                     saveData(data);
                     closeLupaModal();
-                    alert('Password berhasil diubah. Silakan login dengan password baru.');
+                    alert('Password superadmin berhasil diubah. Silakan login dengan password baru.');
                 });
             }
         }
@@ -356,63 +269,81 @@
                         <button id="logoutSuperBtn" class="btn bg-red-500 hover:bg-red-600 text-white px-4 py-2">Logout</button>
                     </header>
                     <div class="flex flex-1">
+                        <!-- Sidebar -->
                         <aside class="bg-white w-64 p-4 shadow-lg hidden md:block">
                             <h2 class="text-lg font-bold mb-4">Menu</h2>
                             <nav class="space-y-2">
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='daftartoko'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="daftartoko">📋 Daftar Toko & Sewa</button>
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='buattoko'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="buattoko">➕ Buat Toko</button>
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='profilsuper'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="profilsuper">👤 Profil</button>
+                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='manajemen'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="manajemen">📋 Manajemen Toko</button>
+                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='profil'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="profil">👤 Profil</button>
+                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='pengaturan'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="pengaturan">⚙️ Pengaturan</button>
                             </nav>
                         </aside>
+                        <!-- Main Content -->
                         <main class="flex-1 p-6 bg-gray-50">
-                            ${state.activeMenu === 'daftartoko' ? renderDaftarToko() : ''}
-                            ${state.activeMenu === 'buattoko' ? renderBuatTokoForm() : ''}
-                            ${state.activeMenu === 'profilsuper' ? renderProfilSuperadmin() : ''}
+                            ${renderSuperadminContent()}
                         </main>
                     </div>
                 </div>
             `;
         }
 
-        function renderDaftarToko() {
+        function renderSuperadminContent() {
+            switch (state.activeMenu) {
+                case 'manajemen': return renderManajemenToko();
+                case 'profil': return renderProfilSuperadmin();
+                case 'pengaturan': return renderPengaturanSuperadmin();
+                default: return '';
+            }
+        }
+
+        function renderManajemenToko() {
             const data = getData();
+            if (data.toko.length === 0) {
+                return `
+                    <div class="card p-6">
+                        <h2 class="text-2xl font-bold mb-4">Manajemen Toko</h2>
+                        <p class="text-gray-500">Belum ada toko terdaftar. Silakan buat toko baru di menu <b>Pengaturan</b>.</p>
+                    </div>
+                `;
+            }
+            // Nanti kalau sudah ada toko, tampilkan daftar
             return `
                 <div class="card p-6">
-                    <h2 class="text-2xl font-bold mb-4">Manajemen Toko & Sewa</h2>
-                    <div class="grid gap-4">
-                        ${data.toko.map(t => {
-                            const owner = t.users.find(u => u.role === 'OWNER');
-                            const status = t.sewa.status === 'active' && new Date(t.sewa.masaAktif) >= new Date() ? '✅ Aktif' : '❌ Nonaktif/Kadaluarsa';
-                            return `
-                            <div class="border p-4 rounded-xl bg-white shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                <div>
-                                    <h3 class="font-semibold text-lg">${t.namaToko}</h3>
-                                    <p class="text-sm text-gray-600">${t.alamatToko}</p>
-                                    <p class="text-sm">Pemilik: ${owner?.username}</p>
-                                    <p class="text-sm">Paket: <b>${t.sewa.paket.toUpperCase()}</b> | Masa Aktif: ${t.sewa.masaAktif} | Status: ${status}</p>
-                                </div>
-                                <div class="flex flex-wrap gap-2">
-                                    <button class="perpanjangBtn btn bg-yellow-600 text-white px-4 py-2" data-tokoid="${t.id}">🔄 Perpanjang</button>
-                                    <button class="nonaktifkanBtn btn bg-red-500 text-white px-4 py-2" data-tokoid="${t.id}">⏸️ Nonaktifkan</button>
-                                    <button class="hapusTokoBtn btn bg-gray-700 text-white px-4 py-2" data-tokoid="${t.id}">🗑️ Hapus</button>
-                                </div>
-                            </div>
-                            `;
-                        }).join('')}
+                    <h2 class="text-2xl font-bold mb-4">Manajemen Toko</h2>
+                    ${data.toko.map(t => `<p>${t.namaToko}</p>`).join('')}
+                </div>
+            `;
+        }
+
+        function renderProfilSuperadmin() {
+            const sa = getData().superadmin;
+            return `
+                <div class="card p-6 max-w-xl">
+                    <h2 class="text-2xl font-bold mb-4">Profil Superadmin</h2>
+                    <div class="space-y-3">
+                        <p><strong>Nama:</strong> ${sa.nama || '-'}</p>
+                        <p><strong>Username:</strong> ${sa.username}</p>
+                        <p><strong>Email:</strong> ${sa.email || '-'}</p>
+                        <p><strong>No HP:</strong> ${sa.nomorHp || '-'}</p>
+                    </div>
+                    <div class="flex gap-2 mt-6">
+                        <button id="editProfilSuperBtn" class="btn bg-blue-600 text-white px-4 py-2">Edit Profil</button>
+                        <button id="gantiPassSuperBtn" class="btn bg-yellow-600 text-white px-4 py-2">Ganti Password</button>
                     </div>
                 </div>
             `;
         }
 
-        function renderBuatTokoForm() {
+        function renderPengaturanSuperadmin() {
             return `
                 <div class="card p-6 max-w-xl">
-                    <h2 class="text-2xl font-bold mb-4">Buat Toko Baru</h2>
+                    <h2 class="text-2xl font-bold mb-4">Pengaturan</h2>
+                    <p class="mb-4">Buat toko baru untuk penyewa.</p>
                     <form id="buatTokoForm" class="space-y-4">
                         <input type="text" id="namaTokoInput" placeholder="Nama Toko" class="input-field" required>
                         <input type="text" id="alamatTokoInput" placeholder="Alamat Toko" class="input-field">
-                        <input type="text" id="hpTokoInput" placeholder="Nomor HP" class="input-field">
-                        <input type="email" id="emailTokoInput" placeholder="Email" class="input-field">
+                        <input type="text" id="hpTokoInput" placeholder="Nomor HP Toko" class="input-field">
+                        <input type="email" id="emailTokoInput" placeholder="Email Toko" class="input-field">
                         <select id="paketSewa" class="input-field" required>
                             <option value="trial">Trial (30 hari)</option>
                             <option value="1bulan">1 Bulan</option>
@@ -429,22 +360,6 @@
             `;
         }
 
-        function renderProfilSuperadmin() {
-            const sa = getData().superadmin;
-            return `
-                <div class="card p-6 max-w-md">
-                    <h2 class="text-2xl font-bold mb-4">Profil Superadmin</h2>
-                    <p><strong>Username:</strong> ${sa.username}</p>
-                    <p><strong>Email:</strong> ${sa.email || '-'}</p>
-                    <p><strong>No HP:</strong> ${sa.nomorHp || '-'}</p>
-                    <div class="flex gap-2 mt-4">
-                        <button id="editProfilSuperBtn" class="btn bg-blue-600 text-white px-4 py-2">Edit</button>
-                        <button id="gantiPassSuperBtn" class="btn bg-yellow-600 text-white px-4 py-2">Ganti Password</button>
-                    </div>
-                </div>
-            `;
-        }
-
         function attachSuperadminEvents() {
             document.getElementById('logoutSuperBtn')?.addEventListener('click', () => {
                 state.isSuperadmin = false;
@@ -454,42 +369,33 @@
                 state.activeMenu = this.dataset.menu;
                 render();
             }));
-            // Perpanjang, nonaktifkan, hapus toko
-            document.querySelectorAll('.perpanjangBtn').forEach(btn => btn.addEventListener('click', function() {
-                const tokoId = this.dataset.tokoid;
+            // Edit profil superadmin
+            document.getElementById('editProfilSuperBtn')?.addEventListener('click', () => {
                 const data = getData();
-                const toko = data.toko.find(t => t.id === tokoId);
-                if (!toko) return;
-                const paketBaru = prompt('Pilih paket (trial/1bulan/6bulan/1tahun):', toko.sewa.paket);
-                if (paketBaru && ['trial','1bulan','6bulan','1tahun'].includes(paketBaru)) {
-                    let tambahanHari = paketBaru === 'trial' ? 30 : paketBaru === '1bulan' ? 30 : paketBaru === '6bulan' ? 180 : 365;
-                    let tanggalMulai = new Date(toko.sewa.masaAktif) < new Date() ? new Date() : new Date(toko.sewa.masaAktif);
-                    tanggalMulai.setDate(tanggalMulai.getDate() + tambahanHari);
-                    toko.sewa.paket = paketBaru;
-                    toko.sewa.masaAktif = tanggalMulai.toISOString().split('T')[0];
-                    toko.sewa.status = 'active';
+                const nama = prompt('Nama:', data.superadmin.nama);
+                const email = prompt('Email:', data.superadmin.email);
+                const hp = prompt('No HP:', data.superadmin.nomorHp);
+                if (nama !== null) {
+                    data.superadmin.nama = nama;
+                    data.superadmin.email = email;
+                    data.superadmin.nomorHp = hp;
                     saveData(data);
                     render();
                 }
-            }));
-            document.querySelectorAll('.nonaktifkanBtn').forEach(btn => btn.addEventListener('click', function() {
+            });
+            // Ganti password superadmin
+            document.getElementById('gantiPassSuperBtn')?.addEventListener('click', () => {
+                const old = prompt('Password lama:');
                 const data = getData();
-                const toko = data.toko.find(t => t.id === this.dataset.tokoid);
-                if (toko) {
-                    toko.sewa.status = toko.sewa.status === 'active' ? 'disabled' : 'active';
+                if (old !== data.superadmin.password) return alert('Password lama salah!');
+                const baru = prompt('Password baru:');
+                if (baru && baru.length >= 3) {
+                    data.superadmin.password = baru;
                     saveData(data);
-                    render();
+                    alert('Password berhasil diubah.');
                 }
-            }));
-            document.querySelectorAll('.hapusTokoBtn').forEach(btn => btn.addEventListener('click', function() {
-                if (confirm('Hapus toko ini?')) {
-                    const data = getData();
-                    data.toko = data.toko.filter(t => t.id !== this.dataset.tokoid);
-                    saveData(data);
-                    render();
-                }
-            }));
-            // Buat toko
+            });
+            // Buat toko baru
             document.getElementById('buatTokoForm')?.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const nama = document.getElementById('namaTokoInput').value.trim();
@@ -507,181 +413,28 @@
                     alamatToko: document.getElementById('alamatTokoInput').value.trim(),
                     nomorHp: document.getElementById('hpTokoInput').value.trim(),
                     email: document.getElementById('emailTokoInput').value.trim(),
-                    sewa: { paket, masaAktif: masaAktif.toISOString().split('T')[0], status: 'active' },
-                    users: [{ id: 'owner' + Date.now(), username, password, role: 'OWNER' }],
-                    products: [], stockLogs: [], transaksi: [], permissions: [], nextId: 1, kodeCounter: 1000
+                    sewa: {
+                        paket,
+                        masaAktif: masaAktif.toISOString().split('T')[0],
+                        status: 'active'
+                    },
+                    users: [
+                        { id: 'owner' + Date.now(), username, password, role: 'OWNER' }
+                    ],
+                    products: [],
+                    stockLogs: [],
+                    transaksi: [],
+                    permissions: [],
+                    nextId: 1,
+                    kodeCounter: 1000
                 };
                 data.toko.push(newToko);
                 saveData(data);
                 alert('Toko baru berhasil dibuat!');
-                state.activeMenu = 'daftartoko';
+                state.activeMenu = 'manajemen';
                 render();
             });
-            // Profil superadmin
-            document.getElementById('editProfilSuperBtn')?.addEventListener('click', () => {
-                const data = getData();
-                const email = prompt('Email:', data.superadmin.email);
-                const hp = prompt('No HP:', data.superadmin.nomorHp);
-                if (email !== null) {
-                    data.superadmin.email = email;
-                    data.superadmin.nomorHp = hp;
-                    saveData(data);
-                    render();
-                }
-            });
-            document.getElementById('gantiPassSuperBtn')?.addEventListener('click', () => {
-                const old = prompt('Password lama:');
-                const data = getData();
-                if (old !== data.superadmin.password) return alert('Password lama salah!');
-                const baru = prompt('Password baru:');
-                if (baru && baru.length >= 3) {
-                    data.superadmin.password = baru;
-                    saveData(data);
-                    alert('Password berhasil diubah.');
-                }
-            });
         }
-
-        // ==================== DASHBOARD TOKO ====================
-        function renderTokoDashboard() {
-            const toko = getCurrentTokoData();
-            if (!toko) return '<p>Toko tidak ditemukan.</p>';
-            const user = state.currentUser;
-            const permissions = user.role === 'OWNER' ? null : toko.permissions.filter(p => p.userId === user.id);
-            const menus = getAvailableMenus(user.role, permissions);
-            return `
-                <div class="flex h-screen flex-col">
-                    <header class="bg-blue-700 text-white p-4 flex justify-between items-center md:hidden shadow-lg">
-                        <h1 class="text-lg font-bold">${toko.namaToko}</h1>
-                        <button id="menuToggleBtn" class="text-2xl">☰</button>
-                    </header>
-                    <div class="flex flex-1">
-                        <aside id="sidebar" class="sidebar bg-white w-64 shadow-lg p-6 space-y-2 fixed md:static inset-y-0 left-0 z-40">
-                            <div class="mb-6">
-                                <h2 class="text-xl font-bold text-gray-800">${toko.namaToko}</h2>
-                                <p class="text-sm text-gray-500">Halo, ${user.username} (${user.role})</p>
-                            </div>
-                            <nav class="space-y-1">
-                                ${menus.map(m => `
-                                    <button class="menu-toko-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu === m.id ? 'bg-blue-100 text-blue-700 font-semibold' : 'text-gray-700 hover:bg-gray-100'}" data-menu="${m.id}">${m.label}</button>
-                                `).join('')}
-                            </nav>
-                            <button id="logoutBtn" class="mt-6 w-full btn bg-red-500 text-white py-2">Logout</button>
-                        </aside>
-                        <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"></div>
-                        <main class="flex-1 p-6 overflow-y-auto bg-gray-50">
-                            <div class="card p-6">
-                                ${renderMainContent(state.activeMenu, toko)}
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            `;
-        }
-
-        function getAvailableMenus(role, permissions) {
-            const allMenus = [
-                { id: 'kasir', label: '🛒 Kasir', requiredPerm: 'kasir' },
-                { id: 'stok', label: '📦 Stok Barang', requiredPerm: 'stok_barang' },
-                { id: 'laporan', label: '📊 Laporan', requiredPerm: 'laporan' },
-                { id: 'pengaturan', label: '⚙️ Pengaturan', requiredPerm: 'pengaturan' },
-                { id: 'perijinan', label: '🔐 Perijinan', requiredPerm: 'perijinan', ownerOnly: true },
-                { id: 'profil', label: '👤 Profil', requiredPerm: 'profil' },
-                { id: 'buat-user', label: '➕ Buat User', requiredPerm: 'buat_user', ownerOnly: true }
-            ];
-            return allMenus.filter(m => {
-                if (m.ownerOnly && role !== 'OWNER') return false;
-                if (role === 'OWNER') return true;
-                const perm = permissions?.find(p => p.menu === m.requiredPerm);
-                return perm?.canView;
-            });
-        }
-
-        function renderMainContent(menu, toko) {
-            switch (menu) {
-                case 'kasir': return renderKasir(toko);
-                case 'stok': return renderStokBarang(toko);
-                case 'laporan': return renderLaporan(toko);
-                case 'pengaturan': return '<p>Pengaturan toko bisa diakses lewat Profil.</p>';
-                case 'perijinan': return renderPerijinan(toko);
-                case 'profil': return renderProfil(toko);
-                case 'buat-user': return renderBuatUser(toko);
-                default: return '<p>Menu tidak tersedia.</p>';
-            }
-        }
-
-        // ==================== FITUR KASIR ====================
-        function renderKasir(toko) {
-            return `
-                <div>
-                    <h2 class="text-2xl font-bold mb-4">🛒 Kasir Penjualan</h2>
-                    <div class="flex gap-4 mb-6">
-                        <button id="scanKasirBtn" class="btn bg-green-600 text-white px-4 py-2">📷 Scan Barcode</button>
-                        <button id="manualInputKasirBtn" class="btn bg-blue-600 text-white px-4 py-2">⌨️ Input Manual</button>
-                    </div>
-                    <div id="reader" class="mb-4 hidden"></div>
-                    ${renderKeranjang()}
-                </div>
-            `;
-        }
-
-        function renderKeranjang() {
-            const toko = getCurrentTokoData();
-            const keranjang = state.keranjang;
-            if (keranjang.length === 0) return '<p class="text-gray-500">Keranjang kosong.</p>';
-            let total = 0;
-            const rows = keranjang.map((item, idx) => {
-                const prod = toko.products.find(p => p.id === item.productId);
-                if (!prod) return '';
-                const subtotal = prod.harga * item.qty;
-                total += subtotal;
-                return `
-                    <tr class="border-t">
-                        <td class="p-2">${prod.nama}</td>
-                        <td class="p-2">Rp ${prod.harga.toLocaleString()}</td>
-                        <td class="p-2">${item.qty}</td>
-                        <td class="p-2">Rp ${subtotal.toLocaleString()}</td>
-                        <td class="p-2"><button class="hapusItemBtn text-red-600" data-idx="${idx}">X</button></td>
-                    </tr>
-                `;
-            }).join('');
-            return `
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50"><tr><th class="p-2">Barang</th><th class="p-2">Harga</th><th class="p-2">Qty</th><th class="p-2">Subtotal</th><th class="p-2"></th></tr></thead>
-                        <tbody>${rows}</tbody>
-                    </table>
-                    <div class="text-right mt-4 text-xl font-bold">Total: Rp ${total.toLocaleString()}</div>
-                    <button id="prosesBayarBtn" class="btn bg-purple-600 text-white px-6 py-2 mt-4">Proses Bayar</button>
-                </div>
-            `;
-        }
-
-        function attachKasirEvents(toko) {
-            document.getElementById('scanKasirBtn')?.addEventListener('click', () => startScannerKasir(toko));
-            document.getElementById('manualInputKasirBtn')?.addEventListener('click', () => {
-                const kode = prompt('Masukkan kode barang:');
-                if (kode) tambahkanKeKeranjangByKode(kode, toko);
-            });
-            document.getElementById('prosesBayarBtn')?.addEventListener('click', () => prosesPembayaran(toko));
-            document.querySelectorAll('.hapusItemBtn')?.forEach(btn => btn.addEventListener('click', function() {
-                state.keranjang.splice(parseInt(this.dataset.idx), 1);
-                render();
-            }));
-        }
-
-        function startScannerKasir(toko) { /* sama seperti sebelumnya */ }
-        function tambahkanKeKeranjangByKode(kode, toko) { /* sama */ }
-        function prosesPembayaran(toko) { /* sama */ }
-
-        // ==================== STOK BARANG ====================
-        function renderStokBarang(toko) { /* sama seperti sebelumnya, termasuk generate kode */ }
-        function attachStokEvents(toko) { /* sama */ }
-        // dan seterusnya untuk laporan, perijinan, profil, buat user
-        // (seluruh fungsi yang sudah ada di jawaban sebelumnya tetap dipertahankan)
-
-        // Karena panjang, saya tidak tulis ulang semua di sini, tetapi di file final semuanya sudah termasuk.
-        // Pastikan Anda menyalin seluruh kode dari awal hingga akhir.
 
         // Mulai aplikasi
         render();
