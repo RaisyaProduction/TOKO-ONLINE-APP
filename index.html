@@ -134,10 +134,10 @@
     // ====== DATA DEFAULT ======
     const DEFAULT_USER = {
       nama: "TOKO ONLINE APP",
-      hp: "08123456789",
-      email: "admin@tokoonline.com",
-      username: "admin",
-      password: "admin123"
+      hp: "081220285226",
+      email: "dedesugiono.ai@gmail.com",
+      username: "superadmin",
+      password: "tokoonlineapp"
     };
 
     // ====== FUNGSI STORAGE ======
@@ -163,7 +163,7 @@
     }
 
     // ====== NAVIGASI & TAMPILAN ======
-    let currentPage = 'toko'; // halaman aktif di dashboard
+    let currentPage = 'toko';
 
     function hideAll() {
       document.getElementById('loginPage').classList.add('hidden');
@@ -205,17 +205,14 @@
     function showDashboard() {
       hideAll();
       document.getElementById('dashboard').classList.remove('hidden');
-      // Set halaman awal dashboard
       navigateTo('toko');
     }
 
     function navigateTo(page) {
       currentPage = page;
-      // Update link active
       document.querySelectorAll('.sidebar nav a').forEach(a => {
         a.classList.toggle('active', a.dataset.page === page);
       });
-      // Sembunyikan semua konten dashboard
       document.getElementById('tokoPage').classList.add('hidden');
       document.getElementById('buatTokoPage').classList.add('hidden');
       document.getElementById('profilePage').classList.add('hidden');
@@ -274,13 +271,11 @@
         errDiv.classList.remove('hidden');
         return;
       }
-      // Update password
       const user = getUser();
       user.password = newPass;
       saveUser(user);
       succDiv.textContent = 'Password berhasil diubah! Silakan login ulang.';
       succDiv.classList.remove('hidden');
-      // Redirect ke login setelah 2 detik
       setTimeout(() => {
         showLogin();
       }, 2000);
@@ -306,7 +301,7 @@
 
     function showBuatTokoForm() {
       document.getElementById('buatTokoPage').classList.remove('hidden');
-      document.getElementById('tokoPage').classList.add('hidden'); // opsional
+      document.getElementById('tokoPage').classList.add('hidden');
     }
 
     function hideBuatTokoForm() {
@@ -390,7 +385,6 @@
 
     // ====== LOGOUT ======
     function logout() {
-      // Tidak hapus data user, tetap simpan user terakhir (jika diubah)
       showLogin();
     }
 
@@ -402,11 +396,9 @@
     }
 
     // ====== INISIALISASI ======
-    // Pastikan user default ada
     if (!localStorage.getItem('toko_app_user')) {
       localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
     }
-    // Tampilkan login saat pertama kali
     showLogin();
   </script>
 </body>
