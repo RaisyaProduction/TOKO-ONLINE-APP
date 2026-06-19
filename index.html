@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Toko Online App</title>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
@@ -25,7 +26,14 @@
     .sidebar nav a.active, .sidebar nav a:hover { background: #eff6ff; color: #1a56db; }
     .content { flex: 1; padding: 40px; background: #f9fafb; }
     .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .grid-produk { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .produk-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; }
+    .produk-item:hover { transform: translateY(-3px); }
+    .produk-item img { width: 100%; height: 150px; object-fit: cover; background: #f3f4f6; display: block; }
+    .produk-item .info { padding: 12px; }
+    .produk-item .info h4 { font-size: 16px; margin-bottom: 5px; }
+    .produk-item .info p { font-size: 14px; color: #4b5563; }
     .btn-sm { padding: 6px 15px; font-size: 14px; width: auto; display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
     .btn-success { background: #059669; color: white; }
     .btn-success:hover { background: #047857; }
@@ -47,7 +55,8 @@
     th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
     th { background: #f8fafc; font-weight: 600; }
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-    .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; max-height: 80vh; overflow-y: auto; }
+    .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db; margin-bottom: 10px; }
     @media (max-width: 768px) {
       .dashboard { flex-direction: column; }
       .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
@@ -156,7 +165,7 @@
     </main>
   </div>
 
-  <!-- ==================== MODAL AKTIVASI TOKO ==================== -->
+  <!-- ==================== MODAL AKTIVASI ==================== -->
   <div id="modalAktivasi" class="modal hidden">
     <div class="modal-content">
       <h2>⚡ Aktivasi Toko</h2>
@@ -191,17 +200,20 @@
       </div>
     </aside>
     <main class="content">
+      <!-- DASBOR = ETALASE PRODUK -->
       <div id="dasborPage">
-        <h2>📊 Dasbor</h2>
-        <div class="grid-2">
-          <div class="card"><h3>Total Produk</h3><p id="totalProduk" style="font-size:32px;font-weight:bold;">0</p></div>
-          <div class="card"><h3>Total Pesanan</h3><p id="totalPesanan" style="font-size:32px;font-weight:bold;">0</p></div>
-        </div>
+        <h2>📊 Etalase Produk</h2>
+        <div id="etalaseProduk" class="grid-produk"></div>
       </div>
+
+      <!-- PRODUK MANAGEMENT -->
       <div id="produkPage" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <h2>📦 Produk</h2>
-          <button class="btn-sm btn-success" onclick="showFormProduk()">+ Tambah</button>
+          <div style="display:flex; gap:8px;">
+            <button class="btn-sm btn-blue" onclick="showScanModal()">📷 Scan Barcode</button>
+            <button class="btn-sm btn-success" onclick="showFormProduk()">+ Tambah</button>
+          </div>
         </div>
         <div id="produkList"></div>
         <div id="formProduk" class="hidden card" style="max-width:500px;">
@@ -210,12 +222,18 @@
           <input type="text" id="namaProduk" placeholder="Nama Produk">
           <input type="number" id="hargaProduk" placeholder="Harga" min="0">
           <input type="number" id="stokProduk" placeholder="Stok" min="0">
+          <input type="text" id="kodeProduk" placeholder="Kode Produk (dari scan)">
+          <label style="display:block; margin-bottom:5px;">Foto Produk</label>
+          <input type="file" id="fotoProduk" accept="image/*" capture="environment" onchange="previewFoto(this)">
+          <img id="previewGambar" class="preview-img hidden" src="" alt="Preview">
           <div style="display:flex; gap:10px;">
             <button onclick="simpanProduk()" class="btn-sm btn-success">💾 Simpan</button>
             <button onclick="hideFormProduk()" class="btn-sm btn-gray">Batal</button>
           </div>
         </div>
       </div>
+
+      <!-- PESANAN -->
       <div id="pesananPage" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>🧾 Pesanan</h2>
@@ -233,6 +251,8 @@
           </div>
         </div>
       </div>
+
+      <!-- PENGATURAN TOKO -->
       <div id="pengaturanPage" class="hidden">
         <h2>⚙️ Pengaturan Toko</h2>
         <div id="infoToko" class="card profile-info"></div>
@@ -247,6 +267,18 @@
     </main>
   </div>
 
+  <!-- ==================== MODAL SCANNER ==================== -->
+  <div id="scanModal" class="modal hidden">
+    <div class="modal-content" style="max-width:400px; text-align:center;">
+      <h3>📷 Scan Barcode</h3>
+      <div id="reader" style="width:100%; max-width:300px; margin:0 auto;"></div>
+      <p id="scanResult" style="font-weight:bold; color:#1a56db;"></p>
+      <div style="display:flex; gap:10px; justify-content:center;">
+        <button onclick="stopScan()" class="btn-sm btn-gray">Tutup</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ==================== DATA DEFAULT ====================
     const SUPER_ADMIN = {
@@ -257,13 +289,86 @@
       password: "tokoonlineapp"
     };
 
+    // ==================== INDEXEDDB UNTUK GAMBAR PRODUK ====================
+    const DB_NAME = 'TokoOnlineAppDB';
+    const DB_VERSION = 1;
+    let db;
+
+    function openDB() {
+      return new Promise((resolve, reject) => {
+        if (db) return resolve(db);
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (event) => {
+          const database = event.target.result;
+          if (!database.objectStoreNames.contains('produk_gambar')) {
+            database.createObjectStore('produk_gambar', { keyPath: 'produkId' });
+          }
+        };
+        request.onsuccess = (event) => {
+          db = event.target.result;
+          resolve(db);
+        };
+        request.onerror = (event) => {
+          reject('Error membuka IndexedDB');
+        };
+      });
+    }
+
+    async function simpanGambarKeDB(produkId, blob) {
+      const database = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = database.transaction('produk_gambar', 'readwrite');
+        const store = tx.objectStore('produk_gambar');
+        store.put({ produkId, blob });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject('Gagal menyimpan gambar');
+      });
+    }
+
+    async function ambilGambarDariDB(produkId) {
+      const database = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = database.transaction('produk_gambar', 'readonly');
+        const store = tx.objectStore('produk_gambar');
+        const request = store.get(produkId);
+        request.onsuccess = () => {
+          resolve(request.result ? request.result.blob : null);
+        };
+        request.onerror = () => reject('Gagal mengambil gambar');
+      });
+    }
+
+    async function hapusGambarDariDB(produkId) {
+      const database = await openDB();
+      return new Promise((resolve, reject) => {
+        const tx = database.transaction('produk_gambar', 'readwrite');
+        const store = tx.objectStore('produk_gambar');
+        store.delete(produkId);
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject('Gagal menghapus gambar');
+      });
+    }
+
+    async function hapusSemuaGambarToko(tokoId) {
+      // Hapus gambar berdasarkan prefix tokoId (karena produkId diawali tokoId)
+      const database = await openDB();
+      const tx = database.transaction('produk_gambar', 'readwrite');
+      const store = tx.objectStore('produk_gambar');
+      const request = store.getAllKeys();
+      request.onsuccess = () => {
+        const keys = request.result;
+        keys.forEach(key => {
+          if (key.startsWith(tokoId + '_')) {
+            store.delete(key);
+          }
+        });
+      };
+    }
+
     // ==================== STORAGE HELPERS ====================
     function getSuperAdmin() {
       let sa = localStorage.getItem('super_admin');
-      if (!sa) {
-        localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
-        return SUPER_ADMIN;
-      }
+      if (!sa) { localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN)); return SUPER_ADMIN; }
       return JSON.parse(sa);
     }
     function saveSuperAdmin(user) { localStorage.setItem('super_admin', JSON.stringify(user)); }
@@ -285,20 +390,16 @@
       return null;
     }
 
-    // ==================== CEK STATUS AKTIVASI ====================
+    // ==================== STATUS AKTIVASI ====================
     function isTokoActive(toko) {
       if (!toko.aktivasi) return false;
       if (toko.aktivasi.status === 'nonaktif') return false;
-      const now = Date.now();
-      return toko.aktivasi.berakhir > now;
+      return toko.aktivasi.berakhir > Date.now();
     }
-
     function formatDate(ts) {
       if (!ts) return '-';
-      const d = new Date(ts);
-      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+      return new Date(ts).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
     }
-
     function statusBadge(toko) {
       if (!toko.aktivasi) return '<span class="badge badge-inactive">Belum Diaktivasi</span>';
       if (toko.aktivasi.status === 'nonaktif') return '<span class="badge badge-inactive">Nonaktif</span>';
@@ -319,12 +420,7 @@
           email: "demo@toko.com",
           username: "user",
           password: "user",
-          aktivasi: {
-            status: 'aktif',
-            tipe: 'gratis',
-            mulai: Date.now(),
-            berakhir: Date.now() + (3 * 24 * 60 * 60 * 1000) // 3 hari
-          }
+          aktivasi: { status:'aktif', tipe:'gratis', mulai:Date.now(), berakhir:Date.now() + (3*24*60*60*1000) }
         };
         saveTokoList([demoToko]);
       }
@@ -339,6 +435,7 @@
       document.getElementById('superAdminDashboard').classList.add('hidden');
       document.getElementById('tokoDashboard').classList.add('hidden');
       document.getElementById('modalAktivasi').classList.add('hidden');
+      document.getElementById('scanModal').classList.add('hidden');
     }
     function showLogin() { hideAll(); document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('loginUsername').value=''; document.getElementById('loginPassword').value=''; document.getElementById('loginError').classList.add('hidden'); }
 
@@ -405,7 +502,7 @@
       document.getElementById('loginError').textContent='Username atau password salah!'; document.getElementById('loginError').classList.remove('hidden');
     }
 
-    // ==================== SUPER ADMIN DASHBOARD ====================
+    // ==================== SUPER ADMIN ====================
     function showSuperDashboard() { hideAll(); document.getElementById('superAdminDashboard').classList.remove('hidden'); navigateSuper('toko'); }
     function navigateSuper(page) {
       document.querySelectorAll('#superAdminDashboard .sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
@@ -416,9 +513,8 @@
     function renderTokoList() {
       const list = getTokoList();
       const container = document.getElementById('tokoList');
-      if (list.length===0) { container.innerHTML='<p style="color:#6b7280;">Belum ada toko terdaftar.</p>'; return; }
+      if (list.length===0) { container.innerHTML='<p>Belum ada toko.</p>'; return; }
       container.innerHTML = list.map(t=>{
-        const active = isTokoActive(t);
         const badge = statusBadge(t);
         return `
         <div class="card">
@@ -462,10 +558,9 @@
       if (!confirm('Hapus toko ini? Semua data akan hilang.')) return;
       saveTokoList(getTokoList().filter(t=>t.id!==id));
       localStorage.removeItem('produk_'+id); localStorage.removeItem('pesanan_'+id);
+      hapusSemuaGambarToko(id);
       renderTokoList();
     }
-
-    // Aktivasi
     let currentAktivasiTokoId = null;
     function bukaModalAktivasi(id) {
       currentAktivasiTokoId = id;
@@ -491,7 +586,6 @@
       const list = getTokoList();
       const idx = list.findIndex(t=>t.id===currentAktivasiTokoId);
       if (idx===-1) return;
-      // Jika sudah ada aktivasi dan masih aktif, perpanjang dari tanggal berakhir; jika tidak, mulai sekarang
       const existing = list[idx].aktivasi;
       const mulai = (existing && existing.status==='aktif' && existing.berakhir > now) ? existing.berakhir : now;
       list[idx].aktivasi = { status:'aktif', tipe, mulai, berakhir: mulai + durasi };
@@ -500,16 +594,11 @@
       renderTokoList();
     }
     function nonaktifkanToko(id) {
-      if (!confirm('Nonaktifkan toko ini? Pemilik tidak bisa login.')) return;
+      if (!confirm('Nonaktifkan toko ini?')) return;
       const list = getTokoList();
       const idx = list.findIndex(t=>t.id===id);
-      if (idx!==-1 && list[idx].aktivasi) {
-        list[idx].aktivasi.status = 'nonaktif';
-        saveTokoList(list);
-        renderTokoList();
-      }
+      if (idx!==-1 && list[idx].aktivasi) { list[idx].aktivasi.status = 'nonaktif'; saveTokoList(list); renderTokoList(); }
     }
-
     function renderSuperProfile() {
       const sa = getSuperAdmin();
       document.getElementById('superProfileInfo').innerHTML = `<p><strong>Nama Aplikasi:</strong> ${sa.nama}</p><p><strong>HP:</strong> ${sa.hp}</p><p><strong>Email:</strong> ${sa.email}</p><p><strong>Username:</strong> ${sa.username}</p>`;
@@ -535,45 +624,243 @@
     }
     function navigateToko(page) {
       document.querySelectorAll('#tokoDashboard .sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
-      document.getElementById('dasborPage').classList.add('hidden'); document.getElementById('produkPage').classList.add('hidden');
-      document.getElementById('pesananPage').classList.add('hidden'); document.getElementById('pengaturanPage').classList.add('hidden');
-      const session = getSession(); if (!session) return;
-      if (page==='dasbor') { document.getElementById('dasborPage').classList.remove('hidden'); const p=getProdukToko(session.tokoId); const ps=getPesananToko(session.tokoId); document.getElementById('totalProduk').textContent=p.length; document.getElementById('totalPesanan').textContent=ps.length; }
+      document.getElementById('dasborPage').classList.add('hidden');
+      document.getElementById('produkPage').classList.add('hidden');
+      document.getElementById('pesananPage').classList.add('hidden');
+      document.getElementById('pengaturanPage').classList.add('hidden');
+      if (page==='dasbor') { document.getElementById('dasborPage').classList.remove('hidden'); renderEtalase(); }
       else if (page==='produk') { document.getElementById('produkPage').classList.remove('hidden'); renderProduk(); }
       else if (page==='pesanan') { document.getElementById('pesananPage').classList.remove('hidden'); renderPesanan(); }
       else if (page==='pengaturan') { document.getElementById('pengaturanPage').classList.remove('hidden'); renderPengaturanToko(); }
     }
 
-    function renderProduk() {
-      const session=getSession(); const produk=getProdukToko(session.tokoId);
-      const container=document.getElementById('produkList');
-      if (produk.length===0) { container.innerHTML='<p>Belum ada produk.</p>'; return; }
-      container.innerHTML=`<table><thead><tr><th>Nama</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead><tbody>${produk.map(p=>`<tr><td>${escapeHtml(p.nama)}</td><td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td><td>${p.stok}</td><td><button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button> <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+    // ==================== ETALASE PRODUK (DASBOR) ====================
+    async function renderEtalase() {
+      const session = getSession();
+      const produk = getProdukToko(session.tokoId);
+      const container = document.getElementById('etalaseProduk');
+      if (produk.length===0) {
+        container.innerHTML = '<p style="color:#6b7280;">Belum ada produk. Tambahkan di menu Produk.</p>';
+        return;
+      }
+      let html = '';
+      for (const p of produk) {
+        let imgSrc = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"%3E%3Crect fill="%23f3f4f6" width="150" height="150"/%3E%3Ctext fill="%23aaa" font-size="14" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"%3ETidak Ada Foto%3C/text%3E%3C/svg%3E';
+        try {
+          const blob = await ambilGambarDariDB(p.id);
+          if (blob) {
+            imgSrc = URL.createObjectURL(blob);
+          }
+        } catch (e) {}
+        html += `
+          <div class="produk-item">
+            <img src="${imgSrc}" alt="${escapeHtml(p.nama)}">
+            <div class="info">
+              <h4>${escapeHtml(p.nama)}</h4>
+              <p>Rp ${Number(p.harga).toLocaleString('id-ID')}</p>
+              <p>Stok: ${p.stok}</p>
+              ${p.kode ? `<p style="font-size:12px; color:#6b7280;">Kode: ${escapeHtml(p.kode)}</p>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
     }
-    function showFormProduk() {
-      document.getElementById('formProduk').classList.remove('hidden'); document.getElementById('editProdukId').value='';
-      document.getElementById('judulFormProduk').textContent='Tambah Produk'; document.getElementById('namaProduk').value='';
-      document.getElementById('hargaProduk').value=''; document.getElementById('stokProduk').value='';
-    }
-    function editProduk(id) {
-      const session=getSession(); const p=getProdukToko(session.tokoId).find(p=>p.id===id);
-      if (!p) return;
-      document.getElementById('formProduk').classList.remove('hidden'); document.getElementById('editProdukId').value=p.id;
-      document.getElementById('judulFormProduk').textContent='Edit Produk'; document.getElementById('namaProduk').value=p.nama;
-      document.getElementById('hargaProduk').value=p.harga; document.getElementById('stokProduk').value=p.stok;
-    }
-    function hideFormProduk() { document.getElementById('formProduk').classList.add('hidden'); }
-    function simpanProduk() {
-      const session=getSession(); const id=document.getElementById('editProdukId').value;
-      const nama=document.getElementById('namaProduk').value.trim(), harga=document.getElementById('hargaProduk').value.trim(), stok=document.getElementById('stokProduk').value.trim();
-      if(!nama||!harga||!stok) { alert('Lengkapi data.'); return; }
-      let list=getProdukToko(session.tokoId);
-      if (id) list=list.map(p=>p.id===id?{...p,nama,harga:Number(harga),stok:Number(stok)}:p);
-      else list.push({id:Date.now().toString(),nama,harga:Number(harga),stok:Number(stok)});
-      saveProdukToko(session.tokoId,list); hideFormProduk(); renderProduk();
-    }
-    function hapusProduk(id) { if(!confirm('Hapus produk?')) return; const session=getSession(); saveProdukToko(session.tokoId,getProdukToko(session.tokoId).filter(p=>p.id!==id)); renderProduk(); }
 
+    // ==================== PRODUK MANAGEMENT ====================
+    async function renderProduk() {
+      const session = getSession();
+      const produk = getProdukToko(session.tokoId);
+      const container = document.getElementById('produkList');
+      if (produk.length===0) { container.innerHTML='<p>Belum ada produk.</p>'; return; }
+      let html = '<table><thead><tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Stok</th><th>Kode</th><th>Aksi</th></tr></thead><tbody>';
+      for (const p of produk) {
+        let imgTag = '-';
+        try {
+          const blob = await ambilGambarDariDB(p.id);
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            imgTag = `<img src="${url}" width="40" height="40" style="object-fit:cover; border-radius:4px;">`;
+          }
+        } catch (e) {}
+        html += `<tr>
+          <td>${imgTag}</td>
+          <td>${escapeHtml(p.nama)}</td>
+          <td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td>
+          <td>${p.stok}</td>
+          <td>${p.kode || '-'}</td>
+          <td>
+            <button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button>
+            <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button>
+          </td>
+        </tr>`;
+      }
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxSize = 300;
+          let width = img.width, height = img.height;
+          if (width > height && width > maxSize) { height *= maxSize / width; width = maxSize; }
+          else if (height > maxSize) { width *= maxSize / height; height = maxSize; }
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            callback(blob);
+          }, 'image/jpeg', 0.7);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    let currentPreviewBlob = null;
+
+    function previewFoto(input) {
+      const file = input.files[0];
+      if (file) {
+        compressImage(file, (blob) => {
+          currentPreviewBlob = blob;
+          const url = URL.createObjectURL(blob);
+          const preview = document.getElementById('previewGambar');
+          preview.src = url;
+          preview.classList.remove('hidden');
+        });
+      }
+    }
+
+    function showFormProduk() {
+      document.getElementById('formProduk').classList.remove('hidden');
+      document.getElementById('editProdukId').value = '';
+      document.getElementById('judulFormProduk').textContent = 'Tambah Produk';
+      document.getElementById('namaProduk').value = '';
+      document.getElementById('hargaProduk').value = '';
+      document.getElementById('stokProduk').value = '';
+      document.getElementById('kodeProduk').value = '';
+      document.getElementById('fotoProduk').value = '';
+      document.getElementById('previewGambar').classList.add('hidden');
+      currentPreviewBlob = null;
+    }
+
+    async function editProduk(id) {
+      const session = getSession();
+      const p = getProdukToko(session.tokoId).find(p=>p.id===id);
+      if (!p) return;
+      document.getElementById('formProduk').classList.remove('hidden');
+      document.getElementById('editProdukId').value = p.id;
+      document.getElementById('judulFormProduk').textContent = 'Edit Produk';
+      document.getElementById('namaProduk').value = p.nama;
+      document.getElementById('hargaProduk').value = p.harga;
+      document.getElementById('stokProduk').value = p.stok;
+      document.getElementById('kodeProduk').value = p.kode || '';
+      document.getElementById('fotoProduk').value = '';
+      currentPreviewBlob = null;
+      const preview = document.getElementById('previewGambar');
+      try {
+        const blob = await ambilGambarDariDB(p.id);
+        if (blob) {
+          currentPreviewBlob = blob;
+          preview.src = URL.createObjectURL(blob);
+          preview.classList.remove('hidden');
+        } else {
+          preview.classList.add('hidden');
+        }
+      } catch (e) {
+        preview.classList.add('hidden');
+      }
+    }
+
+    function hideFormProduk() {
+      document.getElementById('formProduk').classList.add('hidden');
+    }
+
+    async function simpanProduk() {
+      const session = getSession();
+      const id = document.getElementById('editProdukId').value;
+      const nama = document.getElementById('namaProduk').value.trim();
+      const harga = document.getElementById('hargaProduk').value.trim();
+      const stok = document.getElementById('stokProduk').value.trim();
+      const kode = document.getElementById('kodeProduk').value.trim();
+      if (!nama || !harga || !stok) { alert('Lengkapi data.'); return; }
+      let list = getProdukToko(session.tokoId);
+      const newId = id || Date.now().toString();
+      const data = {
+        id: newId,
+        nama,
+        harga: Number(harga),
+        stok: Number(stok),
+        kode
+      };
+      // Simpan atau update di localStorage
+      if (id) {
+        list = list.map(p => p.id === id ? { ...p, ...data } : p);
+      } else {
+        list.push(data);
+      }
+      saveProdukToko(session.tokoId, list);
+      // Simpan gambar ke IndexedDB jika ada
+      if (currentPreviewBlob) {
+        await simpanGambarKeDB(newId, currentPreviewBlob);
+      } else if (id) {
+        // Jika edit dan tidak ada gambar baru, biarkan gambar lama tetap di DB
+      }
+      hideFormProduk();
+      renderProduk();
+    }
+
+    async function hapusProduk(id) {
+      if (!confirm('Hapus produk?')) return;
+      const session = getSession();
+      saveProdukToko(session.tokoId, getProdukToko(session.tokoId).filter(p=>p.id!==id));
+      await hapusGambarDariDB(id);
+      renderProduk();
+    }
+
+    // ==================== SCAN BARCODE ====================
+    let html5QrCode = null;
+
+    function showScanModal() {
+      document.getElementById('scanModal').classList.remove('hidden');
+      document.getElementById('scanResult').textContent = '';
+      if (!html5QrCode) {
+        html5QrCode = new Html5Qrcode("reader");
+      }
+      html5QrCode.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 250, height: 150 } },
+        (decodedText) => {
+          document.getElementById('scanResult').textContent = 'Hasil: ' + decodedText;
+          document.getElementById('kodeProduk').value = decodedText;
+          html5QrCode.stop().then(() => {
+            document.getElementById('scanModal').classList.add('hidden');
+            showFormProduk();
+          }).catch(err => console.error(err));
+        },
+        (errorMessage) => {}
+      ).catch(err => {
+        alert('Gagal mengakses kamera: ' + err);
+        document.getElementById('scanModal').classList.add('hidden');
+      });
+    }
+
+    function stopScan() {
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(() => {
+          document.getElementById('scanModal').classList.add('hidden');
+        }).catch(err => console.error(err));
+      } else {
+        document.getElementById('scanModal').classList.add('hidden');
+      }
+    }
+
+    // ==================== PESANAN ====================
     function renderPesanan() {
       const session=getSession(); const pesanan=getPesananToko(session.tokoId);
       const container=document.getElementById('pesananList');
@@ -599,6 +886,7 @@
     }
     function hapusPesanan(id) { if(!confirm('Hapus pesanan?')) return; const session=getSession(); savePesananToko(session.tokoId,getPesananToko(session.tokoId).filter(p=>p.id!==id)); renderPesanan(); }
 
+    // ==================== PENGATURAN TOKO ====================
     function renderPengaturanToko() {
       const session=getSession(); const toko=getTokoList().find(t=>t.id===session.tokoId);
       if (!toko) return;
@@ -618,7 +906,7 @@
     function escapeHtml(text) { const div=document.createElement('div'); div.textContent=text; return div.innerHTML; }
 
     // Inisialisasi
-    (function init(){
+    (async function init(){
       if (!localStorage.getItem('super_admin')) localStorage.setItem('super_admin',JSON.stringify(SUPER_ADMIN));
       initDemoToko();
       const session=getSession();
