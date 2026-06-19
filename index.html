@@ -1,443 +1,413 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>TOKO ONLINE APP - Superadmin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        .btn {
-            transition: all 0.3s ease;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .btn:active { transform: scale(0.97); }
-        .input-field {
-            border: 2px solid #e2e8f0;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            width: 100%;
-            transition: border-color 0.3s;
-            background: white;
-        }
-        .input-field:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
-        }
-        .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex;
-            align-items: center; justify-content: center; z-index: 50; backdrop-filter: blur(4px);
-        }
-        .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
-        .sidebar.open { transform: translateX(0); }
-        @media (min-width: 768px) { .sidebar { transform: translateX(0); } }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko Online App</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
+    .container { max-width: 500px; margin: 80px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    h1, h2 { color: #1a56db; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    input, textarea, button { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; }
+    input:focus, textarea:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.2); }
+    button { background: #1a56db; color: white; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+    button:hover { background: #1e40af; }
+    .error { color: #dc2626; background: #fee2e2; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .success { color: #059669; background: #d1fae5; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .link { color: #1a56db; text-decoration: none; font-size: 14px; cursor: pointer; }
+    .link:hover { text-decoration: underline; }
+    .hidden { display: none !important; }
+    /* Dashboard Layout */
+    .dashboard { display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background: #fff; box-shadow: 2px 0 8px rgba(0,0,0,0.05); padding: 20px; display: flex; flex-direction: column; }
+    .sidebar h2 { font-size: 20px; margin-bottom: 30px; }
+    .sidebar nav a { display: flex; align-items: center; gap: 10px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; color: #374151; text-decoration: none; font-weight: 500; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: #eff6ff; color: #1a56db; }
+    .content { flex: 1; padding: 40px; background: #f9fafb; }
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .btn-sm { padding: 6px 15px; font-size: 14px; width: auto; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-danger { background: #dc2626; }
+    .btn-danger:hover { background: #b91c1c; }
+    .btn-success { background: #059669; }
+    .btn-success:hover { background: #047857; }
+    .profile-info p { margin: 8px 0; font-size: 15px; }
+    .profile-info strong { display: inline-block; width: 120px; }
+    @media (max-width: 768px) {
+      .dashboard { flex-direction: column; }
+      .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
+      .content { padding: 20px; }
+    }
+  </style>
 </head>
-<body class="flex items-center justify-center p-4">
-    <div id="app" class="w-full max-w-md"></div>
+<body>
+  <!-- Halaman Login -->
+  <div id="loginPage" class="container">
+    <h1>🔐 Login</h1>
+    <div id="loginError" class="error hidden"></div>
+    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Masuk</button>
+    <div style="text-align:center; margin-top:10px;">
+      <span class="link" onclick="showForgotPassword()">Lupa Password?</span>
+    </div>
+  </div>
 
-    <script>
-        // ==================== STORAGE ====================
-        const STORAGE_KEY = 'toko_online_app';
+  <!-- Halaman Lupa Password -->
+  <div id="forgotPage" class="container hidden">
+    <h1>🔑 Lupa Password</h1>
+    <p style="margin-bottom:15px;">Masukkan email atau nomor HP yang terdaftar.</p>
+    <div id="forgotError" class="error hidden"></div>
+    <input type="text" id="forgotInput" placeholder="Email atau Nomor HP">
+    <button onclick="verifyIdentity()">Lanjutkan</button>
+    <div style="text-align:center; margin-top:10px;">
+      <span class="link" onclick="showLogin()">← Kembali ke Login</span>
+    </div>
+  </div>
 
-        function getData() {
-            const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) {
-                const initial = {
-                    superadmin: {
-                        username: 'admin',
-                        password: 'admin123',
-                        nama: 'apptokoonline',
-                        nomorHp: '081220285226',
-                        email: 'dedesugiono.ai@gmail.com'
-                    },
-                    toko: [],  // kosong dulu
-                    nextTokoId: 1
-                };
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-                return initial;
-            }
-            return JSON.parse(raw);
-        }
+  <!-- Halaman Reset Password (setelah lupa password) -->
+  <div id="resetPage" class="container hidden">
+    <h1>🛡️ Reset Password</h1>
+    <div id="resetProfile" class="card profile-info"></div>
+    <div id="resetError" class="error hidden"></div>
+    <div id="resetSuccess" class="success hidden"></div>
+    <input type="password" id="newPassword" placeholder="Password Baru">
+    <input type="password" id="confirmNewPassword" placeholder="Konfirmasi Password Baru">
+    <button onclick="resetPassword()">Simpan Password Baru</button>
+    <div style="text-align:center; margin-top:10px;">
+      <span class="link" onclick="showLogin()">← Kembali ke Login</span>
+    </div>
+  </div>
 
-        function saveData(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+  <!-- Dashboard (setelah login) -->
+  <div id="dashboard" class="dashboard hidden">
+    <aside class="sidebar">
+      <h2>🏪 TOKO ONLINE APP</h2>
+      <nav>
+        <a href="#" class="active" data-page="toko" onclick="navigateTo('toko')">📋 Manajemen Toko</a>
+        <a href="#" data-page="profile" onclick="navigateTo('profile')">👤 Profile</a>
+      </nav>
+      <div style="margin-top:auto;">
+        <button onclick="logout()" style="background:#dc2626; margin-top:20px;">🚪 Keluar</button>
+      </div>
+    </aside>
 
-        // ==================== STATE ====================
-        let state = {
-            currentUser: null,
-            isSuperadmin: false,
-            activeMenu: 'manajemen',
-            showModal: false,
-            modalType: '',
-            lupaStep: 1,
-            lupaUsername: '',
-        };
+    <main class="content">
+      <!-- Halaman Manajemen Toko -->
+      <div id="tokoPage">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+          <h2>📋 Daftar Toko</h2>
+          <button class="btn-sm btn-success" onclick="showBuatTokoForm()">+ Buat Toko Baru</button>
+        </div>
+        <div id="tokoList" class="grid-2"></div>
+      </div>
 
-        // ==================== RENDER UTAMA ====================
-        function render() {
-            const app = document.getElementById('app');
-            if (!state.isSuperadmin) {
-                document.body.className = 'flex items-center justify-center p-4';
-                app.className = 'w-full max-w-md';
-                app.innerHTML = renderLoginPage();
-                attachLoginEvents();
-            } else {
-                document.body.className = '';
-                app.className = '';
-                app.innerHTML = renderSuperadminDashboard();
-                attachSuperadminEvents();
-            }
-        }
+      <!-- Form Buat Toko Baru (awalnya tersembunyi) -->
+      <div id="buatTokoPage" class="hidden card" style="max-width:500px;">
+        <h2>➕ Buat Toko Baru</h2>
+        <input type="text" id="namaToko" placeholder="Nama Toko">
+        <input type="text" id="pemilikToko" placeholder="Pemilik Toko">
+        <textarea id="alamatToko" placeholder="Alamat Toko" rows="3"></textarea>
+        <div style="display:flex; gap:10px;">
+          <button onclick="simpanToko()" class="btn-sm btn-success">💾 Simpan</button>
+          <button onclick="hideBuatTokoForm()" class="btn-sm" style="background:#6b7280;">Batal</button>
+        </div>
+      </div>
 
-        // ==================== LOGIN ====================
-        function renderLoginPage() {
-            return `
-                <div class="card p-8">
-                    <div class="text-center mb-8">
-                        <div class="text-5xl mb-4">🛍️</div>
-                        <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 bg-clip-text text-transparent">
-                            TOKO ONLINE APP
-                        </h1>
-                        <p class="text-gray-600 mt-2 font-medium">Login Superadmin</p>
-                    </div>
-                    <form id="loginForm" class="space-y-5">
-                        <input type="text" id="username" placeholder="Username" class="input-field" required>
-                        <input type="password" id="password" placeholder="Password" class="input-field" required>
-                        <button type="submit" class="w-full btn bg-gradient-to-r from-purple-600 to-blue-500 text-white py-3 text-lg">Masuk</button>
-                    </form>
-                    <div class="text-center mt-4">
-                        <a href="#" id="lupaPasswordLink" class="text-sm text-purple-600 hover:underline font-medium">Lupa Password?</a>
-                    </div>
-                    <p id="loginError" class="text-red-500 text-sm mt-3 text-center font-medium"></p>
-                </div>
-            `;
-        }
+      <!-- Halaman Profile -->
+      <div id="profilePage" class="hidden">
+        <h2>👤 Profile</h2>
+        <div id="profileInfo" class="card profile-info"></div>
+        <div class="card" style="max-width:500px;">
+          <h3>🔑 Ganti Password</h3>
+          <div id="profileMsg" class="hidden"></div>
+          <input type="password" id="profileNewPass" placeholder="Password Baru">
+          <input type="password" id="profileConfirmPass" placeholder="Konfirmasi Password Baru">
+          <button onclick="gantiPassword()">💾 Simpan Password Baru</button>
+        </div>
+      </div>
+    </main>
+  </div>
 
-        function attachLoginEvents() {
-            document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value.trim();
-                const data = getData();
+  <script>
+    // ====== DATA DEFAULT ======
+    const DEFAULT_USER = {
+      nama: "TOKO ONLINE APP",
+      hp: "08123456789",
+      email: "admin@tokoonline.com",
+      username: "admin",
+      password: "admin123"
+    };
 
-                if (username === data.superadmin.username && password === data.superadmin.password) {
-                    state.isSuperadmin = true;
-                    state.activeMenu = 'manajemen';
-                    render();
-                } else {
-                    document.getElementById('loginError').textContent = 'Username atau password salah.';
-                }
-            });
+    // ====== FUNGSI STORAGE ======
+    function getUser() {
+      let user = localStorage.getItem('toko_app_user');
+      if (!user) {
+        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+        return DEFAULT_USER;
+      }
+      return JSON.parse(user);
+    }
 
-            document.getElementById('lupaPasswordLink')?.addEventListener('click', function(e) {
-                e.preventDefault();
-                state.lupaStep = 1;
-                showLupaPasswordModal();
-            });
-        }
+    function saveUser(user) {
+      localStorage.setItem('toko_app_user', JSON.stringify(user));
+    }
 
-        // ==================== LUPA PASSWORD ====================
-        function showLupaPasswordModal() {
-            state.showModal = true;
-            renderLupaModal();
-        }
+    function getTokoList() {
+      return JSON.parse(localStorage.getItem('toko_list') || '[]');
+    }
 
-        function renderLupaModal() {
-            const existing = document.getElementById('lupaModal');
-            if (existing) existing.remove();
-            const modal = document.createElement('div');
-            modal.id = 'lupaModal';
-            modal.className = 'modal';
-            let content = '';
+    function saveTokoList(list) {
+      localStorage.setItem('toko_list', JSON.stringify(list));
+    }
 
-            if (state.lupaStep === 1) {
-                content = `
-                    <div class="card p-6 w-full max-w-sm mx-4">
-                        <h2 class="text-xl font-bold mb-4">Lupa Password</h2>
-                        <p class="mb-4">Masukkan username superadmin.</p>
-                        <input type="text" id="lupaUsername" class="input-field mb-4" placeholder="Username">
-                        <div class="flex gap-3">
-                            <button id="cariAkunBtn" class="btn bg-blue-600 text-white px-4 py-2">Cari</button>
-                            <button id="batalLupaBtn" class="btn bg-gray-300 px-4 py-2">Batal</button>
-                        </div>
-                        <p id="lupaError" class="text-red-500 text-sm mt-2"></p>
-                    </div>
-                `;
-            } else if (state.lupaStep === 2) {
-                const kontak = getData().superadmin.email + ' / ' + getData().superadmin.nomorHp;
-                content = `
-                    <div class="card p-6 w-full max-w-sm mx-4">
-                        <h2 class="text-xl font-bold mb-4">Verifikasi Kontak</h2>
-                        <p class="mb-4">Token reset dikirim ke <b>${kontak}</b> (simulasi: <b>123456</b>).</p>
-                        <input type="text" id="tokenLupa" class="input-field mb-4" placeholder="Masukkan token">
-                        <div class="flex gap-3">
-                            <button id="verifTokenBtn" class="btn bg-blue-600 text-white px-4 py-2">Verifikasi</button>
-                            <button id="batalLupa2Btn" class="btn bg-gray-300 px-4 py-2">Batal</button>
-                        </div>
-                        <p id="tokenError" class="text-red-500 text-sm mt-2"></p>
-                    </div>
-                `;
-            } else if (state.lupaStep === 3) {
-                content = `
-                    <div class="card p-6 w-full max-w-sm mx-4">
-                        <h2 class="text-xl font-bold mb-4">Password Baru</h2>
-                        <input type="password" id="passBaru" class="input-field mb-4" placeholder="Password baru">
-                        <button id="simpanPassBtn" class="w-full btn bg-green-600 text-white py-2">Simpan</button>
-                        <p id="simpanError" class="text-red-500 text-sm mt-2"></p>
-                    </div>
-                `;
-            }
+    // ====== NAVIGASI & TAMPILAN ======
+    let currentPage = 'toko'; // halaman aktif di dashboard
 
-            modal.innerHTML = content;
-            document.body.appendChild(modal);
-            attachLupaEvents();
-        }
+    function hideAll() {
+      document.getElementById('loginPage').classList.add('hidden');
+      document.getElementById('forgotPage').classList.add('hidden');
+      document.getElementById('resetPage').classList.add('hidden');
+      document.getElementById('dashboard').classList.add('hidden');
+    }
 
-        function attachLupaEvents() {
-            if (state.lupaStep === 1) {
-                document.getElementById('cariAkunBtn')?.addEventListener('click', () => {
-                    const username = document.getElementById('lupaUsername').value.trim();
-                    const data = getData();
-                    if (username === data.superadmin.username) {
-                        state.lupaUsername = username;
-                        state.lupaStep = 2;
-                        document.getElementById('lupaModal').remove();
-                        renderLupaModal();
-                    } else {
-                        document.getElementById('lupaError').textContent = 'Username tidak ditemukan.';
-                    }
-                });
-                document.getElementById('batalLupaBtn')?.addEventListener('click', closeLupaModal);
-            } else if (state.lupaStep === 2) {
-                document.getElementById('verifTokenBtn')?.addEventListener('click', () => {
-                    if (document.getElementById('tokenLupa').value.trim() === '123456') {
-                        state.lupaStep = 3;
-                        document.getElementById('lupaModal').remove();
-                        renderLupaModal();
-                    } else {
-                        document.getElementById('tokenError').textContent = 'Token salah.';
-                    }
-                });
-                document.getElementById('batalLupa2Btn')?.addEventListener('click', closeLupaModal);
-            } else if (state.lupaStep === 3) {
-                document.getElementById('simpanPassBtn')?.addEventListener('click', () => {
-                    const newPass = document.getElementById('passBaru').value;
-                    if (!newPass || newPass.length < 3) {
-                        document.getElementById('simpanError').textContent = 'Minimal 3 karakter.';
-                        return;
-                    }
-                    const data = getData();
-                    data.superadmin.password = newPass;
-                    saveData(data);
-                    closeLupaModal();
-                    alert('Password superadmin berhasil diubah. Silakan login dengan password baru.');
-                });
-            }
-        }
+    function showLogin() {
+      hideAll();
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
+      document.getElementById('loginError').classList.add('hidden');
+    }
 
-        function closeLupaModal() {
-            document.getElementById('lupaModal')?.remove();
-            state.showModal = false;
-            state.lupaStep = 1;
-            render();
-        }
+    function showForgotPassword() {
+      hideAll();
+      document.getElementById('forgotPage').classList.remove('hidden');
+      document.getElementById('forgotInput').value = '';
+      document.getElementById('forgotError').classList.add('hidden');
+    }
 
-        // ==================== SUPERADMIN DASHBOARD ====================
-        function renderSuperadminDashboard() {
-            return `
-                <div class="flex flex-col min-h-screen">
-                    <header class="bg-gradient-to-r from-purple-700 to-purple-900 text-white p-4 shadow-lg flex justify-between items-center">
-                        <h1 class="text-xl font-bold">TOKO ONLINE APP - Superadmin</h1>
-                        <button id="logoutSuperBtn" class="btn bg-red-500 hover:bg-red-600 text-white px-4 py-2">Logout</button>
-                    </header>
-                    <div class="flex flex-1">
-                        <!-- Sidebar -->
-                        <aside class="bg-white w-64 p-4 shadow-lg hidden md:block">
-                            <h2 class="text-lg font-bold mb-4">Menu</h2>
-                            <nav class="space-y-2">
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='manajemen'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="manajemen">📋 Manajemen Toko</button>
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='profil'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="profil">👤 Profil</button>
-                                <button class="menu-super-btn w-full text-left px-4 py-2 rounded-lg ${state.activeMenu==='pengaturan'?'bg-purple-100 text-purple-700 font-semibold':'hover:bg-gray-100'}" data-menu="pengaturan">⚙️ Pengaturan</button>
-                            </nav>
-                        </aside>
-                        <!-- Main Content -->
-                        <main class="flex-1 p-6 bg-gray-50">
-                            ${renderSuperadminContent()}
-                        </main>
-                    </div>
-                </div>
-            `;
-        }
+    function showResetPage(user) {
+      hideAll();
+      document.getElementById('resetPage').classList.remove('hidden');
+      const profileDiv = document.getElementById('resetProfile');
+      profileDiv.innerHTML = `
+        <p><strong>Nama Aplikasi:</strong> ${user.nama}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Nomor HP:</strong> ${user.hp}</p>
+      `;
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmNewPassword').value = '';
+      document.getElementById('resetError').classList.add('hidden');
+      document.getElementById('resetSuccess').classList.add('hidden');
+    }
 
-        function renderSuperadminContent() {
-            switch (state.activeMenu) {
-                case 'manajemen': return renderManajemenToko();
-                case 'profil': return renderProfilSuperadmin();
-                case 'pengaturan': return renderPengaturanSuperadmin();
-                default: return '';
-            }
-        }
+    function showDashboard() {
+      hideAll();
+      document.getElementById('dashboard').classList.remove('hidden');
+      // Set halaman awal dashboard
+      navigateTo('toko');
+    }
 
-        function renderManajemenToko() {
-            const data = getData();
-            if (data.toko.length === 0) {
-                return `
-                    <div class="card p-6">
-                        <h2 class="text-2xl font-bold mb-4">Manajemen Toko</h2>
-                        <p class="text-gray-500">Belum ada toko terdaftar. Silakan buat toko baru di menu <b>Pengaturan</b>.</p>
-                    </div>
-                `;
-            }
-            // Nanti kalau sudah ada toko, tampilkan daftar
-            return `
-                <div class="card p-6">
-                    <h2 class="text-2xl font-bold mb-4">Manajemen Toko</h2>
-                    ${data.toko.map(t => `<p>${t.namaToko}</p>`).join('')}
-                </div>
-            `;
-        }
+    function navigateTo(page) {
+      currentPage = page;
+      // Update link active
+      document.querySelectorAll('.sidebar nav a').forEach(a => {
+        a.classList.toggle('active', a.dataset.page === page);
+      });
+      // Sembunyikan semua konten dashboard
+      document.getElementById('tokoPage').classList.add('hidden');
+      document.getElementById('buatTokoPage').classList.add('hidden');
+      document.getElementById('profilePage').classList.add('hidden');
+      
+      if (page === 'toko') {
+        document.getElementById('tokoPage').classList.remove('hidden');
+        renderTokoList();
+      } else if (page === 'profile') {
+        document.getElementById('profilePage').classList.remove('hidden');
+        renderProfile();
+      }
+    }
 
-        function renderProfilSuperadmin() {
-            const sa = getData().superadmin;
-            return `
-                <div class="card p-6 max-w-xl">
-                    <h2 class="text-2xl font-bold mb-4">Profil Superadmin</h2>
-                    <div class="space-y-3">
-                        <p><strong>Nama:</strong> ${sa.nama || '-'}</p>
-                        <p><strong>Username:</strong> ${sa.username}</p>
-                        <p><strong>Email:</strong> ${sa.email || '-'}</p>
-                        <p><strong>No HP:</strong> ${sa.nomorHp || '-'}</p>
-                    </div>
-                    <div class="flex gap-2 mt-6">
-                        <button id="editProfilSuperBtn" class="btn bg-blue-600 text-white px-4 py-2">Edit Profil</button>
-                        <button id="gantiPassSuperBtn" class="btn bg-yellow-600 text-white px-4 py-2">Ganti Password</button>
-                    </div>
-                </div>
-            `;
-        }
+    // ====== LOGIN ======
+    function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const user = getUser();
+      if (username === user.username && password === user.password) {
+        showDashboard();
+      } else {
+        const err = document.getElementById('loginError');
+        err.textContent = 'Username atau password salah!';
+        err.classList.remove('hidden');
+      }
+    }
 
-        function renderPengaturanSuperadmin() {
-            return `
-                <div class="card p-6 max-w-xl">
-                    <h2 class="text-2xl font-bold mb-4">Pengaturan</h2>
-                    <p class="mb-4">Buat toko baru untuk penyewa.</p>
-                    <form id="buatTokoForm" class="space-y-4">
-                        <input type="text" id="namaTokoInput" placeholder="Nama Toko" class="input-field" required>
-                        <input type="text" id="alamatTokoInput" placeholder="Alamat Toko" class="input-field">
-                        <input type="text" id="hpTokoInput" placeholder="Nomor HP Toko" class="input-field">
-                        <input type="email" id="emailTokoInput" placeholder="Email Toko" class="input-field">
-                        <select id="paketSewa" class="input-field" required>
-                            <option value="trial">Trial (30 hari)</option>
-                            <option value="1bulan">1 Bulan</option>
-                            <option value="6bulan">6 Bulan</option>
-                            <option value="1tahun">1 Tahun</option>
-                        </select>
-                        <hr>
-                        <p class="font-medium">Akun Pemilik Toko</p>
-                        <input type="text" id="usernamePemilik" placeholder="Username Pemilik" class="input-field" required>
-                        <input type="password" id="passwordPemilik" placeholder="Password Pemilik" class="input-field" required>
-                        <button type="submit" class="w-full btn bg-purple-600 text-white py-3">Buat Toko</button>
-                    </form>
-                </div>
-            `;
-        }
+    // ====== LUPA PASSWORD ======
+    function verifyIdentity() {
+      const input = document.getElementById('forgotInput').value.trim();
+      const user = getUser();
+      if (input === user.email || input === user.hp) {
+        showResetPage(user);
+      } else {
+        const err = document.getElementById('forgotError');
+        err.textContent = 'Email / Nomor HP tidak cocok dengan data terdaftar.';
+        err.classList.remove('hidden');
+      }
+    }
 
-        function attachSuperadminEvents() {
-            document.getElementById('logoutSuperBtn')?.addEventListener('click', () => {
-                state.isSuperadmin = false;
-                render();
-            });
-            document.querySelectorAll('.menu-super-btn').forEach(btn => btn.addEventListener('click', function() {
-                state.activeMenu = this.dataset.menu;
-                render();
-            }));
-            // Edit profil superadmin
-            document.getElementById('editProfilSuperBtn')?.addEventListener('click', () => {
-                const data = getData();
-                const nama = prompt('Nama:', data.superadmin.nama);
-                const email = prompt('Email:', data.superadmin.email);
-                const hp = prompt('No HP:', data.superadmin.nomorHp);
-                if (nama !== null) {
-                    data.superadmin.nama = nama;
-                    data.superadmin.email = email;
-                    data.superadmin.nomorHp = hp;
-                    saveData(data);
-                    render();
-                }
-            });
-            // Ganti password superadmin
-            document.getElementById('gantiPassSuperBtn')?.addEventListener('click', () => {
-                const old = prompt('Password lama:');
-                const data = getData();
-                if (old !== data.superadmin.password) return alert('Password lama salah!');
-                const baru = prompt('Password baru:');
-                if (baru && baru.length >= 3) {
-                    data.superadmin.password = baru;
-                    saveData(data);
-                    alert('Password berhasil diubah.');
-                }
-            });
-            // Buat toko baru
-            document.getElementById('buatTokoForm')?.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const nama = document.getElementById('namaTokoInput').value.trim();
-                const username = document.getElementById('usernamePemilik').value.trim();
-                const password = document.getElementById('passwordPemilik').value.trim();
-                if (!nama || !username || !password) return alert('Lengkapi data!');
-                const paket = document.getElementById('paketSewa').value;
-                let tambahanHari = paket === 'trial' ? 30 : paket === '1bulan' ? 30 : paket === '6bulan' ? 180 : 365;
-                const masaAktif = new Date();
-                masaAktif.setDate(masaAktif.getDate() + tambahanHari);
-                const data = getData();
-                const newToko = {
-                    id: 'toko' + data.nextTokoId++,
-                    namaToko: nama,
-                    alamatToko: document.getElementById('alamatTokoInput').value.trim(),
-                    nomorHp: document.getElementById('hpTokoInput').value.trim(),
-                    email: document.getElementById('emailTokoInput').value.trim(),
-                    sewa: {
-                        paket,
-                        masaAktif: masaAktif.toISOString().split('T')[0],
-                        status: 'active'
-                    },
-                    users: [
-                        { id: 'owner' + Date.now(), username, password, role: 'OWNER' }
-                    ],
-                    products: [],
-                    stockLogs: [],
-                    transaksi: [],
-                    permissions: [],
-                    nextId: 1,
-                    kodeCounter: 1000
-                };
-                data.toko.push(newToko);
-                saveData(data);
-                alert('Toko baru berhasil dibuat!');
-                state.activeMenu = 'manajemen';
-                render();
-            });
-        }
+    function resetPassword() {
+      const newPass = document.getElementById('newPassword').value;
+      const confirmPass = document.getElementById('confirmNewPassword').value;
+      const errDiv = document.getElementById('resetError');
+      const succDiv = document.getElementById('resetSuccess');
+      errDiv.classList.add('hidden');
+      succDiv.classList.add('hidden');
 
-        // Mulai aplikasi
-        render();
-    </script>
+      if (newPass.length < 4) {
+        errDiv.textContent = 'Password minimal 4 karakter.';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+      if (newPass !== confirmPass) {
+        errDiv.textContent = 'Konfirmasi password tidak cocok.';
+        errDiv.classList.remove('hidden');
+        return;
+      }
+      // Update password
+      const user = getUser();
+      user.password = newPass;
+      saveUser(user);
+      succDiv.textContent = 'Password berhasil diubah! Silakan login ulang.';
+      succDiv.classList.remove('hidden');
+      // Redirect ke login setelah 2 detik
+      setTimeout(() => {
+        showLogin();
+      }, 2000);
+    }
+
+    // ====== MANAJEMEN TOKO ======
+    function renderTokoList() {
+      const tokoList = getTokoList();
+      const container = document.getElementById('tokoList');
+      if (tokoList.length === 0) {
+        container.innerHTML = '<p style="color:#6b7280;">Belum ada toko terdaftar.</p>';
+        return;
+      }
+      container.innerHTML = tokoList.map(toko => `
+        <div class="card">
+          <h3 style="margin-bottom:8px;">${escapeHtml(toko.namaToko)}</h3>
+          <p>👤 ${escapeHtml(toko.pemilik)}</p>
+          <p>📍 ${escapeHtml(toko.alamat)}</p>
+          <button class="btn-sm btn-danger" style="margin-top:10px;" onclick="hapusToko('${toko.id}')">🗑️ Hapus</button>
+        </div>
+      `).join('');
+    }
+
+    function showBuatTokoForm() {
+      document.getElementById('buatTokoPage').classList.remove('hidden');
+      document.getElementById('tokoPage').classList.add('hidden'); // opsional
+    }
+
+    function hideBuatTokoForm() {
+      document.getElementById('buatTokoPage').classList.add('hidden');
+      document.getElementById('tokoPage').classList.remove('hidden');
+      document.getElementById('namaToko').value = '';
+      document.getElementById('pemilikToko').value = '';
+      document.getElementById('alamatToko').value = '';
+    }
+
+    function simpanToko() {
+      const nama = document.getElementById('namaToko').value.trim();
+      const pemilik = document.getElementById('pemilikToko').value.trim();
+      const alamat = document.getElementById('alamatToko').value.trim();
+      if (!nama || !pemilik || !alamat) {
+        alert('Mohon lengkapi semua data toko.');
+        return;
+      }
+      const tokoList = getTokoList();
+      tokoList.push({
+        id: Date.now().toString(),
+        namaToko: nama,
+        pemilik: pemilik,
+        alamat: alamat
+      });
+      saveTokoList(tokoList);
+      hideBuatTokoForm();
+      renderTokoList();
+    }
+
+    function hapusToko(id) {
+      if (!confirm('Yakin hapus toko ini?')) return;
+      const tokoList = getTokoList().filter(t => t.id !== id);
+      saveTokoList(tokoList);
+      renderTokoList();
+    }
+
+    // ====== PROFILE ======
+    function renderProfile() {
+      const user = getUser();
+      const infoDiv = document.getElementById('profileInfo');
+      infoDiv.innerHTML = `
+        <p><strong>Nama Aplikasi:</strong> ${user.nama}</p>
+        <p><strong>HP:</strong> ${user.hp}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Username:</strong> ${user.username}</p>
+      `;
+      document.getElementById('profileNewPass').value = '';
+      document.getElementById('profileConfirmPass').value = '';
+      const msg = document.getElementById('profileMsg');
+      msg.classList.add('hidden');
+    }
+
+    function gantiPassword() {
+      const newPass = document.getElementById('profileNewPass').value;
+      const confirmPass = document.getElementById('profileConfirmPass').value;
+      const msgDiv = document.getElementById('profileMsg');
+      msgDiv.classList.add('hidden');
+
+      if (newPass.length < 4) {
+        msgDiv.textContent = 'Password minimal 4 karakter.';
+        msgDiv.className = 'error';
+        msgDiv.classList.remove('hidden');
+        return;
+      }
+      if (newPass !== confirmPass) {
+        msgDiv.textContent = 'Konfirmasi password tidak cocok.';
+        msgDiv.className = 'error';
+        msgDiv.classList.remove('hidden');
+        return;
+      }
+      const user = getUser();
+      user.password = newPass;
+      saveUser(user);
+      msgDiv.textContent = 'Password berhasil diubah!';
+      msgDiv.className = 'success';
+      msgDiv.classList.remove('hidden');
+      document.getElementById('profileNewPass').value = '';
+      document.getElementById('profileConfirmPass').value = '';
+    }
+
+    // ====== LOGOUT ======
+    function logout() {
+      // Tidak hapus data user, tetap simpan user terakhir (jika diubah)
+      showLogin();
+    }
+
+    // ====== HELPER ======
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // ====== INISIALISASI ======
+    // Pastikan user default ada
+    if (!localStorage.getItem('toko_app_user')) {
+      localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+    }
+    // Tampilkan login saat pertama kali
+    showLogin();
+  </script>
 </body>
 </html>
