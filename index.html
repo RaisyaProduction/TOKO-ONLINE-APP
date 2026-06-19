@@ -25,7 +25,7 @@
     .sidebar nav a.active, .sidebar nav a:hover { background: #eff6ff; color: #1a56db; }
     .content { flex: 1; padding: 40px; background: #f9fafb; }
     .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
     .btn-sm { padding: 6px 15px; font-size: 14px; width: auto; display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
     .btn-success { background: #059669; color: white; }
     .btn-success:hover { background: #047857; }
@@ -35,11 +35,19 @@
     .btn-warning:hover { background: #b45309; }
     .btn-gray { background: #6b7280; color: white; }
     .btn-gray:hover { background: #4b5563; }
+    .btn-blue { background: #1a56db; color: white; }
+    .btn-blue:hover { background: #1e40af; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-active { background: #d1fae5; color: #065f46; }
+    .badge-inactive { background: #fee2e2; color: #991b1b; }
+    .badge-expired { background: #fef3c7; color: #92400e; }
     .profile-info p { margin: 8px 0; font-size: 15px; }
     .profile-info strong { display: inline-block; width: 120px; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; margin-top: 15px; }
     th, td { padding: 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
     th { background: #f8fafc; font-weight: 600; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; }
     @media (max-width: 768px) {
       .dashboard { flex-direction: column; }
       .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
@@ -63,7 +71,7 @@
     </p>
   </div>
 
-  <!-- ==================== LUPA PASSWORD (UNIVERSAL) ==================== -->
+  <!-- ==================== LUPA PASSWORD ==================== -->
   <div id="lupaPage" class="container hidden">
     <h1>🔑 Lupa Password</h1>
     <p>Masukkan username Anda, lalu verifikasi dengan email atau nomor HP terdaftar.</p>
@@ -87,7 +95,7 @@
     </div>
   </div>
 
-  <!-- ==================== RESET PASSWORD (SETELAH VERIFIKASI) ==================== -->
+  <!-- ==================== RESET PASSWORD ==================== -->
   <div id="resetPage" class="container hidden">
     <h1>🔒 Reset Password</h1>
     <div id="resetError" class="error hidden"></div>
@@ -124,11 +132,11 @@
         <h2>➕ Buat Toko Baru</h2>
         <input type="text" id="namaToko" placeholder="Nama Toko">
         <input type="text" id="pemilikToko" placeholder="Pemilik Toko">
-        <input type="text" id="noHpToko" placeholder="Nomor HP Toko">
+        <input type="text" id="noHpToko" placeholder="Nomor HP">
         <textarea id="alamatToko" placeholder="Alamat Toko" rows="2"></textarea>
-        <input type="email" id="emailToko" placeholder="Email Toko">
-        <input type="text" id="usernameToko" placeholder="Username Login Toko (tidak bisa diubah)">
-        <input type="password" id="passwordToko" placeholder="Password Sementara (default: user)" value="user">
+        <input type="email" id="emailToko" placeholder="Email">
+        <input type="text" id="usernameToko" placeholder="Username Login Toko (unik)">
+        <input type="password" id="passwordToko" placeholder="Password Sementara" value="user">
         <div style="display:flex; gap:10px;">
           <button onclick="simpanToko()" class="btn-sm btn-success">💾 Simpan</button>
           <button onclick="hideBuatTokoForm()" class="btn-sm btn-gray">Batal</button>
@@ -146,6 +154,26 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- ==================== MODAL AKTIVASI TOKO ==================== -->
+  <div id="modalAktivasi" class="modal hidden">
+    <div class="modal-content">
+      <h2>⚡ Aktivasi Toko</h2>
+      <p id="modalNamaToko"></p>
+      <div id="modalError" class="error hidden"></div>
+      <select id="pilihanAktivasi">
+        <option value="gratis">Uji Coba 3 Hari Gratis</option>
+        <option value="1bulan">Sewa 1 Bulan</option>
+        <option value="3bulan">Sewa 3 Bulan</option>
+        <option value="6bulan">Sewa 6 Bulan</option>
+        <option value="1tahun">Sewa 1 Tahun</option>
+      </select>
+      <div style="display:flex; gap:10px;">
+        <button onclick="aktivasiToko()" class="btn-sm btn-success">✅ Aktifkan</button>
+        <button onclick="tutupModal()" class="btn-sm btn-gray">Batal</button>
+      </div>
+    </div>
   </div>
 
   <!-- ==================== DASHBOARD TOKO ==================== -->
@@ -170,7 +198,6 @@
           <div class="card"><h3>Total Pesanan</h3><p id="totalPesanan" style="font-size:32px;font-weight:bold;">0</p></div>
         </div>
       </div>
-
       <div id="produkPage" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>📦 Produk</h2>
@@ -189,7 +216,6 @@
           </div>
         </div>
       </div>
-
       <div id="pesananPage" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h2>🧾 Pesanan</h2>
@@ -207,7 +233,6 @@
           </div>
         </div>
       </div>
-
       <div id="pengaturanPage" class="hidden">
         <h2>⚙️ Pengaturan Toko</h2>
         <div id="infoToko" class="card profile-info"></div>
@@ -241,56 +266,44 @@
       }
       return JSON.parse(sa);
     }
-
-    function saveSuperAdmin(user) {
-      localStorage.setItem('super_admin', JSON.stringify(user));
-    }
-
-    function getTokoList() {
-      return JSON.parse(localStorage.getItem('toko_list') || '[]');
-    }
-
-    function saveTokoList(list) {
-      localStorage.setItem('toko_list', JSON.stringify(list));
-    }
-
-    function getProdukToko(tokoId) {
-      return JSON.parse(localStorage.getItem('produk_' + tokoId) || '[]');
-    }
-
-    function saveProdukToko(tokoId, data) {
-      localStorage.setItem('produk_' + tokoId, JSON.stringify(data));
-    }
-
-    function getPesananToko(tokoId) {
-      return JSON.parse(localStorage.getItem('pesanan_' + tokoId) || '[]');
-    }
-
-    function savePesananToko(tokoId, data) {
-      localStorage.setItem('pesanan_' + tokoId, JSON.stringify(data));
-    }
+    function saveSuperAdmin(user) { localStorage.setItem('super_admin', JSON.stringify(user)); }
+    function getTokoList() { return JSON.parse(localStorage.getItem('toko_list') || '[]'); }
+    function saveTokoList(list) { localStorage.setItem('toko_list', JSON.stringify(list)); }
+    function getProdukToko(tokoId) { return JSON.parse(localStorage.getItem('produk_' + tokoId) || '[]'); }
+    function saveProdukToko(tokoId, data) { localStorage.setItem('produk_' + tokoId, JSON.stringify(data)); }
+    function getPesananToko(tokoId) { return JSON.parse(localStorage.getItem('pesanan_' + tokoId) || '[]'); }
+    function savePesananToko(tokoId, data) { localStorage.setItem('pesanan_' + tokoId, JSON.stringify(data)); }
 
     // ==================== SESSION ====================
     let currentSession = null;
-
-    function setSession(session) {
-      currentSession = session;
-      sessionStorage.setItem('toko_app_session', JSON.stringify(session));
-    }
-
-    function clearSession() {
-      currentSession = null;
-      sessionStorage.removeItem('toko_app_session');
-    }
-
+    function setSession(s) { currentSession = s; sessionStorage.setItem('toko_app_session', JSON.stringify(s)); }
+    function clearSession() { currentSession = null; sessionStorage.removeItem('toko_app_session'); }
     function getSession() {
       if (currentSession) return currentSession;
       const s = sessionStorage.getItem('toko_app_session');
-      if (s) {
-        currentSession = JSON.parse(s);
-        return currentSession;
-      }
+      if (s) { currentSession = JSON.parse(s); return currentSession; }
       return null;
+    }
+
+    // ==================== CEK STATUS AKTIVASI ====================
+    function isTokoActive(toko) {
+      if (!toko.aktivasi) return false;
+      if (toko.aktivasi.status === 'nonaktif') return false;
+      const now = Date.now();
+      return toko.aktivasi.berakhir > now;
+    }
+
+    function formatDate(ts) {
+      if (!ts) return '-';
+      const d = new Date(ts);
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function statusBadge(toko) {
+      if (!toko.aktivasi) return '<span class="badge badge-inactive">Belum Diaktivasi</span>';
+      if (toko.aktivasi.status === 'nonaktif') return '<span class="badge badge-inactive">Nonaktif</span>';
+      if (Date.now() > toko.aktivasi.berakhir) return '<span class="badge badge-expired">Kadaluarsa</span>';
+      return '<span class="badge badge-active">Aktif</span>';
     }
 
     // ==================== INISIALISASI TOKO DEMO ====================
@@ -305,7 +318,13 @@
           alamat: "Jl. Contoh No. 123",
           email: "demo@toko.com",
           username: "user",
-          password: "user"
+          password: "user",
+          aktivasi: {
+            status: 'aktif',
+            tipe: 'gratis',
+            mulai: Date.now(),
+            berakhir: Date.now() + (3 * 24 * 60 * 60 * 1000) // 3 hari
+          }
         };
         saveTokoList([demoToko]);
       }
@@ -319,199 +338,89 @@
       document.getElementById('resetPage').classList.add('hidden');
       document.getElementById('superAdminDashboard').classList.add('hidden');
       document.getElementById('tokoDashboard').classList.add('hidden');
+      document.getElementById('modalAktivasi').classList.add('hidden');
     }
+    function showLogin() { hideAll(); document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('loginUsername').value=''; document.getElementById('loginPassword').value=''; document.getElementById('loginError').classList.add('hidden'); }
 
-    function showLogin() {
-      hideAll();
-      document.getElementById('loginPage').classList.remove('hidden');
-      document.getElementById('loginUsername').value = '';
-      document.getElementById('loginPassword').value = '';
-      document.getElementById('loginError').classList.add('hidden');
-    }
-
-    // ==================== LUPA PASSWORD UNIVERSAL ====================
-    function showLupaPassword() {
-      hideAll();
-      document.getElementById('lupaPage').classList.remove('hidden');
-      document.getElementById('lupaUsername').value = '';
-      document.getElementById('lupaError').classList.add('hidden');
-    }
-
+    // ==================== LUPA PASSWORD ====================
+    function showLupaPassword() { hideAll(); document.getElementById('lupaPage').classList.remove('hidden'); document.getElementById('lupaUsername').value=''; document.getElementById('lupaError').classList.add('hidden'); }
     function cekUsernameLupa() {
       const username = document.getElementById('lupaUsername').value.trim();
-      if (!username) {
-        document.getElementById('lupaError').textContent = 'Masukkan username.';
-        document.getElementById('lupaError').classList.remove('hidden');
-        return;
-      }
-      // Cek super admin
+      if (!username) { document.getElementById('lupaError').textContent='Masukkan username.'; document.getElementById('lupaError').classList.remove('hidden'); return; }
       const sa = getSuperAdmin();
       if (username === sa.username) {
-        // lanjut ke verifikasi super admin
-        document.getElementById('verifikasiInfo').innerHTML = `
-          <p><strong>Nama Aplikasi:</strong> ${sa.nama}</p>
-          <p>Silakan masukkan email atau nomor HP terdaftar untuk verifikasi.</p>
-        `;
-        document.getElementById('verifikasiPage').dataset.role = 'super';
-        document.getElementById('verifikasiPage').dataset.username = sa.username;
-        hideAll();
-        document.getElementById('verifikasiPage').classList.remove('hidden');
-        document.getElementById('verifikasiInput').value = '';
-        document.getElementById('verifikasiError').classList.add('hidden');
+        document.getElementById('verifikasiInfo').innerHTML = `<p><strong>Nama Aplikasi:</strong> ${sa.nama}</p><p>Silakan masukkan email atau nomor HP terdaftar.</p>`;
+        document.getElementById('verifikasiPage').dataset.role='super'; document.getElementById('verifikasiPage').dataset.username=sa.username;
+        hideAll(); document.getElementById('verifikasiPage').classList.remove('hidden'); document.getElementById('verifikasiInput').value=''; document.getElementById('verifikasiError').classList.add('hidden');
         return;
       }
-      // Cek toko
-      const tokoList = getTokoList();
-      const toko = tokoList.find(t => t.username === username);
+      const toko = getTokoList().find(t=>t.username===username);
       if (toko) {
-        document.getElementById('verifikasiInfo').innerHTML = `
-          <p><strong>Nama Toko:</strong> ${toko.namaToko}</p>
-          <p>Silakan masukkan email atau nomor HP terdaftar untuk verifikasi.</p>
-        `;
-        document.getElementById('verifikasiPage').dataset.role = 'toko';
-        document.getElementById('verifikasiPage').dataset.username = toko.username;
-        hideAll();
-        document.getElementById('verifikasiPage').classList.remove('hidden');
-        document.getElementById('verifikasiInput').value = '';
-        document.getElementById('verifikasiError').classList.add('hidden');
+        document.getElementById('verifikasiInfo').innerHTML = `<p><strong>Nama Toko:</strong> ${toko.namaToko}</p><p>Silakan masukkan email atau nomor HP terdaftar.</p>`;
+        document.getElementById('verifikasiPage').dataset.role='toko'; document.getElementById('verifikasiPage').dataset.username=toko.username;
+        hideAll(); document.getElementById('verifikasiPage').classList.remove('hidden'); document.getElementById('verifikasiInput').value=''; document.getElementById('verifikasiError').classList.add('hidden');
         return;
       }
-      document.getElementById('lupaError').textContent = 'Username tidak ditemukan.';
-      document.getElementById('lupaError').classList.remove('hidden');
+      document.getElementById('lupaError').textContent='Username tidak ditemukan.'; document.getElementById('lupaError').classList.remove('hidden');
     }
-
     function verifikasiLupa() {
       const role = document.getElementById('verifikasiPage').dataset.role;
       const username = document.getElementById('verifikasiPage').dataset.username;
       const input = document.getElementById('verifikasiInput').value.trim();
-
-      if (role === 'super') {
+      if (role==='super') {
         const sa = getSuperAdmin();
-        if (input === sa.email || input === sa.hp) {
-          // lanjut ke reset password super admin
-          document.getElementById('resetPage').dataset.role = 'super';
-          document.getElementById('resetPage').dataset.username = sa.username;
-          hideAll();
-          document.getElementById('resetPage').classList.remove('hidden');
-          document.getElementById('newPassword').value = '';
-          document.getElementById('confirmNewPassword').value = '';
-          document.getElementById('resetError').classList.add('hidden');
-          document.getElementById('resetSuccess').classList.add('hidden');
-        } else {
-          document.getElementById('verifikasiError').textContent = 'Email / Nomor HP tidak cocok.';
-          document.getElementById('verifikasiError').classList.remove('hidden');
-        }
-      } else if (role === 'toko') {
-        const tokoList = getTokoList();
-        const toko = tokoList.find(t => t.username === username);
-        if (toko && (input === toko.email || input === toko.noHp)) {
-          // lanjut ke reset password toko
-          document.getElementById('resetPage').dataset.role = 'toko';
-          document.getElementById('resetPage').dataset.tokoId = toko.id;
-          hideAll();
-          document.getElementById('resetPage').classList.remove('hidden');
-          document.getElementById('newPassword').value = '';
-          document.getElementById('confirmNewPassword').value = '';
-          document.getElementById('resetError').classList.add('hidden');
-          document.getElementById('resetSuccess').classList.add('hidden');
-        } else {
-          document.getElementById('verifikasiError').textContent = 'Email / Nomor HP tidak cocok.';
-          document.getElementById('verifikasiError').classList.remove('hidden');
-        }
+        if (input===sa.email || input===sa.hp) { document.getElementById('resetPage').dataset.role='super'; document.getElementById('resetPage').dataset.username=sa.username; hideAll(); document.getElementById('resetPage').classList.remove('hidden'); document.getElementById('newPassword').value=''; document.getElementById('confirmNewPassword').value=''; document.getElementById('resetError').classList.add('hidden'); document.getElementById('resetSuccess').classList.add('hidden'); }
+        else { document.getElementById('verifikasiError').textContent='Email / Nomor HP tidak cocok.'; document.getElementById('verifikasiError').classList.remove('hidden'); }
+      } else {
+        const toko = getTokoList().find(t=>t.username===username);
+        if (toko && (input===toko.email || input===toko.noHp)) { document.getElementById('resetPage').dataset.role='toko'; document.getElementById('resetPage').dataset.tokoId=toko.id; hideAll(); document.getElementById('resetPage').classList.remove('hidden'); document.getElementById('newPassword').value=''; document.getElementById('confirmNewPassword').value=''; document.getElementById('resetError').classList.add('hidden'); document.getElementById('resetSuccess').classList.add('hidden'); }
+        else { document.getElementById('verifikasiError').textContent='Email / Nomor HP tidak cocok.'; document.getElementById('verifikasiError').classList.remove('hidden'); }
       }
     }
-
     function resetPassword() {
       const role = document.getElementById('resetPage').dataset.role;
       const newP = document.getElementById('newPassword').value.trim();
       const confirmP = document.getElementById('confirmNewPassword').value.trim();
-      const errDiv = document.getElementById('resetError');
-      const succDiv = document.getElementById('resetSuccess');
-      errDiv.classList.add('hidden');
-      succDiv.classList.add('hidden');
-
-      if (newP.length < 4) {
-        errDiv.textContent = 'Password minimal 4 karakter.';
-        errDiv.classList.remove('hidden');
-        return;
-      }
-      if (newP !== confirmP) {
-        errDiv.textContent = 'Konfirmasi password tidak cocok.';
-        errDiv.classList.remove('hidden');
-        return;
-      }
-
-      if (role === 'super') {
-        const sa = getSuperAdmin();
-        sa.password = newP;
-        saveSuperAdmin(sa);
-      } else if (role === 'toko') {
-        const tokoId = document.getElementById('resetPage').dataset.tokoId;
-        let allToko = getTokoList();
-        allToko = allToko.map(t => t.id === tokoId ? { ...t, password: newP } : t);
-        saveTokoList(allToko);
-      }
-      succDiv.textContent = 'Password berhasil diubah! Silakan login ulang.';
-      succDiv.classList.remove('hidden');
-      setTimeout(showLogin, 2000);
+      const errDiv = document.getElementById('resetError'); const succDiv = document.getElementById('resetSuccess');
+      errDiv.classList.add('hidden'); succDiv.classList.add('hidden');
+      if (newP.length<4) { errDiv.textContent='Password minimal 4 karakter.'; errDiv.classList.remove('hidden'); return; }
+      if (newP!==confirmP) { errDiv.textContent='Konfirmasi password tidak cocok.'; errDiv.classList.remove('hidden'); return; }
+      if (role==='super') { const sa=getSuperAdmin(); sa.password=newP; saveSuperAdmin(sa); }
+      else { const tokoId=document.getElementById('resetPage').dataset.tokoId; let all=getTokoList(); all=all.map(t=>t.id===tokoId?{...t,password:newP}:t); saveTokoList(all); }
+      succDiv.textContent='Password berhasil diubah! Silakan login ulang.'; succDiv.classList.remove('hidden');
+      setTimeout(showLogin,2000);
     }
 
-    // ==================== LOGIN HANDLER ====================
+    // ==================== LOGIN ====================
     function handleLogin() {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
-
-      const superAdmin = getSuperAdmin();
-      if (username === superAdmin.username && password === superAdmin.password) {
-        setSession({ role: 'super' });
-        showSuperDashboard();
-        return;
-      }
-
-      const tokoList = getTokoList();
-      const toko = tokoList.find(t => t.username === username && t.password === password);
+      const sa = getSuperAdmin();
+      if (username===sa.username && password===sa.password) { setSession({role:'super'}); showSuperDashboard(); return; }
+      const toko = getTokoList().find(t=>t.username===username && t.password===password);
       if (toko) {
-        setSession({ role: 'toko', tokoId: toko.id });
-        showTokoDashboard();
-        return;
+        if (!isTokoActive(toko)) { document.getElementById('loginError').textContent='Akun toko belum diaktivasi atau masa sewa habis.'; document.getElementById('loginError').classList.remove('hidden'); return; }
+        setSession({role:'toko', tokoId:toko.id}); showTokoDashboard(); return;
       }
-
-      document.getElementById('loginError').textContent = 'Username atau password salah!';
-      document.getElementById('loginError').classList.remove('hidden');
+      document.getElementById('loginError').textContent='Username atau password salah!'; document.getElementById('loginError').classList.remove('hidden');
     }
 
     // ==================== SUPER ADMIN DASHBOARD ====================
-    function showSuperDashboard() {
-      hideAll();
-      document.getElementById('superAdminDashboard').classList.remove('hidden');
-      navigateSuper('toko');
-    }
-
+    function showSuperDashboard() { hideAll(); document.getElementById('superAdminDashboard').classList.remove('hidden'); navigateSuper('toko'); }
     function navigateSuper(page) {
-      document.querySelectorAll('#superAdminDashboard .sidebar nav a').forEach(a => {
-        a.classList.toggle('active', a.dataset.page === page);
-      });
-      document.getElementById('superTokoPage').classList.add('hidden');
-      document.getElementById('buatTokoPage').classList.add('hidden');
-      document.getElementById('superProfilePage').classList.add('hidden');
-
-      if (page === 'toko') {
-        document.getElementById('superTokoPage').classList.remove('hidden');
-        renderTokoList();
-      } else if (page === 'profile') {
-        document.getElementById('superProfilePage').classList.remove('hidden');
-        renderSuperProfile();
-      }
+      document.querySelectorAll('#superAdminDashboard .sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+      document.getElementById('superTokoPage').classList.add('hidden'); document.getElementById('buatTokoPage').classList.add('hidden'); document.getElementById('superProfilePage').classList.add('hidden');
+      if (page==='toko') { document.getElementById('superTokoPage').classList.remove('hidden'); renderTokoList(); }
+      else if (page==='profile') { document.getElementById('superProfilePage').classList.remove('hidden'); renderSuperProfile(); }
     }
-
     function renderTokoList() {
       const list = getTokoList();
       const container = document.getElementById('tokoList');
-      if (list.length === 0) {
-        container.innerHTML = '<p style="color:#6b7280;">Belum ada toko terdaftar.</p>';
-        return;
-      }
-      container.innerHTML = list.map(t => `
+      if (list.length===0) { container.innerHTML='<p style="color:#6b7280;">Belum ada toko terdaftar.</p>'; return; }
+      container.innerHTML = list.map(t=>{
+        const active = isTokoActive(t);
+        const badge = statusBadge(t);
+        return `
         <div class="card">
           <h3>${escapeHtml(t.namaToko)}</h3>
           <p>👤 ${escapeHtml(t.pemilik)}</p>
@@ -519,365 +428,209 @@
           <p>📍 ${escapeHtml(t.alamat)}</p>
           <p>✉️ ${escapeHtml(t.email)}</p>
           <p>🔑 Login: ${escapeHtml(t.username)}</p>
-          <button class="btn-sm btn-danger" style="margin-top:10px;" onclick="hapusToko('${t.id}')">🗑️ Hapus</button>
-        </div>
-      `).join('');
+          <div style="margin:10px 0;">${badge}</div>
+          ${t.aktivasi ? `<p style="font-size:13px;">Berlaku sampai: ${formatDate(t.aktivasi.berakhir)}</p>` : ''}
+          <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
+            <button class="btn-sm btn-blue" onclick="bukaModalAktivasi('${t.id}')">⚡ ${t.aktivasi && t.aktivasi.status!=='nonaktif' ? 'Perpanjang' : 'Aktivasi'}</button>
+            ${t.aktivasi && t.aktivasi.status==='aktif' ? `<button class="btn-sm btn-danger" onclick="nonaktifkanToko('${t.id}')">⛔ Nonaktifkan</button>` : ''}
+            <button class="btn-sm btn-gray" onclick="hapusToko('${t.id}')">🗑️ Hapus</button>
+          </div>
+        </div>`;
+      }).join('');
     }
-
     function showBuatTokoForm() {
-      document.getElementById('buatTokoPage').classList.remove('hidden');
-      document.getElementById('superTokoPage').classList.add('hidden');
-      document.getElementById('namaToko').value = '';
-      document.getElementById('pemilikToko').value = '';
-      document.getElementById('noHpToko').value = '';
-      document.getElementById('alamatToko').value = '';
-      document.getElementById('emailToko').value = '';
-      document.getElementById('usernameToko').value = '';
-      document.getElementById('passwordToko').value = 'user';
+      document.getElementById('buatTokoPage').classList.remove('hidden'); document.getElementById('superTokoPage').classList.add('hidden');
+      document.getElementById('namaToko').value=''; document.getElementById('pemilikToko').value=''; document.getElementById('noHpToko').value='';
+      document.getElementById('alamatToko').value=''; document.getElementById('emailToko').value=''; document.getElementById('usernameToko').value='';
+      document.getElementById('passwordToko').value='user';
     }
-
-    function hideBuatTokoForm() {
-      document.getElementById('buatTokoPage').classList.add('hidden');
-      document.getElementById('superTokoPage').classList.remove('hidden');
-    }
-
+    function hideBuatTokoForm() { document.getElementById('buatTokoPage').classList.add('hidden'); document.getElementById('superTokoPage').classList.remove('hidden'); }
     function simpanToko() {
-      const nama = document.getElementById('namaToko').value.trim();
-      const pemilik = document.getElementById('pemilikToko').value.trim();
-      const noHp = document.getElementById('noHpToko').value.trim();
-      const alamat = document.getElementById('alamatToko').value.trim();
-      const email = document.getElementById('emailToko').value.trim();
-      const username = document.getElementById('usernameToko').value.trim();
-      const password = document.getElementById('passwordToko').value.trim();
-
-      if (!nama || !pemilik || !noHp || !alamat || !email || !username || !password) {
-        alert('Lengkapi semua data.');
-        return;
-      }
+      const nama=document.getElementById('namaToko').value.trim(), pemilik=document.getElementById('pemilikToko').value.trim();
+      const noHp=document.getElementById('noHpToko').value.trim(), alamat=document.getElementById('alamatToko').value.trim();
+      const email=document.getElementById('emailToko').value.trim(), username=document.getElementById('usernameToko').value.trim();
+      const password=document.getElementById('passwordToko').value.trim();
+      if(!nama||!pemilik||!noHp||!alamat||!email||!username||!password) { alert('Lengkapi semua data.'); return; }
       const list = getTokoList();
-      list.push({
-        id: Date.now().toString(),
-        namaToko: nama,
-        pemilik: pemilik,
-        noHp: noHp,
-        alamat: alamat,
-        email: email,
-        username: username,
-        password: password
-      });
+      if (list.find(t=>t.username===username)) { alert('Username sudah digunakan, pilih yang lain.'); return; }
+      list.push({ id: Date.now().toString(), namaToko:nama, pemilik, noHp, alamat, email, username, password, aktivasi: null });
       saveTokoList(list);
       hideBuatTokoForm();
       renderTokoList();
     }
-
     function hapusToko(id) {
-      if (!confirm('Hapus toko ini? Semua data produk & pesanan akan hilang.')) return;
-      const list = getTokoList().filter(t => t.id !== id);
-      saveTokoList(list);
-      localStorage.removeItem('produk_' + id);
-      localStorage.removeItem('pesanan_' + id);
+      if (!confirm('Hapus toko ini? Semua data akan hilang.')) return;
+      saveTokoList(getTokoList().filter(t=>t.id!==id));
+      localStorage.removeItem('produk_'+id); localStorage.removeItem('pesanan_'+id);
       renderTokoList();
+    }
+
+    // Aktivasi
+    let currentAktivasiTokoId = null;
+    function bukaModalAktivasi(id) {
+      currentAktivasiTokoId = id;
+      const toko = getTokoList().find(t=>t.id===id);
+      if (!toko) return;
+      document.getElementById('modalNamaToko').textContent = 'Toko: ' + toko.namaToko;
+      document.getElementById('pilihanAktivasi').value = 'gratis';
+      document.getElementById('modalError').classList.add('hidden');
+      document.getElementById('modalAktivasi').classList.remove('hidden');
+    }
+    function tutupModal() { document.getElementById('modalAktivasi').classList.add('hidden'); currentAktivasiTokoId=null; }
+    function aktivasiToko() {
+      const tipe = document.getElementById('pilihanAktivasi').value;
+      const now = Date.now();
+      let durasi = 0;
+      switch(tipe) {
+        case 'gratis': durasi = 3 * 24 * 60 * 60 * 1000; break;
+        case '1bulan': durasi = 30 * 24 * 60 * 60 * 1000; break;
+        case '3bulan': durasi = 90 * 24 * 60 * 60 * 1000; break;
+        case '6bulan': durasi = 180 * 24 * 60 * 60 * 1000; break;
+        case '1tahun': durasi = 365 * 24 * 60 * 60 * 1000; break;
+      }
+      const list = getTokoList();
+      const idx = list.findIndex(t=>t.id===currentAktivasiTokoId);
+      if (idx===-1) return;
+      // Jika sudah ada aktivasi dan masih aktif, perpanjang dari tanggal berakhir; jika tidak, mulai sekarang
+      const existing = list[idx].aktivasi;
+      const mulai = (existing && existing.status==='aktif' && existing.berakhir > now) ? existing.berakhir : now;
+      list[idx].aktivasi = { status:'aktif', tipe, mulai, berakhir: mulai + durasi };
+      saveTokoList(list);
+      tutupModal();
+      renderTokoList();
+    }
+    function nonaktifkanToko(id) {
+      if (!confirm('Nonaktifkan toko ini? Pemilik tidak bisa login.')) return;
+      const list = getTokoList();
+      const idx = list.findIndex(t=>t.id===id);
+      if (idx!==-1 && list[idx].aktivasi) {
+        list[idx].aktivasi.status = 'nonaktif';
+        saveTokoList(list);
+        renderTokoList();
+      }
     }
 
     function renderSuperProfile() {
       const sa = getSuperAdmin();
-      document.getElementById('superProfileInfo').innerHTML = `
-        <p><strong>Nama Aplikasi:</strong> ${sa.nama}</p>
-        <p><strong>HP:</strong> ${sa.hp}</p>
-        <p><strong>Email:</strong> ${sa.email}</p>
-        <p><strong>Username:</strong> ${sa.username}</p>
-      `;
-      document.getElementById('superNewPass').value = '';
-      document.getElementById('superConfirmPass').value = '';
-      document.getElementById('superProfileMsg').classList.add('hidden');
+      document.getElementById('superProfileInfo').innerHTML = `<p><strong>Nama Aplikasi:</strong> ${sa.nama}</p><p><strong>HP:</strong> ${sa.hp}</p><p><strong>Email:</strong> ${sa.email}</p><p><strong>Username:</strong> ${sa.username}</p>`;
+      document.getElementById('superNewPass').value=''; document.getElementById('superConfirmPass').value=''; document.getElementById('superProfileMsg').classList.add('hidden');
     }
-
     function gantiPasswordSuper() {
-      const newP = document.getElementById('superNewPass').value.trim();
-      const confirmP = document.getElementById('superConfirmPass').value.trim();
-      const msg = document.getElementById('superProfileMsg');
-      msg.classList.add('hidden');
-      if (newP.length < 4) {
-        msg.textContent = 'Password minimal 4 karakter.';
-        msg.className = 'error';
-        msg.classList.remove('hidden');
-        return;
-      }
-      if (newP !== confirmP) {
-        msg.textContent = 'Konfirmasi password tidak cocok.';
-        msg.className = 'error';
-        msg.classList.remove('hidden');
-        return;
-      }
-      const sa = getSuperAdmin();
-      sa.password = newP;
-      saveSuperAdmin(sa);
-      msg.textContent = 'Password berhasil diubah!';
-      msg.className = 'success';
-      msg.classList.remove('hidden');
+      const newP=document.getElementById('superNewPass').value.trim(), confirmP=document.getElementById('superConfirmPass').value.trim();
+      const msg=document.getElementById('superProfileMsg'); msg.classList.add('hidden');
+      if (newP.length<4) { msg.textContent='Password minimal 4 karakter.'; msg.className='error'; msg.classList.remove('hidden'); return; }
+      if (newP!==confirmP) { msg.textContent='Konfirmasi password tidak cocok.'; msg.className='error'; msg.classList.remove('hidden'); return; }
+      const sa=getSuperAdmin(); sa.password=newP; saveSuperAdmin(sa);
+      msg.textContent='Password berhasil diubah!'; msg.className='success'; msg.classList.remove('hidden');
     }
 
     // ==================== TOKO DASHBOARD ====================
     function showTokoDashboard() {
-      hideAll();
-      document.getElementById('tokoDashboard').classList.remove('hidden');
+      hideAll(); document.getElementById('tokoDashboard').classList.remove('hidden');
       const session = getSession();
-      const toko = getTokoList().find(t => t.id === session.tokoId);
-      if (!toko) {
-        logout();
-        return;
-      }
+      const toko = getTokoList().find(t=>t.id===session.tokoId);
+      if (!toko || !isTokoActive(toko)) { logout(); return; }
       document.getElementById('namaTokoSidebar').textContent = '🏬 ' + toko.namaToko;
       navigateToko('dasbor');
     }
-
     function navigateToko(page) {
-      document.querySelectorAll('#tokoDashboard .sidebar nav a').forEach(a => {
-        a.classList.toggle('active', a.dataset.page === page);
-      });
-      document.getElementById('dasborPage').classList.add('hidden');
-      document.getElementById('produkPage').classList.add('hidden');
-      document.getElementById('pesananPage').classList.add('hidden');
-      document.getElementById('pengaturanPage').classList.add('hidden');
-
-      const session = getSession();
-      if (!session) return;
-
-      if (page === 'dasbor') {
-        document.getElementById('dasborPage').classList.remove('hidden');
-        const produk = getProdukToko(session.tokoId);
-        const pesanan = getPesananToko(session.tokoId);
-        document.getElementById('totalProduk').textContent = produk.length;
-        document.getElementById('totalPesanan').textContent = pesanan.length;
-      } else if (page === 'produk') {
-        document.getElementById('produkPage').classList.remove('hidden');
-        renderProduk();
-      } else if (page === 'pesanan') {
-        document.getElementById('pesananPage').classList.remove('hidden');
-        renderPesanan();
-      } else if (page === 'pengaturan') {
-        document.getElementById('pengaturanPage').classList.remove('hidden');
-        renderPengaturanToko();
-      }
+      document.querySelectorAll('#tokoDashboard .sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+      document.getElementById('dasborPage').classList.add('hidden'); document.getElementById('produkPage').classList.add('hidden');
+      document.getElementById('pesananPage').classList.add('hidden'); document.getElementById('pengaturanPage').classList.add('hidden');
+      const session = getSession(); if (!session) return;
+      if (page==='dasbor') { document.getElementById('dasborPage').classList.remove('hidden'); const p=getProdukToko(session.tokoId); const ps=getPesananToko(session.tokoId); document.getElementById('totalProduk').textContent=p.length; document.getElementById('totalPesanan').textContent=ps.length; }
+      else if (page==='produk') { document.getElementById('produkPage').classList.remove('hidden'); renderProduk(); }
+      else if (page==='pesanan') { document.getElementById('pesananPage').classList.remove('hidden'); renderPesanan(); }
+      else if (page==='pengaturan') { document.getElementById('pengaturanPage').classList.remove('hidden'); renderPengaturanToko(); }
     }
 
-    // Produk
     function renderProduk() {
-      const session = getSession();
-      const produk = getProdukToko(session.tokoId);
-      const container = document.getElementById('produkList');
-      if (produk.length === 0) {
-        container.innerHTML = '<p style="color:#6b7280;">Belum ada produk.</p>';
-        return;
-      }
-      container.innerHTML = `
-        <table>
-          <thead><tr><th>Nama</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
-          <tbody>${produk.map(p => `
-            <tr>
-              <td>${escapeHtml(p.nama)}</td>
-              <td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td>
-              <td>${p.stok}</td>
-              <td>
-                <button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button>
-                <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button>
-              </td>
-            </tr>`).join('')}</tbody>
-        </table>
-      `;
+      const session=getSession(); const produk=getProdukToko(session.tokoId);
+      const container=document.getElementById('produkList');
+      if (produk.length===0) { container.innerHTML='<p>Belum ada produk.</p>'; return; }
+      container.innerHTML=`<table><thead><tr><th>Nama</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead><tbody>${produk.map(p=>`<tr><td>${escapeHtml(p.nama)}</td><td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td><td>${p.stok}</td><td><button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button> <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`;
     }
-
     function showFormProduk() {
-      document.getElementById('formProduk').classList.remove('hidden');
-      document.getElementById('editProdukId').value = '';
-      document.getElementById('judulFormProduk').textContent = 'Tambah Produk';
-      document.getElementById('namaProduk').value = '';
-      document.getElementById('hargaProduk').value = '';
-      document.getElementById('stokProduk').value = '';
+      document.getElementById('formProduk').classList.remove('hidden'); document.getElementById('editProdukId').value='';
+      document.getElementById('judulFormProduk').textContent='Tambah Produk'; document.getElementById('namaProduk').value='';
+      document.getElementById('hargaProduk').value=''; document.getElementById('stokProduk').value='';
     }
-
     function editProduk(id) {
-      const session = getSession();
-      const p = getProdukToko(session.tokoId).find(p => p.id === id);
+      const session=getSession(); const p=getProdukToko(session.tokoId).find(p=>p.id===id);
       if (!p) return;
-      document.getElementById('formProduk').classList.remove('hidden');
-      document.getElementById('editProdukId').value = p.id;
-      document.getElementById('judulFormProduk').textContent = 'Edit Produk';
-      document.getElementById('namaProduk').value = p.nama;
-      document.getElementById('hargaProduk').value = p.harga;
-      document.getElementById('stokProduk').value = p.stok;
+      document.getElementById('formProduk').classList.remove('hidden'); document.getElementById('editProdukId').value=p.id;
+      document.getElementById('judulFormProduk').textContent='Edit Produk'; document.getElementById('namaProduk').value=p.nama;
+      document.getElementById('hargaProduk').value=p.harga; document.getElementById('stokProduk').value=p.stok;
     }
-
-    function hideFormProduk() {
-      document.getElementById('formProduk').classList.add('hidden');
-    }
-
+    function hideFormProduk() { document.getElementById('formProduk').classList.add('hidden'); }
     function simpanProduk() {
-      const session = getSession();
-      const id = document.getElementById('editProdukId').value;
-      const nama = document.getElementById('namaProduk').value.trim();
-      const harga = document.getElementById('hargaProduk').value.trim();
-      const stok = document.getElementById('stokProduk').value.trim();
-      if (!nama || !harga || !stok) { alert('Lengkapi data.'); return; }
-      let list = getProdukToko(session.tokoId);
-      if (id) {
-        list = list.map(p => p.id === id ? { ...p, nama, harga: Number(harga), stok: Number(stok) } : p);
-      } else {
-        list.push({ id: Date.now().toString(), nama, harga: Number(harga), stok: Number(stok) });
-      }
-      saveProdukToko(session.tokoId, list);
-      hideFormProduk();
-      renderProduk();
+      const session=getSession(); const id=document.getElementById('editProdukId').value;
+      const nama=document.getElementById('namaProduk').value.trim(), harga=document.getElementById('hargaProduk').value.trim(), stok=document.getElementById('stokProduk').value.trim();
+      if(!nama||!harga||!stok) { alert('Lengkapi data.'); return; }
+      let list=getProdukToko(session.tokoId);
+      if (id) list=list.map(p=>p.id===id?{...p,nama,harga:Number(harga),stok:Number(stok)}:p);
+      else list.push({id:Date.now().toString(),nama,harga:Number(harga),stok:Number(stok)});
+      saveProdukToko(session.tokoId,list); hideFormProduk(); renderProduk();
     }
+    function hapusProduk(id) { if(!confirm('Hapus produk?')) return; const session=getSession(); saveProdukToko(session.tokoId,getProdukToko(session.tokoId).filter(p=>p.id!==id)); renderProduk(); }
 
-    function hapusProduk(id) {
-      if (!confirm('Hapus produk?')) return;
-      const session = getSession();
-      saveProdukToko(session.tokoId, getProdukToko(session.tokoId).filter(p => p.id !== id));
-      renderProduk();
-    }
-
-    // Pesanan
     function renderPesanan() {
-      const session = getSession();
-      const pesanan = getPesananToko(session.tokoId);
-      const container = document.getElementById('pesananList');
-      if (pesanan.length === 0) {
-        container.innerHTML = '<p style="color:#6b7280;">Belum ada pesanan.</p>';
-        return;
-      }
-      container.innerHTML = `
-        <table>
-          <thead><tr><th>Pelanggan</th><th>Produk</th><th>Jumlah</th><th>Total</th><th>Aksi</th></tr></thead>
-          <tbody>${pesanan.map(ps => `
-            <tr>
-              <td>${escapeHtml(ps.pelanggan)}</td>
-              <td>${escapeHtml(ps.namaProduk)}</td>
-              <td>${ps.jumlah}</td>
-              <td>Rp ${Number(ps.total).toLocaleString('id-ID')}</td>
-              <td><button class="btn-sm btn-danger" onclick="hapusPesanan('${ps.id}')">🗑️</button></td>
-            </tr>`).join('')}</tbody>
-        </table>
-      `;
+      const session=getSession(); const pesanan=getPesananToko(session.tokoId);
+      const container=document.getElementById('pesananList');
+      if (pesanan.length===0) { container.innerHTML='<p>Belum ada pesanan.</p>'; return; }
+      container.innerHTML=`<table><thead><tr><th>Pelanggan</th><th>Produk</th><th>Jumlah</th><th>Total</th><th>Aksi</th></tr></thead><tbody>${pesanan.map(ps=>`<tr><td>${escapeHtml(ps.pelanggan)}</td><td>${escapeHtml(ps.namaProduk)}</td><td>${ps.jumlah}</td><td>Rp ${Number(ps.total).toLocaleString('id-ID')}</td><td><button class="btn-sm btn-danger" onclick="hapusPesanan('${ps.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`;
     }
-
     function showFormPesanan() {
-      document.getElementById('formPesanan').classList.remove('hidden');
-      document.getElementById('pelanggan').value = '';
-      document.getElementById('jumlah').value = '';
-      const session = getSession();
-      const produk = getProdukToko(session.tokoId);
-      const select = document.getElementById('pilihProduk');
-      select.innerHTML = produk.map(p => `<option value="${p.id}">${p.nama} - Rp ${p.harga} (Stok: ${p.stok})</option>`).join('');
-      if (produk.length === 0) select.innerHTML = '<option value="">-- Tidak ada produk --</option>';
+      document.getElementById('formPesanan').classList.remove('hidden'); document.getElementById('pelanggan').value='';
+      document.getElementById('jumlah').value=''; const session=getSession(); const produk=getProdukToko(session.tokoId);
+      const select=document.getElementById('pilihProduk');
+      select.innerHTML=produk.map(p=>`<option value="${p.id}">${p.nama} - Rp ${p.harga} (Stok: ${p.stok})</option>`).join('');
+      if (produk.length===0) select.innerHTML='<option value="">-- Tidak ada produk --</option>';
     }
-
-    function hideFormPesanan() {
-      document.getElementById('formPesanan').classList.add('hidden');
-    }
-
+    function hideFormPesanan() { document.getElementById('formPesanan').classList.add('hidden'); }
     function simpanPesanan() {
-      const session = getSession();
-      const pelanggan = document.getElementById('pelanggan').value.trim();
-      const produkId = document.getElementById('pilihProduk').value;
-      const jumlah = parseInt(document.getElementById('jumlah').value);
-      if (!pelanggan || !produkId || !jumlah || jumlah < 1) { alert('Lengkapi data.'); return; }
-      const produk = getProdukToko(session.tokoId).find(p => p.id === produkId);
-      if (!produk) return;
-      const total = produk.harga * jumlah;
-      const list = getPesananToko(session.tokoId);
-      list.push({ id: Date.now().toString(), pelanggan, produkId: produk.id, namaProduk: produk.nama, jumlah, total });
-      savePesananToko(session.tokoId, list);
-      hideFormPesanan();
-      renderPesanan();
+      const session=getSession(); const pelanggan=document.getElementById('pelanggan').value.trim();
+      const produkId=document.getElementById('pilihProduk').value; const jumlah=parseInt(document.getElementById('jumlah').value);
+      if(!pelanggan||!produkId||!jumlah||jumlah<1) { alert('Lengkapi data.'); return; }
+      const produk=getProdukToko(session.tokoId).find(p=>p.id===produkId); if(!produk) return;
+      const total=produk.harga*jumlah; const list=getPesananToko(session.tokoId);
+      list.push({id:Date.now().toString(),pelanggan,produkId:produk.id,namaProduk:produk.nama,jumlah,total});
+      savePesananToko(session.tokoId,list); hideFormPesanan(); renderPesanan();
     }
+    function hapusPesanan(id) { if(!confirm('Hapus pesanan?')) return; const session=getSession(); savePesananToko(session.tokoId,getPesananToko(session.tokoId).filter(p=>p.id!==id)); renderPesanan(); }
 
-    function hapusPesanan(id) {
-      if (!confirm('Hapus pesanan?')) return;
-      const session = getSession();
-      savePesananToko(session.tokoId, getPesananToko(session.tokoId).filter(p => p.id !== id));
-      renderPesanan();
-    }
-
-    // Pengaturan Toko
     function renderPengaturanToko() {
-      const session = getSession();
-      const toko = getTokoList().find(t => t.id === session.tokoId);
+      const session=getSession(); const toko=getTokoList().find(t=>t.id===session.tokoId);
       if (!toko) return;
-      document.getElementById('infoToko').innerHTML = `
-        <p><strong>Nama Toko:</strong> ${escapeHtml(toko.namaToko)}</p>
-        <p><strong>Pemilik:</strong> ${escapeHtml(toko.pemilik)}</p>
-        <p><strong>No HP:</strong> ${escapeHtml(toko.noHp)}</p>
-        <p><strong>Alamat:</strong> ${escapeHtml(toko.alamat)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(toko.email)}</p>
-        <p><strong>Username:</strong> ${escapeHtml(toko.username)}</p>
-      `;
-      document.getElementById('tokoNewPass').value = '';
-      document.getElementById('tokoConfirmPass').value = '';
-      document.getElementById('tokoProfileMsg').classList.add('hidden');
+      document.getElementById('infoToko').innerHTML=`<p><strong>Nama Toko:</strong> ${escapeHtml(toko.namaToko)}</p><p><strong>Pemilik:</strong> ${escapeHtml(toko.pemilik)}</p><p><strong>No HP:</strong> ${escapeHtml(toko.noHp)}</p><p><strong>Alamat:</strong> ${escapeHtml(toko.alamat)}</p><p><strong>Email:</strong> ${escapeHtml(toko.email)}</p><p><strong>Username:</strong> ${escapeHtml(toko.username)}</p>`;
+      document.getElementById('tokoNewPass').value=''; document.getElementById('tokoConfirmPass').value=''; document.getElementById('tokoProfileMsg').classList.add('hidden');
     }
-
     function gantiPasswordToko() {
-      const newP = document.getElementById('tokoNewPass').value.trim();
-      const confirmP = document.getElementById('tokoConfirmPass').value.trim();
-      const msg = document.getElementById('tokoProfileMsg');
-      msg.classList.add('hidden');
-      if (newP.length < 4) {
-        msg.textContent = 'Password minimal 4 karakter.';
-        msg.className = 'error';
-        msg.classList.remove('hidden');
-        return;
-      }
-      if (newP !== confirmP) {
-        msg.textContent = 'Konfirmasi password tidak cocok.';
-        msg.className = 'error';
-        msg.classList.remove('hidden');
-        return;
-      }
-      const session = getSession();
-      let allToko = getTokoList();
-      allToko = allToko.map(t => {
-        if (t.id === session.tokoId) return { ...t, password: newP };
-        return t;
-      });
-      saveTokoList(allToko);
-      msg.textContent = 'Password berhasil diubah!';
-      msg.className = 'success';
-      msg.classList.remove('hidden');
+      const newP=document.getElementById('tokoNewPass').value.trim(), confirmP=document.getElementById('tokoConfirmPass').value.trim();
+      const msg=document.getElementById('tokoProfileMsg'); msg.classList.add('hidden');
+      if (newP.length<4) { msg.textContent='Password minimal 4 karakter.'; msg.className='error'; msg.classList.remove('hidden'); return; }
+      if (newP!==confirmP) { msg.textContent='Konfirmasi password tidak cocok.'; msg.className='error'; msg.classList.remove('hidden'); return; }
+      const session=getSession(); let all=getTokoList(); all=all.map(t=>t.id===session.tokoId?{...t,password:newP}:t); saveTokoList(all);
+      msg.textContent='Password berhasil diubah!'; msg.className='success'; msg.classList.remove('hidden');
     }
 
-    // ==================== LOGOUT ====================
-    function logout() {
-      clearSession();
-      showLogin();
-    }
+    function logout() { clearSession(); showLogin(); }
+    function escapeHtml(text) { const div=document.createElement('div'); div.textContent=text; return div.innerHTML; }
 
-    function escapeHtml(text) {
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    // ==================== INISIALISASI ====================
-    function init() {
-      if (!localStorage.getItem('super_admin')) {
-        localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
-      }
+    // Inisialisasi
+    (function init(){
+      if (!localStorage.getItem('super_admin')) localStorage.setItem('super_admin',JSON.stringify(SUPER_ADMIN));
       initDemoToko();
-
-      const session = getSession();
+      const session=getSession();
       if (session) {
-        if (session.role === 'super') {
-          showSuperDashboard();
-        } else if (session.role === 'toko') {
-          showTokoDashboard();
+        if (session.role==='super') showSuperDashboard();
+        else if (session.role==='toko') {
+          const toko=getTokoList().find(t=>t.id===session.tokoId);
+          if (toko && isTokoActive(toko)) showTokoDashboard();
+          else { clearSession(); showLogin(); }
         }
-      } else {
-        showLogin();
-      }
-    }
-
-    init();
+      } else showLogin();
+    })();
   </script>
 </body>
 </html>
