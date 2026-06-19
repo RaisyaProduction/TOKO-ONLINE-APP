@@ -18,7 +18,6 @@
     .link { color: #1a56db; text-decoration: none; font-size: 14px; cursor: pointer; }
     .link:hover { text-decoration: underline; }
     .hidden { display: none !important; }
-    /* Dashboard Layout */
     .dashboard { display: flex; min-height: 100vh; }
     .sidebar { width: 250px; background: #fff; box-shadow: 2px 0 8px rgba(0,0,0,0.05); padding: 20px; display: flex; flex-direction: column; }
     .sidebar h2 { font-size: 20px; margin-bottom: 30px; }
@@ -66,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Halaman Reset Password (setelah lupa password) -->
+  <!-- Halaman Reset Password -->
   <div id="resetPage" class="container hidden">
     <h1>🛡️ Reset Password</h1>
     <div id="resetProfile" class="card profile-info"></div>
@@ -80,7 +79,7 @@
     </div>
   </div>
 
-  <!-- Dashboard (setelah login) -->
+  <!-- Dashboard -->
   <div id="dashboard" class="dashboard hidden">
     <aside class="sidebar">
       <h2>🏪 TOKO ONLINE APP</h2>
@@ -94,7 +93,6 @@
     </aside>
 
     <main class="content">
-      <!-- Halaman Manajemen Toko -->
       <div id="tokoPage">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
           <h2>📋 Daftar Toko</h2>
@@ -103,7 +101,6 @@
         <div id="tokoList" class="grid-2"></div>
       </div>
 
-      <!-- Form Buat Toko Baru (awalnya tersembunyi) -->
       <div id="buatTokoPage" class="hidden card" style="max-width:500px;">
         <h2>➕ Buat Toko Baru</h2>
         <input type="text" id="namaToko" placeholder="Nama Toko">
@@ -115,7 +112,6 @@
         </div>
       </div>
 
-      <!-- Halaman Profile -->
       <div id="profilePage" class="hidden">
         <h2>👤 Profile</h2>
         <div id="profileInfo" class="card profile-info"></div>
@@ -131,7 +127,7 @@
   </div>
 
   <script>
-    // ====== DATA DEFAULT ======
+    // ====== DATA DEFAULT (Super Admin) ======
     const DEFAULT_USER = {
       nama: "TOKO ONLINE APP",
       hp: "081220285226",
@@ -147,7 +143,13 @@
         localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
         return DEFAULT_USER;
       }
-      return JSON.parse(user);
+      const parsed = JSON.parse(user);
+      // Perbaikan: jika username di storage bukan 'superadmin', kembalikan ke default
+      if (parsed.username !== 'superadmin') {
+        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+        return DEFAULT_USER;
+      }
+      return parsed;
     }
 
     function saveUser(user) {
@@ -162,7 +164,7 @@
       localStorage.setItem('toko_list', JSON.stringify(list));
     }
 
-    // ====== NAVIGASI & TAMPILAN ======
+    // ====== NAVIGASI ======
     let currentPage = 'toko';
 
     function hideAll() {
@@ -226,10 +228,10 @@
       }
     }
 
-    // ====== LOGIN ======
+    // ====== LOGIN (dengan trim password) ======
     function login() {
       const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value;
+      const password = document.getElementById('loginPassword').value.trim(); // <-- perbaikan: trim password
       const user = getUser();
       if (username === user.username && password === user.password) {
         showDashboard();
@@ -254,8 +256,8 @@
     }
 
     function resetPassword() {
-      const newPass = document.getElementById('newPassword').value;
-      const confirmPass = document.getElementById('confirmNewPassword').value;
+      const newPass = document.getElementById('newPassword').value.trim();
+      const confirmPass = document.getElementById('confirmNewPassword').value.trim();
       const errDiv = document.getElementById('resetError');
       const succDiv = document.getElementById('resetSuccess');
       errDiv.classList.add('hidden');
@@ -356,8 +358,8 @@
     }
 
     function gantiPassword() {
-      const newPass = document.getElementById('profileNewPass').value;
-      const confirmPass = document.getElementById('profileConfirmPass').value;
+      const newPass = document.getElementById('profileNewPass').value.trim();
+      const confirmPass = document.getElementById('profileConfirmPass').value.trim();
       const msgDiv = document.getElementById('profileMsg');
       msgDiv.classList.add('hidden');
 
@@ -383,23 +385,34 @@
       document.getElementById('profileConfirmPass').value = '';
     }
 
-    // ====== LOGOUT ======
     function logout() {
       showLogin();
     }
 
-    // ====== HELPER ======
     function escapeHtml(text) {
       const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     }
 
-    // ====== INISIALISASI ======
-    if (!localStorage.getItem('toko_app_user')) {
-      localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-    }
-    showLogin();
+    // ====== INISIALISASI UTAMA ======
+    (function init() {
+      // Pastikan data user sesuai dengan superadmin, jika tidak reset
+      const stored = localStorage.getItem('toko_app_user');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed.username !== 'superadmin') {
+            localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+          }
+        } catch (e) {
+          localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+        }
+      } else {
+        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
+      }
+      showLogin();
+    })();
   </script>
 </body>
 </html>
