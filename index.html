@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Toko Online App">
   <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlRva28gT25saW5lIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVG9rbyBBcHAiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhNTZkYiIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTU2ZGIiLAogICJpY29ucyI6IFtdCn0=">
-  <title>Toko Online App - v2.4 Final</title>
+  <title>Toko Online App - v2.5 Final</title>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
   </script>
   <style>
@@ -34,7 +34,6 @@
     .offline-banner.show {
       display: block;
     }
-    /* PWA Install Banner */
     .install-banner {
       background: linear-gradient(135deg, #1a56db, #1e40af);
       color: white;
@@ -185,6 +184,33 @@
     }
     .hidden {
       display: none !important;
+    }
+    .login-info {
+      font-size: 13px;
+      color: #6b7280;
+      margin-top: 15px;
+      text-align: center;
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .login-info p {
+      margin: 3px 0;
+    }
+    .login-info .contact-link {
+      color: #1a56db;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .login-info .contact-link:hover {
+      text-decoration: underline;
+    }
+    .security-note {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 10px;
+      text-align: center;
     }
     .dashboard {
       display: flex;
@@ -600,9 +626,25 @@
     <div style="text-align:center; margin-top:10px;">
       <span class="link" onclick="showLupaPassword()">Lupa Password?</span>
     </div>
-    <p style="font-size:13px;color:#6b7280;margin-top:10px;text-align:center;">
-      Super Admin: superadmin / tokoonlineapp<br>Demo Toko: user / user (pemilik)<br>Demo Kasir: kasir1 / kasir123
-    </p>
+    <div class="login-info">
+      <p>🔒 <strong>Akses Login</strong></p>
+      <p>Hubungi <span class="contact-link" onclick="showContactInfo()">Super Admin</span> untuk mendapatkan akun toko dan kasir.</p>
+      <p style="font-size:12px; color:#9ca3af;">Login terbatas untuk pengguna terdaftar.</p>
+    </div>
+    <p class="security-note">🔐 Aplikasi Kasir & Manajemen Toko • Data Tersimpan Aman di Perangkat</p>
+  </div>
+
+  <!-- ==================== MODAL KONTAK SUPER ADMIN ==================== -->
+  <div id="modalKontak" class="modal hidden">
+    <div class="modal-content" style="max-width:400px; text-align:center;">
+      <h3>📞 Hubungi Super Admin</h3>
+      <p style="margin:10px 0;">Untuk pembuatan akun toko, aktivasi, dan bantuan teknis:</p>
+      <div style="background:#f9fafb; padding:15px; border-radius:8px; margin:15px 0; text-align:left;">
+        <p>📱 <strong>HP/WA:</strong> 081220285226</p>
+        <p>✉️ <strong>Email:</strong> dedesugiono.ai@gmail.com</p>
+      </div>
+      <button onclick="document.getElementById('modalKontak').classList.add('hidden')" class="btn-sm btn-blue">Tutup</button>
+    </div>
   </div>
 
   <!-- ==================== LUPA PASSWORD ==================== -->
@@ -747,7 +789,6 @@
           <div id="produkActions" style="display:flex; gap:8px; flex-wrap:wrap;"></div>
         </div>
         <div id="produkList"></div>
-        <!-- Tombol Hapus Semua Produk (hanya pemilik) -->
         <div id="hapusSemuaProdukContainer" class="hidden" style="margin-top:20px; text-align:center;">
           <button onclick="hapusSemuaProduk()" class="btn-sm btn-danger" style="width:auto; padding:10px 25px; font-size:15px;">🗑️ Hapus Semua Produk</button>
           <p style="font-size:12px; color:#dc2626; margin-top:5px;">⚠️ Semua produk, gambar, dan data terkait akan dihapus permanen!</p>
@@ -1079,6 +1120,11 @@
       }
     }
 
+    // ==================== KONTAK INFO ====================
+    function showContactInfo() {
+      document.getElementById('modalKontak').classList.remove('hidden');
+    }
+
     // ==================== DATA DEFAULT ====================
     const SUPER_ADMIN = {
       nama: "TOKO ONLINE APP",
@@ -1247,7 +1293,7 @@
 
     // ==================== UI ====================
     function hideAll() {
-      ['loginPage','lupaPage','verifikasiPage','resetPage','superAdminDashboard','tokoDashboard','modalAktivasi','scanModal','modalPilihProduk','modalStruk','modalBayarKasbon'].forEach(id => {
+      ['loginPage','lupaPage','verifikasiPage','resetPage','superAdminDashboard','tokoDashboard','modalAktivasi','scanModal','modalPilihProduk','modalStruk','modalBayarKasbon','modalKontak'].forEach(id => {
         const el = document.getElementById(id); if (el) el.classList.add('hidden');
       });
     }
@@ -1519,7 +1565,6 @@
       c.innerHTML = h;
     }
 
-    // ==================== HAPUS SEMUA PRODUK (PEMILIK) ====================
     async function hapusSemuaProduk() {
       const s = getSession();
       if (s.role !== 'pemilik') { alert('Hanya pemilik toko yang bisa menghapus semua produk.'); return; }
@@ -1527,11 +1572,8 @@
       if (produkList.length === 0) { alert('Tidak ada produk untuk dihapus.'); return; }
       if (!confirm(`⚠️ PERINGATAN!\n\nAnda akan menghapus SEMUA produk (${produkList.length} produk) beserta SEMUA gambar yang tersimpan.\n\nData transaksi dan kasbon TIDAK akan dihapus.\n\nLanjutkan?`)) return;
       if (!confirm('Konfirmasi ulang: Hapus semua produk? Tindakan ini TIDAK dapat dibatalkan.')) return;
-      // Hapus semua gambar dari IndexedDB
       await hapusSemuaGambar();
-      // Hapus semua produk
       saveProdukToko(s.tokoId, []);
-      // Hapus keranjang
       saveKeranjang(s.tokoId, []);
       alert('✅ Semua produk berhasil dihapus!');
       renderProduk();
@@ -1926,7 +1968,6 @@
       if (!localStorage.getItem('super_admin')) localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
       initDemoToko();
       if (!isOnline) document.getElementById('offlineBanner').classList.add('show');
-      // Cek apakah sudah terinstall sebagai PWA
       if (window.matchMedia('(display-mode: standalone)').matches) {
         installBannerDismissed = true;
       }
