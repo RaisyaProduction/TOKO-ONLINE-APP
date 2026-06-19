@@ -207,7 +207,7 @@
         <div id="etalaseProduk" class="grid-produk"></div>
       </div>
 
-      <!-- PRODUK MANAGEMENT (pemilik bisa edit, kasir hanya lihat) -->
+      <!-- PRODUK MANAGEMENT -->
       <div id="produkPage" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <h2>📦 Produk</h2>
@@ -424,14 +424,30 @@
     function getPesananToko(tokoId) { return JSON.parse(localStorage.getItem('pesanan_' + tokoId) || '[]'); }
     function savePesananToko(tokoId, data) { localStorage.setItem('pesanan_' + tokoId, JSON.stringify(data)); }
 
-    // ==================== SESSION ====================
+    // ==================== SESSION (disimpan di localStorage) ====================
     let currentSession = null;
-    function setSession(s) { currentSession = s; sessionStorage.setItem('toko_app_session', JSON.stringify(s)); }
-    function clearSession() { currentSession = null; sessionStorage.removeItem('toko_app_session'); }
+
+    function setSession(s) {
+      currentSession = s;
+      localStorage.setItem('toko_app_session', JSON.stringify(s));
+    }
+
+    function clearSession() {
+      currentSession = null;
+      localStorage.removeItem('toko_app_session');
+    }
+
     function getSession() {
       if (currentSession) return currentSession;
-      const s = sessionStorage.getItem('toko_app_session');
-      if (s) { currentSession = JSON.parse(s); return currentSession; }
+      const s = localStorage.getItem('toko_app_session');
+      if (s) {
+        try {
+          currentSession = JSON.parse(s);
+          return currentSession;
+        } catch (e) {
+          return null;
+        }
+      }
       return null;
     }
 
@@ -483,9 +499,16 @@
       document.getElementById('modalAktivasi').classList.add('hidden');
       document.getElementById('scanModal').classList.add('hidden');
     }
-    function showLogin() { hideAll(); document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('loginUsername').value=''; document.getElementById('loginPassword').value=''; document.getElementById('loginError').classList.add('hidden'); }
 
-    // ==================== LUPA PASSWORD (UNIVERSAL) ====================
+    function showLogin() {
+      hideAll();
+      document.getElementById('loginPage').classList.remove('hidden');
+      document.getElementById('loginUsername').value='';
+      document.getElementById('loginPassword').value='';
+      document.getElementById('loginError').classList.add('hidden');
+    }
+
+    // ==================== LUPA PASSWORD ====================
     function showLupaPassword() { hideAll(); document.getElementById('lupaPage').classList.remove('hidden'); document.getElementById('lupaUsername').value=''; document.getElementById('lupaError').classList.add('hidden'); }
     function cekUsernameLupa() {
       const username = document.getElementById('lupaUsername').value.trim();
@@ -558,7 +581,6 @@
           showTokoDashboard();
           return;
         }
-        // cek kasir
         if (toko.kasir && Array.isArray(toko.kasir)) {
           const kasir = toko.kasir.find(k => k.username === username && k.password === password);
           if (kasir) {
@@ -688,7 +710,7 @@
       msg.textContent='Password berhasil diubah!'; msg.className='success'; msg.classList.remove('hidden');
     }
 
-    // ==================== TOKO DASHBOARD (DENGAN ROLE) ====================
+    // ==================== TOKO DASHBOARD ====================
     function showTokoDashboard() {
       hideAll(); document.getElementById('tokoDashboard').classList.remove('hidden');
       const session = getSession();
@@ -745,7 +767,7 @@
       else if (page==='kasir' && isPemilik) { document.getElementById('kasirPage').classList.remove('hidden'); renderDaftarKasir(); }
     }
 
-    // ==================== ETALASE PRODUK (DASBOR) ====================
+    // ==================== ETALASE PRODUK ====================
     async function renderEtalase() {
       const session = getSession();
       const produk = getProdukToko(session.tokoId);
@@ -1312,19 +1334,23 @@
     function logout() { clearSession(); showLogin(); }
     function escapeHtml(text) { const div=document.createElement('div'); div.textContent=text; return div.innerHTML; }
 
-    // Inisialisasi
+    // ==================== INISIALISASI ====================
     (async function init(){
       if (!localStorage.getItem('super_admin')) localStorage.setItem('super_admin',JSON.stringify(SUPER_ADMIN));
       initDemoToko();
-      const session=getSession();
+      const session = getSession();
       if (session) {
         if (session.role==='super') showSuperDashboard();
         else if (session.role==='pemilik' || session.role==='kasir') {
           const toko=getTokoList().find(t=>t.id===session.tokoId);
           if (toko && isTokoActive(toko)) showTokoDashboard();
           else { clearSession(); showLogin(); }
+        } else {
+          showLogin();
         }
-      } else showLogin();
+      } else {
+        showLogin();
+      }
     })();
   </script>
 </body>
