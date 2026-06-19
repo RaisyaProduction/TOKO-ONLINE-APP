@@ -24,7 +24,7 @@
     .sidebar h2 { font-size: 20px; margin-bottom: 30px; }
     .sidebar nav a { display: flex; align-items: center; gap: 10px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; color: #374151; text-decoration: none; font-weight: 500; }
     .sidebar nav a.active, .sidebar nav a:hover { background: #eff6ff; color: #1a56db; }
-    .content { flex: 1; padding: 40px; background: #f9fafb; }
+    .content { flex: 1; padding: 40px; background: #f9fafb; overflow-y: auto; }
     .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
     .grid-produk { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
@@ -57,6 +57,11 @@
     .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
     .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 450px; width: 90%; max-height: 80vh; overflow-y: auto; }
     .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db; margin-bottom: 10px; }
+    .total-box { font-size: 18px; font-weight: bold; margin: 10px 0; padding: 10px; background: #e0f2fe; border-radius: 8px; }
+    .kembalian-box { font-size: 18px; font-weight: bold; margin: 10px 0; padding: 10px; background: #d1fae5; border-radius: 8px; }
+    .tab-nav { display: flex; gap: 5px; margin-bottom: 15px; }
+    .tab-nav button { width: auto; padding: 8px 16px; background: #e5e7eb; color: #374151; border: none; border-radius: 20px; cursor: pointer; }
+    .tab-nav button.active { background: #1a56db; color: white; }
     @media (max-width: 768px) {
       .dashboard { flex-direction: column; }
       .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
@@ -76,7 +81,7 @@
       <span class="link" onclick="showLupaPassword()">Lupa Password?</span>
     </div>
     <p style="font-size:13px;color:#6b7280;margin-top:10px;text-align:center;">
-      Super Admin: superadmin / tokoonlineapp<br>Demo Toko: user / user
+      Super Admin: superadmin / tokoonlineapp<br>Demo Toko: user / user (pemilik)<br>Demo Kasir: kasir1 / kasir123
     </p>
   </div>
 
@@ -170,7 +175,6 @@
     <div class="modal-content">
       <h2>⚡ Aktivasi Toko</h2>
       <p id="modalNamaToko"></p>
-      <div id="modalError" class="error hidden"></div>
       <select id="pilihanAktivasi">
         <option value="gratis">Uji Coba 3 Hari Gratis</option>
         <option value="1bulan">Sewa 1 Bulan</option>
@@ -187,32 +191,28 @@
 
   <!-- ==================== DASHBOARD TOKO ==================== -->
   <div id="tokoDashboard" class="dashboard hidden">
-    <aside class="sidebar">
+    <aside class="sidebar" id="tokoSidebar">
       <h2 id="namaTokoSidebar">🏬 TOKO</h2>
-      <nav>
-        <a href="#" class="active" data-page="dasbor" onclick="navigateToko('dasbor')">📊 Dasbor</a>
-        <a href="#" data-page="produk" onclick="navigateToko('produk')">📦 Produk</a>
-        <a href="#" data-page="pesanan" onclick="navigateToko('pesanan')">🧾 Pesanan</a>
-        <a href="#" data-page="pengaturan" onclick="navigateToko('pengaturan')">⚙️ Pengaturan</a>
+      <nav id="tokoMenu">
+        <!-- Menu akan diisi berdasarkan role -->
       </nav>
       <div style="margin-top:auto;">
         <button onclick="logout()" style="background:#dc2626; margin-top:20px;">🚪 Keluar</button>
       </div>
     </aside>
     <main class="content">
-      <!-- DASBOR = ETALASE PRODUK -->
+      <!-- DASBOR = ETALASE PRODUK (hanya pemilik) -->
       <div id="dasborPage">
         <h2>📊 Etalase Produk</h2>
         <div id="etalaseProduk" class="grid-produk"></div>
       </div>
 
-      <!-- PRODUK MANAGEMENT -->
+      <!-- PRODUK MANAGEMENT (pemilik bisa edit, kasir hanya lihat) -->
       <div id="produkPage" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
           <h2>📦 Produk</h2>
-          <div style="display:flex; gap:8px;">
-            <button class="btn-sm btn-blue" onclick="showScanModal()">📷 Scan Barcode</button>
-            <button class="btn-sm btn-success" onclick="showFormProduk()">+ Tambah</button>
+          <div id="produkActions" style="display:flex; gap:8px;">
+            <!-- Aksi hanya muncul untuk pemilik -->
           </div>
         </div>
         <div id="produkList"></div>
@@ -234,26 +234,57 @@
         </div>
       </div>
 
-      <!-- PESANAN -->
+      <!-- TRANSAKSI (PESANAN) KASIR -->
       <div id="pesananPage" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2>🧾 Pesanan</h2>
-          <button class="btn-sm btn-success" onclick="showFormPesanan()">+ Pesanan Baru</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <h2>🧾 Transaksi</h2>
+          <button class="btn-sm btn-blue" onclick="scanForPesanan()">📷 Scan Belanja</button>
         </div>
         <div id="pesananList"></div>
-        <div id="formPesanan" class="hidden card" style="max-width:500px;">
-          <h3>Pesanan Baru</h3>
-          <input type="text" id="pelanggan" placeholder="Nama Pelanggan">
-          <select id="pilihProduk" style="width:100%; padding:12px; margin-bottom:15px;"></select>
-          <input type="number" id="jumlah" placeholder="Jumlah" min="1">
-          <div style="display:flex; gap:10px;">
-            <button onclick="simpanPesanan()" class="btn-sm btn-success">💾 Simpan</button>
-            <button onclick="hideFormPesanan()" class="btn-sm btn-gray">Batal</button>
+        <div id="totalBayar" class="total-box">Total: Rp 0</div>
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+          <input type="number" id="uangDibayar" placeholder="Uang Dibayar" style="width:60%;">
+          <button onclick="hitungKembalian()" class="btn-sm btn-warning" style="width:35%;">Hitung</button>
+        </div>
+        <div id="kembalianBox" class="kembalian-box hidden">Kembalian: Rp 0</div>
+      </div>
+
+      <!-- LAPORAN (hanya pemilik) -->
+      <div id="laporanPage" class="hidden">
+        <h2>📈 Laporan</h2>
+        <div class="tab-nav">
+          <button id="tabRiwayat" class="active" onclick="switchTab('riwayat')">Riwayat Transaksi</button>
+          <button id="tabProduk" onclick="switchTab('produk')">Produk</button>
+        </div>
+        <div id="riwayatTab">
+          <div class="card">
+            <h3>Filter Periode</h3>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <input type="date" id="tglMulai" style="flex:1;">
+              <input type="date" id="tglSelesai" style="flex:1;">
+            </div>
+            <div style="display:flex; gap:5px; margin-bottom:10px;">
+              <button onclick="setPeriode('hari')" class="btn-sm btn-gray">Hari Ini</button>
+              <button onclick="setPeriode('minggu')" class="btn-sm btn-gray">Minggu Ini</button>
+              <button onclick="setPeriode('bulan')" class="btn-sm btn-gray">Bulan Ini</button>
+              <button onclick="setPeriode('tahun')" class="btn-sm btn-gray">Tahun Ini</button>
+            </div>
+            <button onclick="tampilkanLaporanRiwayat()" class="btn-sm btn-blue">Tampilkan</button>
+            <button onclick="downloadCSV('riwayat')" class="btn-sm btn-success" style="margin-left:5px;">📥 Download CSV</button>
           </div>
+          <div id="hasilRiwayat"></div>
+        </div>
+        <div id="produkTab" class="hidden">
+          <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button onclick="tampilkanProdukTerlaris()" class="btn-sm btn-blue">25 Terlaris</button>
+            <button onclick="tampilkanProdukBelumTerjual()" class="btn-sm btn-warning">25 Belum Terjual</button>
+            <button onclick="downloadCSV('terlaris')" class="btn-sm btn-success" id="btnDownloadTerlaris">📥 CSV</button>
+          </div>
+          <div id="hasilProduk"></div>
         </div>
       </div>
 
-      <!-- PENGATURAN TOKO -->
+      <!-- PENGATURAN TOKO (hanya pemilik) -->
       <div id="pengaturanPage" class="hidden">
         <h2>⚙️ Pengaturan Toko</h2>
         <div id="infoToko" class="card profile-info"></div>
@@ -264,6 +295,18 @@
           <input type="password" id="tokoConfirmPass" placeholder="Konfirmasi Password Baru">
           <button onclick="gantiPasswordToko()">💾 Simpan</button>
         </div>
+      </div>
+
+      <!-- KELOLA KASIR (hanya pemilik) -->
+      <div id="kasirPage" class="hidden">
+        <h2>👥 Kasir</h2>
+        <div class="card" style="max-width:500px;">
+          <h3>Tambah Kasir</h3>
+          <input type="text" id="usernameKasir" placeholder="Username Kasir">
+          <input type="password" id="passwordKasir" placeholder="Password Kasir">
+          <button onclick="tambahKasir()" class="btn-sm btn-success">+ Tambah</button>
+        </div>
+        <div id="daftarKasir"></div>
       </div>
     </main>
   </div>
@@ -422,7 +465,8 @@
           email: "demo@toko.com",
           username: "user",
           password: "user",
-          aktivasi: { status:'aktif', tipe:'gratis', mulai:Date.now(), berakhir:Date.now() + (3*24*60*60*1000) }
+          aktivasi: { status:'aktif', tipe:'gratis', mulai:Date.now(), berakhir:Date.now() + (3*24*60*60*1000) },
+          kasir: [{ username: 'kasir1', password: 'kasir123' }]
         };
         saveTokoList([demoToko]);
       }
@@ -441,7 +485,7 @@
     }
     function showLogin() { hideAll(); document.getElementById('loginPage').classList.remove('hidden'); document.getElementById('loginUsername').value=''; document.getElementById('loginPassword').value=''; document.getElementById('loginError').classList.add('hidden'); }
 
-    // ==================== LUPA PASSWORD ====================
+    // ==================== LUPA PASSWORD (UNIVERSAL) ====================
     function showLupaPassword() { hideAll(); document.getElementById('lupaPage').classList.remove('hidden'); document.getElementById('lupaUsername').value=''; document.getElementById('lupaError').classList.add('hidden'); }
     function cekUsernameLupa() {
       const username = document.getElementById('lupaUsername').value.trim();
@@ -490,18 +534,48 @@
       setTimeout(showLogin,2000);
     }
 
-    // ==================== LOGIN ====================
+    // ==================== LOGIN (DENGAN KASIR) ====================
     function handleLogin() {
       const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
+
       const sa = getSuperAdmin();
-      if (username===sa.username && password===sa.password) { setSession({role:'super'}); showSuperDashboard(); return; }
-      const toko = getTokoList().find(t=>t.username===username && t.password===password);
-      if (toko) {
-        if (!isTokoActive(toko)) { document.getElementById('loginError').textContent='Akun toko belum diaktivasi atau masa sewa habis.'; document.getElementById('loginError').classList.remove('hidden'); return; }
-        setSession({role:'toko', tokoId:toko.id}); showTokoDashboard(); return;
+      if (username === sa.username && password === sa.password) {
+        setSession({ role: 'super' });
+        showSuperDashboard();
+        return;
       }
-      document.getElementById('loginError').textContent='Username atau password salah!'; document.getElementById('loginError').classList.remove('hidden');
+
+      const tokoList = getTokoList();
+      for (const toko of tokoList) {
+        if (toko.username === username && toko.password === password) {
+          if (!isTokoActive(toko)) {
+            document.getElementById('loginError').textContent = 'Akun toko belum diaktivasi atau masa sewa habis.';
+            document.getElementById('loginError').classList.remove('hidden');
+            return;
+          }
+          setSession({ role: 'pemilik', tokoId: toko.id });
+          showTokoDashboard();
+          return;
+        }
+        // cek kasir
+        if (toko.kasir && Array.isArray(toko.kasir)) {
+          const kasir = toko.kasir.find(k => k.username === username && k.password === password);
+          if (kasir) {
+            if (!isTokoActive(toko)) {
+              document.getElementById('loginError').textContent = 'Toko belum diaktivasi atau masa sewa habis.';
+              document.getElementById('loginError').classList.remove('hidden');
+              return;
+            }
+            setSession({ role: 'kasir', tokoId: toko.id, username: kasir.username });
+            showTokoDashboard();
+            return;
+          }
+        }
+      }
+
+      document.getElementById('loginError').textContent = 'Username atau password salah!';
+      document.getElementById('loginError').classList.remove('hidden');
     }
 
     // ==================== SUPER ADMIN ====================
@@ -551,7 +625,7 @@
       if(!nama||!pemilik||!noHp||!alamat||!email||!username||!password) { alert('Lengkapi semua data.'); return; }
       const list = getTokoList();
       if (list.find(t=>t.username===username)) { alert('Username sudah digunakan, pilih yang lain.'); return; }
-      list.push({ id: Date.now().toString(), namaToko:nama, pemilik, noHp, alamat, email, username, password, aktivasi: null });
+      list.push({ id: Date.now().toString(), namaToko:nama, pemilik, noHp, alamat, email, username, password, aktivasi: null, kasir: [] });
       saveTokoList(list);
       hideBuatTokoForm();
       renderTokoList();
@@ -570,7 +644,6 @@
       if (!toko) return;
       document.getElementById('modalNamaToko').textContent = 'Toko: ' + toko.namaToko;
       document.getElementById('pilihanAktivasi').value = 'gratis';
-      document.getElementById('modalError').classList.add('hidden');
       document.getElementById('modalAktivasi').classList.remove('hidden');
     }
     function tutupModal() { document.getElementById('modalAktivasi').classList.add('hidden'); currentAktivasiTokoId=null; }
@@ -615,25 +688,61 @@
       msg.textContent='Password berhasil diubah!'; msg.className='success'; msg.classList.remove('hidden');
     }
 
-    // ==================== TOKO DASHBOARD ====================
+    // ==================== TOKO DASHBOARD (DENGAN ROLE) ====================
     function showTokoDashboard() {
       hideAll(); document.getElementById('tokoDashboard').classList.remove('hidden');
       const session = getSession();
       const toko = getTokoList().find(t=>t.id===session.tokoId);
       if (!toko || !isTokoActive(toko)) { logout(); return; }
       document.getElementById('namaTokoSidebar').textContent = '🏬 ' + toko.namaToko;
-      navigateToko('dasbor');
+
+      const isPemilik = session.role === 'pemilik';
+      const menuContainer = document.getElementById('tokoMenu');
+      if (isPemilik) {
+        menuContainer.innerHTML = `
+          <a href="#" class="active" data-page="dasbor" onclick="navigateToko('dasbor')">📊 Dasbor</a>
+          <a href="#" data-page="produk" onclick="navigateToko('produk')">📦 Produk</a>
+          <a href="#" data-page="pesanan" onclick="navigateToko('pesanan')">🧾 Transaksi</a>
+          <a href="#" data-page="laporan" onclick="navigateToko('laporan')">📈 Laporan</a>
+          <a href="#" data-page="kasir" onclick="navigateToko('kasir')">👥 Kasir</a>
+          <a href="#" data-page="pengaturan" onclick="navigateToko('pengaturan')">⚙️ Pengaturan</a>
+        `;
+      } else {
+        menuContainer.innerHTML = `
+          <a href="#" class="active" data-page="pesanan" onclick="navigateToko('pesanan')">🧾 Transaksi</a>
+          <a href="#" data-page="produk" onclick="navigateToko('produk')">📦 Produk</a>
+        `;
+      }
+      navigateToko(isPemilik ? 'dasbor' : 'pesanan');
     }
+
     function navigateToko(page) {
-      document.querySelectorAll('#tokoDashboard .sidebar nav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
+      document.querySelectorAll('#tokoMenu a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));
       document.getElementById('dasborPage').classList.add('hidden');
       document.getElementById('produkPage').classList.add('hidden');
       document.getElementById('pesananPage').classList.add('hidden');
+      document.getElementById('laporanPage').classList.add('hidden');
       document.getElementById('pengaturanPage').classList.add('hidden');
-      if (page==='dasbor') { document.getElementById('dasborPage').classList.remove('hidden'); renderEtalase(); }
-      else if (page==='produk') { document.getElementById('produkPage').classList.remove('hidden'); renderProduk(); }
+      document.getElementById('kasirPage').classList.add('hidden');
+
+      const session = getSession();
+      const isPemilik = session.role === 'pemilik';
+
+      if (page==='dasbor' && isPemilik) { document.getElementById('dasborPage').classList.remove('hidden'); renderEtalase(); }
+      else if (page==='produk') {
+        document.getElementById('produkPage').classList.remove('hidden');
+        const actionsDiv = document.getElementById('produkActions');
+        if (isPemilik) {
+          actionsDiv.innerHTML = `<button class="btn-sm btn-blue" onclick="showScanModal()">📷 Scan Barcode</button><button class="btn-sm btn-success" onclick="showFormProduk()">+ Tambah</button>`;
+        } else {
+          actionsDiv.innerHTML = '';
+        }
+        renderProduk();
+      }
       else if (page==='pesanan') { document.getElementById('pesananPage').classList.remove('hidden'); renderPesanan(); }
-      else if (page==='pengaturan') { document.getElementById('pengaturanPage').classList.remove('hidden'); renderPengaturanToko(); }
+      else if (page==='laporan' && isPemilik) { document.getElementById('laporanPage').classList.remove('hidden'); switchTab('riwayat'); }
+      else if (page==='pengaturan' && isPemilik) { document.getElementById('pengaturanPage').classList.remove('hidden'); renderPengaturanToko(); }
+      else if (page==='kasir' && isPemilik) { document.getElementById('kasirPage').classList.remove('hidden'); renderDaftarKasir(); }
     }
 
     // ==================== ETALASE PRODUK (DASBOR) ====================
@@ -641,30 +750,15 @@
       const session = getSession();
       const produk = getProdukToko(session.tokoId);
       const container = document.getElementById('etalaseProduk');
-      if (produk.length===0) {
-        container.innerHTML = '<p style="color:#6b7280;">Belum ada produk. Tambahkan di menu Produk.</p>';
-        return;
-      }
+      if (produk.length===0) { container.innerHTML = '<p>Belum ada produk.</p>'; return; }
       let html = '';
       for (const p of produk) {
         let imgSrc = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150"%3E%3Crect fill="%23f3f4f6" width="150" height="150"/%3E%3Ctext fill="%23aaa" font-size="14" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"%3ETidak Ada Foto%3C/text%3E%3C/svg%3E';
         try {
           const blob = await ambilGambarDariDB(p.id);
-          if (blob) {
-            imgSrc = URL.createObjectURL(blob);
-          }
-        } catch (e) {}
-        html += `
-          <div class="produk-item">
-            <img src="${imgSrc}" alt="${escapeHtml(p.nama)}">
-            <div class="info">
-              <h4>${escapeHtml(p.nama)}</h4>
-              <p>Rp ${Number(p.harga).toLocaleString('id-ID')}</p>
-              <p>Stok: ${p.stok}</p>
-              ${p.kode ? `<p style="font-size:12px; color:#6b7280;">Kode: ${escapeHtml(p.kode)}</p>` : ''}
-            </div>
-          </div>
-        `;
+          if (blob) { imgSrc = URL.createObjectURL(blob); }
+        } catch(e) {}
+        html += `<div class="produk-item"><img src="${imgSrc}" alt="${escapeHtml(p.nama)}"><div class="info"><h4>${escapeHtml(p.nama)}</h4><p>Rp ${Number(p.harga).toLocaleString('id-ID')}</p><p>Stok: ${p.stok}</p>${p.kode ? `<p style="font-size:12px;">Kode: ${escapeHtml(p.kode)}</p>` : ''}</div></div>`;
       }
       container.innerHTML = html;
     }
@@ -674,28 +768,20 @@
       const session = getSession();
       const produk = getProdukToko(session.tokoId);
       const container = document.getElementById('produkList');
+      const isPemilik = session.role === 'pemilik';
       if (produk.length===0) { container.innerHTML='<p>Belum ada produk.</p>'; return; }
-      let html = '<table><thead><tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Stok</th><th>Kode</th><th>Aksi</th></tr></thead><tbody>';
+      let html = '<table><thead><tr><th>Foto</th><th>Nama</th><th>Harga</th><th>Stok</th><th>Kode</th>';
+      if (isPemilik) html += '<th>Aksi</th>';
+      html += '</tr></thead><tbody>';
       for (const p of produk) {
         let imgTag = '-';
         try {
           const blob = await ambilGambarDariDB(p.id);
-          if (blob) {
-            const url = URL.createObjectURL(blob);
-            imgTag = `<img src="${url}" width="40" height="40" style="object-fit:cover; border-radius:4px;">`;
-          }
-        } catch (e) {}
-        html += `<tr>
-          <td>${imgTag}</td>
-          <td>${escapeHtml(p.nama)}</td>
-          <td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td>
-          <td>${p.stok}</td>
-          <td>${p.kode || '-'}</td>
-          <td>
-            <button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button>
-            <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button>
-          </td>
-        </tr>`;
+          if (blob) { const url = URL.createObjectURL(blob); imgTag = `<img src="${url}" width="40" height="40" style="object-fit:cover; border-radius:4px;">`; }
+        } catch(e) {}
+        html += `<tr><td>${imgTag}</td><td>${escapeHtml(p.nama)}</td><td>Rp ${Number(p.harga).toLocaleString('id-ID')}</td><td>${p.stok}</td><td>${p.kode || '-'}</td>`;
+        if (isPemilik) html += `<td><button class="btn-sm btn-warning" onclick="editProduk('${p.id}')">✏️</button> <button class="btn-sm btn-danger" onclick="hapusProduk('${p.id}')">🗑️</button></td>`;
+        html += '</tr>';
       }
       html += '</tbody></table>';
       container.innerHTML = html;
@@ -714,9 +800,7 @@
           canvas.width = width; canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          canvas.toBlob((blob) => {
-            callback(blob);
-          }, 'image/jpeg', 0.7);
+          canvas.toBlob((blob) => { callback(blob); }, 'image/jpeg', 0.7);
         };
         img.src = e.target.result;
       };
@@ -725,7 +809,6 @@
 
     let currentPreviewBlob = null;
 
-    // Fungsi untuk mendeteksi barcode dari blob gambar (dipanggil otomatis saat upload)
     async function detectBarcodeFromBlob(blob) {
       const statusElem = document.getElementById('scanStatus');
       if (!blob) return;
@@ -736,14 +819,13 @@
         const result = await tempScanner.scanFile(file, false);
         if (result && result.decodedText) {
           document.getElementById('kodeProduk').value = result.decodedText;
-          statusElem.textContent = '✅ Kode produk terdeteksi: ' + result.decodedText;
+          statusElem.textContent = '✅ Kode terdeteksi: ' + result.decodedText;
         } else {
-          statusElem.textContent = 'ℹ️ Tidak ada barcode terdeteksi di foto.';
+          statusElem.textContent = 'ℹ️ Tidak ada barcode di foto.';
         }
         await tempScanner.clear();
       } catch (err) {
-        console.warn('Scan otomatis gagal:', err);
-        statusElem.textContent = 'ℹ️ Tidak dapat membaca kode dari foto (mungkin bukan barcode).';
+        statusElem.textContent = 'ℹ️ Tidak dapat membaca kode.';
       }
     }
 
@@ -756,7 +838,6 @@
         const preview = document.getElementById('previewGambar');
         preview.src = url;
         preview.classList.remove('hidden');
-        // Deteksi barcode otomatis
         await detectBarcodeFromBlob(blob);
       });
     }
@@ -792,24 +873,27 @@
       const preview = document.getElementById('previewGambar');
       try {
         const blob = await ambilGambarDariDB(p.id);
-        if (blob) {
-          currentPreviewBlob = blob;
-          preview.src = URL.createObjectURL(blob);
-          preview.classList.remove('hidden');
-        } else {
-          preview.classList.add('hidden');
-        }
-      } catch (e) {
-        preview.classList.add('hidden');
-      }
+        if (blob) { currentPreviewBlob = blob; preview.src = URL.createObjectURL(blob); preview.classList.remove('hidden'); }
+        else { preview.classList.add('hidden'); }
+      } catch(e) { preview.classList.add('hidden'); }
     }
 
-    function hideFormProduk() {
-      document.getElementById('formProduk').classList.add('hidden');
+    function hideFormProduk() { document.getElementById('formProduk').classList.add('hidden'); }
+
+    async function quickSaveProduct(kode) {
+      const session = getSession();
+      if (!session || session.role !== 'pemilik') return;
+      const newId = Date.now().toString();
+      const newProduct = { id: newId, nama: "Produk Baru", harga: 0, stok: 0, kode: kode };
+      let list = getProdukToko(session.tokoId);
+      list.push(newProduct);
+      saveProdukToko(session.tokoId, list);
+      navigateToko('dasbor');
     }
 
     async function simpanProduk() {
       const session = getSession();
+      if (session.role !== 'pemilik') { alert('Hanya pemilik yang bisa menambah produk.'); return; }
       const id = document.getElementById('editProdukId').value;
       const nama = document.getElementById('namaProduk').value.trim();
       const harga = document.getElementById('hargaProduk').value.trim();
@@ -818,44 +902,125 @@
       if (!nama || !harga || !stok) { alert('Lengkapi data.'); return; }
       let list = getProdukToko(session.tokoId);
       const newId = id || Date.now().toString();
-      const data = {
-        id: newId,
-        nama,
-        harga: Number(harga),
-        stok: Number(stok),
-        kode
-      };
-      if (id) {
-        list = list.map(p => p.id === id ? { ...p, ...data } : p);
-      } else {
-        list.push(data);
-      }
+      const data = { id: newId, nama, harga: Number(harga), stok: Number(stok), kode };
+      if (id) { list = list.map(p => p.id === id ? { ...p, ...data } : p); }
+      else { list.push(data); }
       saveProdukToko(session.tokoId, list);
-      if (currentPreviewBlob) {
-        await simpanGambarKeDB(newId, currentPreviewBlob);
-      }
+      if (currentPreviewBlob) { await simpanGambarKeDB(newId, currentPreviewBlob); }
       hideFormProduk();
-      // Langsung arahkan ke halaman Dasbor (etalase)
       navigateToko('dasbor');
     }
 
     async function hapusProduk(id) {
       if (!confirm('Hapus produk?')) return;
       const session = getSession();
+      if (session.role !== 'pemilik') { alert('Hanya pemilik yang bisa menghapus.'); return; }
       saveProdukToko(session.tokoId, getProdukToko(session.tokoId).filter(p=>p.id!==id));
       await hapusGambarDariDB(id);
       renderProduk();
     }
 
-    // ==================== SCAN BARCODE (LIVE & FILE) ====================
-    let html5QrCode = null;
+    // ==================== PESANAN & KASIR ====================
+    function tambahKePesanan(kode) {
+      const session = getSession();
+      const produkList = getProdukToko(session.tokoId);
+      const produk = produkList.find(p => p.kode === kode);
+      if (!produk) { alert('Produk dengan kode "' + kode + '" tidak ditemukan.'); return; }
+      if (produk.stok <= 0) { alert('Stok produk "' + produk.nama + '" habis!'); return; }
+      const jumlahStr = prompt('Jumlah untuk ' + produk.nama + ' (Stok: ' + produk.stok + '):', '1');
+      if (!jumlahStr) return;
+      const jumlah = parseInt(jumlahStr);
+      if (isNaN(jumlah) || jumlah < 1 || jumlah > produk.stok) {
+        alert('Jumlah tidak valid atau melebihi stok.');
+        return;
+      }
+      const total = produk.harga * jumlah;
+      const pesananList = getPesananToko(session.tokoId);
+      pesananList.push({
+        id: Date.now().toString(),
+        pelanggan: session.role === 'kasir' ? 'Kasir' : 'Scan',
+        produkId: produk.id,
+        namaProduk: produk.nama,
+        jumlah: jumlah,
+        total: total,
+        tanggal: Date.now()
+      });
+      savePesananToko(session.tokoId, pesananList);
+      const listProduk = getProdukToko(session.tokoId);
+      const idx = listProduk.findIndex(p => p.id === produk.id);
+      if (idx !== -1) {
+        listProduk[idx].stok -= jumlah;
+        saveProdukToko(session.tokoId, listProduk);
+      }
+      renderPesanan();
+    }
 
-    function showScanModal() {
+    function renderPesanan() {
+      const session = getSession();
+      const pesanan = getPesananToko(session.tokoId);
+      const container = document.getElementById('pesananList');
+      if (pesanan.length === 0) {
+        container.innerHTML = '<p>Belum ada transaksi.</p>';
+        document.getElementById('totalBayar').textContent = 'Total: Rp 0';
+        document.getElementById('kembalianBox').classList.add('hidden');
+        return;
+      }
+      let totalSemua = 0;
+      let html = '<table><thead><tr><th>Produk</th><th>Jumlah</th><th>Total</th><th>Aksi</th></tr></thead><tbody>';
+      pesanan.forEach(ps => {
+        totalSemua += ps.total;
+        html += `<tr><td>${escapeHtml(ps.namaProduk)}</td><td>${ps.jumlah}</td><td>Rp ${ps.total.toLocaleString('id-ID')}</td><td><button class="btn-sm btn-danger" onclick="hapusPesanan('${ps.id}')">🗑️</button></td></tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+      document.getElementById('totalBayar').textContent = 'Total: Rp ' + totalSemua.toLocaleString('id-ID');
+      document.getElementById('kembalianBox').classList.add('hidden');
+    }
+
+    function hapusPesanan(id) {
+      if (!confirm('Hapus pesanan? Stok akan dikembalikan.')) return;
+      const session = getSession();
+      const pesananList = getPesananToko(session.tokoId);
+      const pesanan = pesananList.find(p => p.id === id);
+      if (!pesanan) return;
+      const produkList = getProdukToko(session.tokoId);
+      const idx = produkList.findIndex(p => p.id === pesanan.produkId);
+      if (idx !== -1) {
+        produkList[idx].stok += pesanan.jumlah;
+        saveProdukToko(session.tokoId, produkList);
+      }
+      savePesananToko(session.tokoId, pesananList.filter(p => p.id !== id));
+      renderPesanan();
+    }
+
+    function hitungKembalian() {
+      const totalText = document.getElementById('totalBayar').textContent.replace(/[^0-9]/g, '');
+      const total = parseInt(totalText) || 0;
+      const dibayar = parseInt(document.getElementById('uangDibayar').value) || 0;
+      if (dibayar < total) {
+        alert('Uang yang dibayarkan kurang.');
+        return;
+      }
+      const kembalian = dibayar - total;
+      document.getElementById('kembalianBox').textContent = 'Kembalian: Rp ' + kembalian.toLocaleString('id-ID');
+      document.getElementById('kembalianBox').classList.remove('hidden');
+    }
+
+    function scanForPesanan() {
+      showScanModal((decodedText) => {
+        tambahKePesanan(decodedText);
+      });
+    }
+
+    // ==================== SCANNER ====================
+    let html5QrCode = null;
+    let currentScanCallback = null;
+
+    function showScanModal(callback) {
       document.getElementById('scanModal').classList.remove('hidden');
       document.getElementById('scanResult').textContent = '';
-      if (!html5QrCode) {
-        html5QrCode = new Html5Qrcode("reader");
-      }
+      if (!html5QrCode) { html5QrCode = new Html5Qrcode("reader"); }
+      currentScanCallback = callback || null;
       if (html5QrCode.isScanning) {
         html5QrCode.stop().then(() => startLiveScan()).catch(() => {});
       } else {
@@ -869,12 +1034,23 @@
         { fps: 10, qrbox: { width: 250, height: 150 } },
         (decodedText) => {
           document.getElementById('scanResult').textContent = 'Hasil: ' + decodedText;
-          document.getElementById('kodeProduk').value = decodedText;
-          stopScan(true);
+          if (currentScanCallback) {
+            currentScanCallback(decodedText);
+            stopScan(false);
+          } else {
+            const simpan = confirm('Simpan produk dengan kode "' + decodedText + '" langsung ke Dasbor?');
+            if (simpan) {
+              quickSaveProduct(decodedText);
+              stopScan(false);
+            } else {
+              document.getElementById('kodeProduk').value = decodedText;
+              stopScan(true);
+            }
+          }
         },
         (errorMessage) => {}
       ).catch(err => {
-        alert('Gagal mengakses kamera: ' + err + '\n\nGunakan tombol "Pilih Gambar" untuk scan dari file.');
+        alert('Gagal mengakses kamera: ' + err + '\nGunakan tombol "Pilih Gambar".');
         stopScan(false);
       });
     }
@@ -883,19 +1059,17 @@
       if (html5QrCode && html5QrCode.isScanning) {
         html5QrCode.stop().then(() => {
           document.getElementById('scanModal').classList.add('hidden');
-          if (success) {
-            showFormProduk();
-          }
+          if (success && !currentScanCallback) { showFormProduk(); }
+          currentScanCallback = null;
         }).catch(err => console.error(err));
       } else {
         document.getElementById('scanModal').classList.add('hidden');
-        if (success) showFormProduk();
+        if (success && !currentScanCallback) showFormProduk();
+        currentScanCallback = null;
       }
     }
 
-    function scanFromFile() {
-      document.getElementById('scanFileInput').click();
-    }
+    function scanFromFile() { document.getElementById('scanFileInput').click(); }
 
     async function handleScanFile(input) {
       const file = input.files[0];
@@ -904,60 +1078,234 @@
         const tempScanner = new Html5Qrcode("temp-scan-file");
         const result = await tempScanner.scanFile(file, false);
         if (result && result.decodedText) {
-          document.getElementById('kodeProduk').value = result.decodedText;
           document.getElementById('scanResult').textContent = 'Hasil: ' + result.decodedText;
-          document.getElementById('scanModal').classList.add('hidden');
-          showFormProduk();
-        } else {
-          alert('Tidak ada barcode terdeteksi di gambar.');
-        }
+          if (currentScanCallback) {
+            currentScanCallback(result.decodedText);
+            document.getElementById('scanModal').classList.add('hidden');
+          } else {
+            const simpan = confirm('Simpan produk dengan kode "' + result.decodedText + '" langsung ke Dasbor?');
+            if (simpan) {
+              quickSaveProduct(result.decodedText);
+              document.getElementById('scanModal').classList.add('hidden');
+            } else {
+              document.getElementById('kodeProduk').value = result.decodedText;
+              document.getElementById('scanModal').classList.add('hidden');
+              showFormProduk();
+            }
+          }
+        } else { alert('Tidak ada barcode di gambar.'); }
         await tempScanner.clear();
-      } catch (err) {
-        alert('Gagal membaca gambar: ' + err);
-      } finally {
-        input.value = '';
-      }
+      } catch (err) { alert('Gagal membaca gambar: ' + err); }
+      finally { input.value = ''; currentScanCallback = null; }
     }
 
-    // ==================== PESANAN ====================
-    function renderPesanan() {
-      const session=getSession(); const pesanan=getPesananToko(session.tokoId);
-      const container=document.getElementById('pesananList');
-      if (pesanan.length===0) { container.innerHTML='<p>Belum ada pesanan.</p>'; return; }
-      container.innerHTML=`<table><thead><tr><th>Pelanggan</th><th>Produk</th><th>Jumlah</th><th>Total</th><th>Aksi</th></tr></thead><tbody>${pesanan.map(ps=>`<tr><td>${escapeHtml(ps.pelanggan)}</td><td>${escapeHtml(ps.namaProduk)}</td><td>${ps.jumlah}</td><td>Rp ${Number(ps.total).toLocaleString('id-ID')}</td><td><button class="btn-sm btn-danger" onclick="hapusPesanan('${ps.id}')">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+    // ==================== LAPORAN ====================
+    let currentLaporanData = [];
+
+    function switchTab(tab) {
+      document.getElementById('tabRiwayat').classList.toggle('active', tab === 'riwayat');
+      document.getElementById('tabProduk').classList.toggle('active', tab === 'produk');
+      document.getElementById('riwayatTab').classList.toggle('hidden', tab !== 'riwayat');
+      document.getElementById('produkTab').classList.toggle('hidden', tab !== 'produk');
+      if (tab === 'riwayat') setPeriode('hari');
     }
-    function showFormPesanan() {
-      document.getElementById('formPesanan').classList.remove('hidden'); document.getElementById('pelanggan').value='';
-      document.getElementById('jumlah').value=''; const session=getSession(); const produk=getProdukToko(session.tokoId);
-      const select=document.getElementById('pilihProduk');
-      select.innerHTML=produk.map(p=>`<option value="${p.id}">${p.nama} - Rp ${p.harga} (Stok: ${p.stok})</option>`).join('');
-      if (produk.length===0) select.innerHTML='<option value="">-- Tidak ada produk --</option>';
+
+    function setPeriode(periode) {
+      const now = new Date();
+      const start = new Date(now);
+      const end = new Date(now);
+      if (periode === 'hari') {
+        start.setHours(0,0,0,0);
+        end.setHours(23,59,59,999);
+      } else if (periode === 'minggu') {
+        const day = now.getDay();
+        const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+        start.setDate(diff);
+        start.setHours(0,0,0,0);
+        end.setDate(start.getDate() + 6);
+        end.setHours(23,59,59,999);
+      } else if (periode === 'bulan') {
+        start.setDate(1);
+        start.setHours(0,0,0,0);
+        end.setMonth(start.getMonth() + 1, 0);
+        end.setHours(23,59,59,999);
+      } else if (periode === 'tahun') {
+        start.setMonth(0, 1);
+        start.setHours(0,0,0,0);
+        end.setMonth(11, 31);
+        end.setHours(23,59,59,999);
+      }
+      document.getElementById('tglMulai').value = start.toISOString().split('T')[0];
+      document.getElementById('tglSelesai').value = end.toISOString().split('T')[0];
     }
-    function hideFormPesanan() { document.getElementById('formPesanan').classList.add('hidden'); }
-    function simpanPesanan() {
-      const session=getSession(); const pelanggan=document.getElementById('pelanggan').value.trim();
-      const produkId=document.getElementById('pilihProduk').value; const jumlah=parseInt(document.getElementById('jumlah').value);
-      if(!pelanggan||!produkId||!jumlah||jumlah<1) { alert('Lengkapi data.'); return; }
-      const produk=getProdukToko(session.tokoId).find(p=>p.id===produkId); if(!produk) return;
-      const total=produk.harga*jumlah; const list=getPesananToko(session.tokoId);
-      list.push({id:Date.now().toString(),pelanggan,produkId:produk.id,namaProduk:produk.nama,jumlah,total});
-      savePesananToko(session.tokoId,list); hideFormPesanan(); renderPesanan();
+
+    function tampilkanLaporanRiwayat() {
+      const session = getSession();
+      const tglMulai = document.getElementById('tglMulai').value;
+      const tglSelesai = document.getElementById('tglSelesai').value;
+      if (!tglMulai || !tglSelesai) return;
+      const start = new Date(tglMulai); start.setHours(0,0,0,0);
+      const end = new Date(tglSelesai); end.setHours(23,59,59,999);
+      const pesanan = getPesananToko(session.tokoId);
+      const filtered = pesanan.filter(ps => {
+        const t = new Date(ps.tanggal);
+        return t >= start && t <= end;
+      });
+      currentLaporanData = filtered;
+      const container = document.getElementById('hasilRiwayat');
+      if (filtered.length === 0) { container.innerHTML = '<p>Tidak ada transaksi pada periode ini.</p>'; return; }
+      let totalPendapatan = 0;
+      let html = '<table><thead><tr><th>Tanggal</th><th>Produk</th><th>Jumlah</th><th>Total</th></tr></thead><tbody>';
+      filtered.forEach(ps => {
+        totalPendapatan += ps.total;
+        const tgl = new Date(ps.tanggal).toLocaleDateString('id-ID');
+        html += `<tr><td>${tgl}</td><td>${escapeHtml(ps.namaProduk)}</td><td>${ps.jumlah}</td><td>Rp ${ps.total.toLocaleString('id-ID')}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      html += `<div class="total-box">Total Pendapatan: Rp ${totalPendapatan.toLocaleString('id-ID')}</div>`;
+      container.innerHTML = html;
     }
-    function hapusPesanan(id) { if(!confirm('Hapus pesanan?')) return; const session=getSession(); savePesananToko(session.tokoId,getPesananToko(session.tokoId).filter(p=>p.id!==id)); renderPesanan(); }
+
+    function tampilkanProdukTerlaris() {
+      const session = getSession();
+      const produk = getProdukToko(session.tokoId);
+      const pesanan = getPesananToko(session.tokoId);
+      const penjualan = {};
+      produk.forEach(p => { penjualan[p.id] = { nama: p.nama, terjual: 0 }; });
+      pesanan.forEach(ps => {
+        if (penjualan[ps.produkId]) penjualan[ps.produkId].terjual += ps.jumlah;
+        else penjualan[ps.produkId] = { nama: ps.namaProduk, terjual: ps.jumlah };
+      });
+      const sorted = Object.entries(penjualan).sort((a,b) => b[1].terjual - a[1].terjual).slice(0, 25);
+      currentLaporanData = sorted;
+      const container = document.getElementById('hasilProduk');
+      if (sorted.length === 0) { container.innerHTML = '<p>Belum ada penjualan.</p>'; return; }
+      let html = '<table><thead><tr><th>No</th><th>Produk</th><th>Terjual</th></tr></thead><tbody>';
+      sorted.forEach((item, i) => {
+        html += `<tr><td>${i+1}</td><td>${escapeHtml(item[1].nama)}</td><td>${item[1].terjual}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function tampilkanProdukBelumTerjual() {
+      const session = getSession();
+      const produk = getProdukToko(session.tokoId);
+      const pesanan = getPesananToko(session.tokoId);
+      const terjualIds = new Set(pesanan.map(ps => ps.produkId));
+      const belum = produk.filter(p => !terjualIds.has(p.id)).slice(0, 25);
+      currentLaporanData = belum;
+      const container = document.getElementById('hasilProduk');
+      if (belum.length === 0) { container.innerHTML = '<p>Semua produk pernah terjual.</p>'; return; }
+      let html = '<table><thead><tr><th>No</th><th>Produk</th><th>Stok</th></tr></thead><tbody>';
+      belum.forEach((p, i) => {
+        html += `<tr><td>${i+1}</td><td>${escapeHtml(p.nama)}</td><td>${p.stok}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function downloadCSV(type) {
+      if (!currentLaporanData.length) { alert('Tampilkan data terlebih dahulu.'); return; }
+      let csv = '';
+      let filename = '';
+      if (type === 'riwayat') {
+        csv = 'Tanggal,Produk,Jumlah,Total\n';
+        currentLaporanData.forEach(ps => {
+          const tgl = new Date(ps.tanggal).toLocaleDateString('id-ID');
+          csv += `"${tgl}","${ps.namaProduk}","${ps.jumlah}","${ps.total}"\n`;
+        });
+        filename = 'riwayat_transaksi.csv';
+      } else if (type === 'terlaris') {
+        csv = 'No,Produk,Terjual\n';
+        currentLaporanData.forEach((item, i) => {
+          csv += `"${i+1}","${item[1].nama}","${item[1].terjual}"\n`;
+        });
+        filename = 'produk_terlaris.csv';
+      } else if (type === 'belumterjual') {
+        csv = 'No,Produk,Stok\n';
+        currentLaporanData.forEach((p, i) => {
+          csv += `"${i+1}","${p.nama}","${p.stok}"\n`;
+        });
+        filename = 'produk_belum_terjual.csv';
+      }
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ==================== KELOLA KASIR ====================
+    function renderDaftarKasir() {
+      const session = getSession();
+      if (session.role !== 'pemilik') return;
+      const toko = getTokoList().find(t => t.id === session.tokoId);
+      if (!toko) return;
+      const kasirList = toko.kasir || [];
+      const container = document.getElementById('daftarKasir');
+      if (kasirList.length === 0) {
+        container.innerHTML = '<p>Belum ada kasir.</p>';
+        return;
+      }
+      let html = '<table><thead><tr><th>Username</th><th>Aksi</th></tr></thead><tbody>';
+      kasirList.forEach(k => {
+        html += `<tr><td>${escapeHtml(k.username)}</td><td><button class="btn-sm btn-danger" onclick="hapusKasir('${k.username}')">🗑️ Hapus</button></td></tr>`;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function tambahKasir() {
+      const session = getSession();
+      if (session.role !== 'pemilik') return;
+      const username = document.getElementById('usernameKasir').value.trim();
+      const password = document.getElementById('passwordKasir').value.trim();
+      if (!username || !password) { alert('Isi username dan password.'); return; }
+      const list = getTokoList();
+      const idx = list.findIndex(t => t.id === session.tokoId);
+      if (idx === -1) return;
+      const toko = list[idx];
+      if (!toko.kasir) toko.kasir = [];
+      if (toko.kasir.find(k => k.username === username)) { alert('Username kasir sudah ada.'); return; }
+      toko.kasir.push({ username, password });
+      saveTokoList(list);
+      document.getElementById('usernameKasir').value = '';
+      document.getElementById('passwordKasir').value = '';
+      renderDaftarKasir();
+    }
+
+    function hapusKasir(username) {
+      if (!confirm('Hapus kasir ' + username + '?')) return;
+      const session = getSession();
+      const list = getTokoList();
+      const idx = list.findIndex(t => t.id === session.tokoId);
+      if (idx === -1) return;
+      const toko = list[idx];
+      toko.kasir = toko.kasir.filter(k => k.username !== username);
+      saveTokoList(list);
+      renderDaftarKasir();
+    }
 
     // ==================== PENGATURAN TOKO ====================
     function renderPengaturanToko() {
-      const session=getSession(); const toko=getTokoList().find(t=>t.id===session.tokoId);
+      const session = getSession();
+      if (session.role !== 'pemilik') return;
+      const toko = getTokoList().find(t=>t.id===session.tokoId);
       if (!toko) return;
-      document.getElementById('infoToko').innerHTML=`<p><strong>Nama Toko:</strong> ${escapeHtml(toko.namaToko)}</p><p><strong>Pemilik:</strong> ${escapeHtml(toko.pemilik)}</p><p><strong>No HP:</strong> ${escapeHtml(toko.noHp)}</p><p><strong>Alamat:</strong> ${escapeHtml(toko.alamat)}</p><p><strong>Email:</strong> ${escapeHtml(toko.email)}</p><p><strong>Username:</strong> ${escapeHtml(toko.username)}</p>`;
+      document.getElementById('infoToko').innerHTML = `<p><strong>Nama Toko:</strong> ${escapeHtml(toko.namaToko)}</p><p><strong>Pemilik:</strong> ${escapeHtml(toko.pemilik)}</p><p><strong>No HP:</strong> ${escapeHtml(toko.noHp)}</p><p><strong>Alamat:</strong> ${escapeHtml(toko.alamat)}</p><p><strong>Email:</strong> ${escapeHtml(toko.email)}</p><p><strong>Username:</strong> ${escapeHtml(toko.username)}</p>`;
       document.getElementById('tokoNewPass').value=''; document.getElementById('tokoConfirmPass').value=''; document.getElementById('tokoProfileMsg').classList.add('hidden');
     }
     function gantiPasswordToko() {
+      const session = getSession();
+      if (session.role !== 'pemilik') return;
       const newP=document.getElementById('tokoNewPass').value.trim(), confirmP=document.getElementById('tokoConfirmPass').value.trim();
       const msg=document.getElementById('tokoProfileMsg'); msg.classList.add('hidden');
       if (newP.length<4) { msg.textContent='Password minimal 4 karakter.'; msg.className='error'; msg.classList.remove('hidden'); return; }
       if (newP!==confirmP) { msg.textContent='Konfirmasi password tidak cocok.'; msg.className='error'; msg.classList.remove('hidden'); return; }
-      const session=getSession(); let all=getTokoList(); all=all.map(t=>t.id===session.tokoId?{...t,password:newP}:t); saveTokoList(all);
+      let all=getTokoList(); all=all.map(t=>t.id===session.tokoId?{...t,password:newP}:t); saveTokoList(all);
       msg.textContent='Password berhasil diubah!'; msg.className='success'; msg.classList.remove('hidden');
     }
 
@@ -971,7 +1319,7 @@
       const session=getSession();
       if (session) {
         if (session.role==='super') showSuperDashboard();
-        else if (session.role==='toko') {
+        else if (session.role==='pemilik' || session.role==='kasir') {
           const toko=getTokoList().find(t=>t.id===session.tokoId);
           if (toko && isTokoActive(toko)) showTokoDashboard();
           else { clearSession(); showLogin(); }
