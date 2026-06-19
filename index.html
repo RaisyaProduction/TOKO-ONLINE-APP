@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Toko Online App</title>
+  <title>Super Admin - Toko Online App</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
@@ -41,9 +41,9 @@
   </style>
 </head>
 <body>
-  <!-- Halaman Login -->
+  <!-- Login -->
   <div id="loginPage" class="container">
-    <h1>🔐 Login</h1>
+    <h1>🔐 Super Admin Login</h1>
     <div id="loginError" class="error hidden"></div>
     <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
     <input type="password" id="loginPassword" placeholder="Password">
@@ -53,19 +53,19 @@
     </div>
   </div>
 
-  <!-- Halaman Lupa Password -->
+  <!-- Lupa Password -->
   <div id="forgotPage" class="container hidden">
     <h1>🔑 Lupa Password</h1>
-    <p style="margin-bottom:15px;">Masukkan email atau nomor HP yang terdaftar.</p>
+    <p>Masukkan email atau nomor HP yang terdaftar.</p>
     <div id="forgotError" class="error hidden"></div>
     <input type="text" id="forgotInput" placeholder="Email atau Nomor HP">
     <button onclick="verifyIdentity()">Lanjutkan</button>
     <div style="text-align:center; margin-top:10px;">
-      <span class="link" onclick="showLogin()">← Kembali ke Login</span>
+      <span class="link" onclick="showLogin()">← Kembali</span>
     </div>
   </div>
 
-  <!-- Halaman Reset Password -->
+  <!-- Reset Password -->
   <div id="resetPage" class="container hidden">
     <h1>🛡️ Reset Password</h1>
     <div id="resetProfile" class="card profile-info"></div>
@@ -73,7 +73,7 @@
     <div id="resetSuccess" class="success hidden"></div>
     <input type="password" id="newPassword" placeholder="Password Baru">
     <input type="password" id="confirmNewPassword" placeholder="Konfirmasi Password Baru">
-    <button onclick="resetPassword()">Simpan Password Baru</button>
+    <button onclick="resetPassword()">Simpan</button>
     <div style="text-align:center; margin-top:10px;">
       <span class="link" onclick="showLogin()">← Kembali ke Login</span>
     </div>
@@ -82,53 +82,51 @@
   <!-- Dashboard -->
   <div id="dashboard" class="dashboard hidden">
     <aside class="sidebar">
-      <h2>🏪 TOKO ONLINE APP</h2>
+      <h2>🏪 SUPER ADMIN</h2>
       <nav>
-        <a href="#" class="active" data-page="toko" onclick="navigateTo('toko')">📋 Manajemen Toko</a>
-        <a href="#" data-page="profile" onclick="navigateTo('profile')">👤 Profile</a>
+        <a href="#" class="active" data-page="toko" onclick="navigate('toko')">📋 Manajemen Toko</a>
+        <a href="#" data-page="profile" onclick="navigate('profile')">👤 Profile</a>
       </nav>
       <div style="margin-top:auto;">
-        <button onclick="logout()" style="background:#dc2626; margin-top:20px;">🚪 Keluar</button>
+        <button onclick="logout()" style="background:#dc2626;">🚪 Keluar</button>
       </div>
     </aside>
-
     <main class="content">
       <div id="tokoPage">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
           <h2>📋 Daftar Toko</h2>
-          <button class="btn-sm btn-success" onclick="showBuatTokoForm()">+ Buat Toko Baru</button>
+          <button class="btn-sm btn-success" onclick="showBuatToko()">+ Buat Toko Baru</button>
         </div>
         <div id="tokoList" class="grid-2"></div>
       </div>
-
       <div id="buatTokoPage" class="hidden card" style="max-width:500px;">
         <h2>➕ Buat Toko Baru</h2>
         <input type="text" id="namaToko" placeholder="Nama Toko">
         <input type="text" id="pemilikToko" placeholder="Pemilik Toko">
-        <textarea id="alamatToko" placeholder="Alamat Toko" rows="3"></textarea>
+        <textarea id="alamatToko" placeholder="Alamat Toko" rows="2"></textarea>
+        <input type="text" id="usernameToko" placeholder="Username Login Toko">
+        <input type="password" id="passwordToko" placeholder="Password Login Toko">
         <div style="display:flex; gap:10px;">
           <button onclick="simpanToko()" class="btn-sm btn-success">💾 Simpan</button>
-          <button onclick="hideBuatTokoForm()" class="btn-sm" style="background:#6b7280;">Batal</button>
+          <button onclick="hideBuatToko()" class="btn-sm" style="background:#6b7280;">Batal</button>
         </div>
       </div>
-
       <div id="profilePage" class="hidden">
-        <h2>👤 Profile</h2>
+        <h2>👤 Profile Super Admin</h2>
         <div id="profileInfo" class="card profile-info"></div>
         <div class="card" style="max-width:500px;">
           <h3>🔑 Ganti Password</h3>
           <div id="profileMsg" class="hidden"></div>
           <input type="password" id="profileNewPass" placeholder="Password Baru">
           <input type="password" id="profileConfirmPass" placeholder="Konfirmasi Password Baru">
-          <button onclick="gantiPassword()">💾 Simpan Password Baru</button>
+          <button onclick="gantiPassword()">💾 Simpan</button>
         </div>
       </div>
     </main>
   </div>
 
   <script>
-    // ====== DATA DEFAULT (Super Admin) ======
-    const DEFAULT_USER = {
+    const SUPER_ADMIN = {
       nama: "TOKO ONLINE APP",
       hp: "081220285226",
       email: "dedesugiono.ai@gmail.com",
@@ -136,24 +134,17 @@
       password: "tokoonlineapp"
     };
 
-    // ====== FUNGSI STORAGE ======
-    function getUser() {
-      let user = localStorage.getItem('toko_app_user');
-      if (!user) {
-        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-        return DEFAULT_USER;
+    function getSA() {
+      let sa = localStorage.getItem('super_admin');
+      if (!sa) {
+        localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
+        return SUPER_ADMIN;
       }
-      const parsed = JSON.parse(user);
-      // Perbaikan: jika username di storage bukan 'superadmin', kembalikan ke default
-      if (parsed.username !== 'superadmin') {
-        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-        return DEFAULT_USER;
-      }
-      return parsed;
+      return JSON.parse(sa);
     }
 
-    function saveUser(user) {
-      localStorage.setItem('toko_app_user', JSON.stringify(user));
+    function saveSA(user) {
+      localStorage.setItem('super_admin', JSON.stringify(user));
     }
 
     function getTokoList() {
@@ -164,7 +155,6 @@
       localStorage.setItem('toko_list', JSON.stringify(list));
     }
 
-    // ====== NAVIGASI ======
     let currentPage = 'toko';
 
     function hideAll() {
@@ -192,8 +182,7 @@
     function showResetPage(user) {
       hideAll();
       document.getElementById('resetPage').classList.remove('hidden');
-      const profileDiv = document.getElementById('resetProfile');
-      profileDiv.innerHTML = `
+      document.getElementById('resetProfile').innerHTML = `
         <p><strong>Nama Aplikasi:</strong> ${user.nama}</p>
         <p><strong>Email:</strong> ${user.email}</p>
         <p><strong>Nomor HP:</strong> ${user.hp}</p>
@@ -207,10 +196,10 @@
     function showDashboard() {
       hideAll();
       document.getElementById('dashboard').classList.remove('hidden');
-      navigateTo('toko');
+      navigate('toko');
     }
 
-    function navigateTo(page) {
+    function navigate(page) {
       currentPage = page;
       document.querySelectorAll('.sidebar nav a').forEach(a => {
         a.classList.toggle('active', a.dataset.page === page);
@@ -218,7 +207,7 @@
       document.getElementById('tokoPage').classList.add('hidden');
       document.getElementById('buatTokoPage').classList.add('hidden');
       document.getElementById('profilePage').classList.add('hidden');
-      
+
       if (page === 'toko') {
         document.getElementById('tokoPage').classList.remove('hidden');
         renderTokoList();
@@ -228,164 +217,159 @@
       }
     }
 
-    // ====== LOGIN (dengan trim password) ======
     function login() {
       const username = document.getElementById('loginUsername').value.trim();
-      const password = document.getElementById('loginPassword').value.trim(); // <-- perbaikan: trim password
-      const user = getUser();
-      if (username === user.username && password === user.password) {
+      const password = document.getElementById('loginPassword').value.trim();
+      const sa = getSA();
+      if (username === sa.username && password === sa.password) {
+        sessionStorage.setItem('sa_session', '1');
         showDashboard();
       } else {
-        const err = document.getElementById('loginError');
-        err.textContent = 'Username atau password salah!';
-        err.classList.remove('hidden');
+        document.getElementById('loginError').textContent = 'Username atau password salah!';
+        document.getElementById('loginError').classList.remove('hidden');
       }
     }
 
-    // ====== LUPA PASSWORD ======
     function verifyIdentity() {
       const input = document.getElementById('forgotInput').value.trim();
-      const user = getUser();
-      if (input === user.email || input === user.hp) {
-        showResetPage(user);
+      const sa = getSA();
+      if (input === sa.email || input === sa.hp) {
+        showResetPage(sa);
       } else {
-        const err = document.getElementById('forgotError');
-        err.textContent = 'Email / Nomor HP tidak cocok dengan data terdaftar.';
-        err.classList.remove('hidden');
+        document.getElementById('forgotError').textContent = 'Email / Nomor HP tidak cocok.';
+        document.getElementById('forgotError').classList.remove('hidden');
       }
     }
 
     function resetPassword() {
-      const newPass = document.getElementById('newPassword').value.trim();
-      const confirmPass = document.getElementById('confirmNewPassword').value.trim();
-      const errDiv = document.getElementById('resetError');
-      const succDiv = document.getElementById('resetSuccess');
-      errDiv.classList.add('hidden');
-      succDiv.classList.add('hidden');
-
-      if (newPass.length < 4) {
-        errDiv.textContent = 'Password minimal 4 karakter.';
-        errDiv.classList.remove('hidden');
+      const newP = document.getElementById('newPassword').value.trim();
+      const confirmP = document.getElementById('confirmNewPassword').value.trim();
+      const err = document.getElementById('resetError');
+      const succ = document.getElementById('resetSuccess');
+      err.classList.add('hidden');
+      succ.classList.add('hidden');
+      if (newP.length < 4) {
+        err.textContent = 'Password minimal 4 karakter.';
+        err.classList.remove('hidden');
         return;
       }
-      if (newPass !== confirmPass) {
-        errDiv.textContent = 'Konfirmasi password tidak cocok.';
-        errDiv.classList.remove('hidden');
+      if (newP !== confirmP) {
+        err.textContent = 'Konfirmasi password tidak cocok.';
+        err.classList.remove('hidden');
         return;
       }
-      const user = getUser();
-      user.password = newPass;
-      saveUser(user);
-      succDiv.textContent = 'Password berhasil diubah! Silakan login ulang.';
-      succDiv.classList.remove('hidden');
-      setTimeout(() => {
-        showLogin();
-      }, 2000);
+      const sa = getSA();
+      sa.password = newP;
+      saveSA(sa);
+      succ.textContent = 'Password berhasil diubah! Silakan login ulang.';
+      succ.classList.remove('hidden');
+      setTimeout(showLogin, 2000);
     }
 
-    // ====== MANAJEMEN TOKO ======
     function renderTokoList() {
-      const tokoList = getTokoList();
+      const list = getTokoList();
       const container = document.getElementById('tokoList');
-      if (tokoList.length === 0) {
+      if (list.length === 0) {
         container.innerHTML = '<p style="color:#6b7280;">Belum ada toko terdaftar.</p>';
         return;
       }
-      container.innerHTML = tokoList.map(toko => `
+      container.innerHTML = list.map(t => `
         <div class="card">
-          <h3 style="margin-bottom:8px;">${escapeHtml(toko.namaToko)}</h3>
-          <p>👤 ${escapeHtml(toko.pemilik)}</p>
-          <p>📍 ${escapeHtml(toko.alamat)}</p>
-          <button class="btn-sm btn-danger" style="margin-top:10px;" onclick="hapusToko('${toko.id}')">🗑️ Hapus</button>
+          <h3>${escapeHtml(t.namaToko)}</h3>
+          <p>👤 ${escapeHtml(t.pemilik)}</p>
+          <p>📍 ${escapeHtml(t.alamat)}</p>
+          <p>🔑 Login: ${escapeHtml(t.username)}</p>
+          <button class="btn-sm btn-danger" style="margin-top:10px;" onclick="hapusToko('${t.id}')">🗑️ Hapus</button>
         </div>
       `).join('');
     }
 
-    function showBuatTokoForm() {
+    function showBuatToko() {
       document.getElementById('buatTokoPage').classList.remove('hidden');
       document.getElementById('tokoPage').classList.add('hidden');
+      ['namaToko','pemilikToko','alamatToko','usernameToko','passwordToko'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
     }
 
-    function hideBuatTokoForm() {
+    function hideBuatToko() {
       document.getElementById('buatTokoPage').classList.add('hidden');
       document.getElementById('tokoPage').classList.remove('hidden');
-      document.getElementById('namaToko').value = '';
-      document.getElementById('pemilikToko').value = '';
-      document.getElementById('alamatToko').value = '';
     }
 
     function simpanToko() {
       const nama = document.getElementById('namaToko').value.trim();
       const pemilik = document.getElementById('pemilikToko').value.trim();
       const alamat = document.getElementById('alamatToko').value.trim();
-      if (!nama || !pemilik || !alamat) {
-        alert('Mohon lengkapi semua data toko.');
+      const username = document.getElementById('usernameToko').value.trim();
+      const password = document.getElementById('passwordToko').value.trim();
+      if (!nama || !pemilik || !alamat || !username || !password) {
+        alert('Lengkapi semua data.');
         return;
       }
-      const tokoList = getTokoList();
-      tokoList.push({
+      const list = getTokoList();
+      list.push({
         id: Date.now().toString(),
         namaToko: nama,
         pemilik: pemilik,
-        alamat: alamat
+        alamat: alamat,
+        username: username,
+        password: password
       });
-      saveTokoList(tokoList);
-      hideBuatTokoForm();
+      saveTokoList(list);
+      hideBuatToko();
       renderTokoList();
     }
 
     function hapusToko(id) {
-      if (!confirm('Yakin hapus toko ini?')) return;
-      const tokoList = getTokoList().filter(t => t.id !== id);
-      saveTokoList(tokoList);
+      if (!confirm('Hapus toko ini? Semua data produk & pesanan akan hilang.')) return;
+      const list = getTokoList().filter(t => t.id !== id);
+      saveTokoList(list);
+      localStorage.removeItem('produk_' + id);
+      localStorage.removeItem('pesanan_' + id);
       renderTokoList();
     }
 
-    // ====== PROFILE ======
     function renderProfile() {
-      const user = getUser();
-      const infoDiv = document.getElementById('profileInfo');
-      infoDiv.innerHTML = `
-        <p><strong>Nama Aplikasi:</strong> ${user.nama}</p>
-        <p><strong>HP:</strong> ${user.hp}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Username:</strong> ${user.username}</p>
+      const sa = getSA();
+      document.getElementById('profileInfo').innerHTML = `
+        <p><strong>Nama Aplikasi:</strong> ${sa.nama}</p>
+        <p><strong>HP:</strong> ${sa.hp}</p>
+        <p><strong>Email:</strong> ${sa.email}</p>
+        <p><strong>Username:</strong> ${sa.username}</p>
       `;
       document.getElementById('profileNewPass').value = '';
       document.getElementById('profileConfirmPass').value = '';
-      const msg = document.getElementById('profileMsg');
-      msg.classList.add('hidden');
+      document.getElementById('profileMsg').classList.add('hidden');
     }
 
     function gantiPassword() {
-      const newPass = document.getElementById('profileNewPass').value.trim();
-      const confirmPass = document.getElementById('profileConfirmPass').value.trim();
-      const msgDiv = document.getElementById('profileMsg');
-      msgDiv.classList.add('hidden');
-
-      if (newPass.length < 4) {
-        msgDiv.textContent = 'Password minimal 4 karakter.';
-        msgDiv.className = 'error';
-        msgDiv.classList.remove('hidden');
+      const newP = document.getElementById('profileNewPass').value.trim();
+      const confirmP = document.getElementById('profileConfirmPass').value.trim();
+      const msg = document.getElementById('profileMsg');
+      msg.classList.add('hidden');
+      if (newP.length < 4) {
+        msg.textContent = 'Password minimal 4 karakter.';
+        msg.className = 'error';
+        msg.classList.remove('hidden');
         return;
       }
-      if (newPass !== confirmPass) {
-        msgDiv.textContent = 'Konfirmasi password tidak cocok.';
-        msgDiv.className = 'error';
-        msgDiv.classList.remove('hidden');
+      if (newP !== confirmP) {
+        msg.textContent = 'Konfirmasi password tidak cocok.';
+        msg.className = 'error';
+        msg.classList.remove('hidden');
         return;
       }
-      const user = getUser();
-      user.password = newPass;
-      saveUser(user);
-      msgDiv.textContent = 'Password berhasil diubah!';
-      msgDiv.className = 'success';
-      msgDiv.classList.remove('hidden');
-      document.getElementById('profileNewPass').value = '';
-      document.getElementById('profileConfirmPass').value = '';
+      const sa = getSA();
+      sa.password = newP;
+      saveSA(sa);
+      msg.textContent = 'Password berhasil diubah!';
+      msg.className = 'success';
+      msg.classList.remove('hidden');
     }
 
     function logout() {
+      sessionStorage.removeItem('sa_session');
       showLogin();
     }
 
@@ -395,24 +379,15 @@
       return div.innerHTML;
     }
 
-    // ====== INISIALISASI UTAMA ======
-    (function init() {
-      // Pastikan data user sesuai dengan superadmin, jika tidak reset
-      const stored = localStorage.getItem('toko_app_user');
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          if (parsed.username !== 'superadmin') {
-            localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-          }
-        } catch (e) {
-          localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-        }
-      } else {
-        localStorage.setItem('toko_app_user', JSON.stringify(DEFAULT_USER));
-      }
+    // Init
+    if (!localStorage.getItem('super_admin')) {
+      localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
+    }
+    if (sessionStorage.getItem('sa_session')) {
+      showDashboard();
+    } else {
       showLogin();
-    })();
+    }
   </script>
 </body>
 </html>
