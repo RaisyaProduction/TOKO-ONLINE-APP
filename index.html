@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Toko Online App">
   <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlRva28gT25saW5lIEFwcCIsCiAgInNob3J0X25hbWUiOiAiVG9rbyBBcHAiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhNTZkYiIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTU2ZGIiLAogICJpY29ucyI6IFtdCn0=">
-  <title>Toko Online App - v3.5 Multi Device</title>
+  <title>Toko Online App - v3.6 Aman</title>
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,16 +99,10 @@
     .btn-orange { background: #ea580c; color: white; } .btn-orange:hover { background: #c2410c; }
     .btn-pink { background: #db2777; color: white; } .btn-pink:hover { background: #be185d; }
     .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-    .badge-active { background: #d1fae5; color: #065f46; }
-    .badge-inactive { background: #fee2e2; color: #991b1b; }
-    .badge-expired { background: #fef3c7; color: #92400e; }
-    .badge-lunas { background: #d1fae5; color: #065f46; }
-    .badge-belum { background: #fee2e2; color: #991b1b; }
-    .badge-sebagian { background: #fef3c7; color: #92400e; }
-    .badge-trial { background: #dbeafe; color: #1e40af; }
-    .badge-online { background: #d1fae5; color: #065f46; }
-    .badge-offline { background: #f3f4f6; color: #6b7280; }
-    .badge-mengirim { background: #fef3c7; color: #92400e; }
+    .badge-active { background: #d1fae5; color: #065f46; } .badge-inactive { background: #fee2e2; color: #991b1b; }
+    .badge-lunas { background: #d1fae5; color: #065f46; } .badge-belum { background: #fee2e2; color: #991b1b; }
+    .badge-sebagian { background: #fef3c7; color: #92400e; } .badge-online { background: #d1fae5; color: #065f46; }
+    .badge-offline { background: #f3f4f6; color: #6b7280; } .badge-mengirim { background: #fef3c7; color: #92400e; }
     .badge-pending { background: #fef3c7; color: #92400e; }
     .profile-info p { margin: 8px 0; font-size: 15px; }
     .profile-info strong { display: inline-block; width: 120px; }
@@ -128,13 +122,11 @@
     .struk-preview { background: white; font-family: 'Courier New', monospace; padding: 20px; border: 2px dashed #333; border-radius: 8px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; font-size: 13px; line-height: 1.6; }
     .anggaran-progress { height: 10px; background: #e5e7eb; border-radius: 5px; margin: 8px 0; overflow: hidden; }
     .anggaran-progress .bar { height: 100%; border-radius: 5px; transition: width 0.5s; }
-    .anggaran-progress .bar.aman { background: #059669; }
-    .anggaran-progress .bar.warning { background: #d97706; }
+    .anggaran-progress .bar.aman { background: #059669; } .anggaran-progress .bar.warning { background: #d97706; }
     .anggaran-progress .bar.bahaya { background: #dc2626; }
     .profit-card { background: linear-gradient(135deg, #059669, #047857); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
     .profit-card.rugi { background: linear-gradient(135deg, #dc2626, #b91c1c); }
-    .profit-card .amount { font-size: 36px; font-weight: 800; }
-    .profit-card .label { font-size: 14px; opacity: 0.9; }
+    .profit-card .amount { font-size: 36px; font-weight: 800; } .profit-card .label { font-size: 14px; opacity: 0.9; }
     .online-order-header { background: linear-gradient(135deg,#059669,#047857); color: white; text-align: center; padding: 20px; border-radius: 16px; margin-bottom: 20px; }
     .online-order-header h1 { color: white; font-size: 22px; margin-bottom: 5px; justify-content: center; }
     .toko-info-card { background: #f0fdf4; border: 2px solid #059669; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
@@ -142,8 +134,7 @@
     .produk-order-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
     .produk-order-item:hover { transform: translateX(3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
     .produk-order-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #f3f4f6; }
-    .produk-order-item .order-info { flex: 1; }
-    .produk-order-item .order-info h4 { margin-bottom: 5px; font-size: 16px; }
+    .produk-order-item .order-info { flex: 1; } .produk-order-item .order-info h4 { margin-bottom: 5px; font-size: 16px; }
     .produk-order-item .order-info .price { color: #059669; font-weight: 700; font-size: 18px; }
     .produk-order-item .order-info .stock { font-size: 12px; color: #6b7280; }
     .keranjang-order { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -153,8 +144,7 @@
     .wa-order-btn { background: #25D366; color: white; padding: 15px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; }
     .wa-order-btn:hover { background: #128C7E; }
     .pesanan-online-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #1a56db; }
-    .pesanan-online-card.diproses { border-left-color: #d97706; }
-    .pesanan-online-card.selesai { border-left-color: #059669; }
+    .pesanan-online-card.diproses { border-left-color: #d97706; } .pesanan-online-card.selesai { border-left-color: #059669; }
     .login-info { font-size: 13px; color: #6b7280; margin-top: 15px; text-align: center; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; }
     .share-link-box { background: #f0fdf4; border: 2px dashed #059669; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
     .share-link-box .link-url { background: white; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px; word-break: break-all; margin: 10px 0; border: 1px solid #d1d5db; text-align: left; }
@@ -167,8 +157,7 @@
     .btn-lihat-katalog { background: #0d9488; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; width: auto; border: none; cursor: pointer; }
     .btn-lihat-katalog:hover { background: #0f766e; }
     .search-bar-direktori { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-    .search-bar-direktori input { flex: 2; min-width: 200px; }
-    .search-bar-direktori select { flex: 1; min-width: 150px; }
+    .search-bar-direktori input { flex: 2; min-width: 200px; } .search-bar-direktori select { flex: 1; min-width: 150px; }
     .produk-katalog-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: 0.2s; }
     .produk-katalog-item:hover { transform: scale(1.02); }
     .produk-katalog-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #f3f4f6; }
@@ -176,35 +165,33 @@
     .btn-kembali-direktori { background: #6b7280; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; border: none; width: auto; margin-bottom: 15px; font-size: 14px; }
     .tracking-timeline { padding: 15px 0; }
     .tracking-item { display: flex; gap: 12px; padding: 10px 0; border-left: 3px solid #d1d5db; margin-left: 10px; padding-left: 20px; position: relative; }
-    .tracking-item.aktif { border-left-color: #059669; }
-    .tracking-item.selesai { border-left-color: #059669; }
+    .tracking-item.aktif { border-left-color: #059669; } .tracking-item.selesai { border-left-color: #059669; }
     .tracking-item.gagal { border-left-color: #dc2626; }
     .tracking-item::before { content: ''; position: absolute; left: -7px; top: 15px; width: 12px; height: 12px; border-radius: 50%; background: #d1d5db; }
-    .tracking-item.aktif::before { background: #f59e0b; }
-    .tracking-item.selesai::before { background: #059669; }
+    .tracking-item.aktif::before { background: #f59e0b; } .tracking-item.selesai::before { background: #059669; }
     .tracking-item.gagal::before { background: #dc2626; }
     .notif-badge { background: #dc2626; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; position: relative; top: -5px; }
     .daftar-hero { background: linear-gradient(135deg, #db2777, #be185d); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
     .daftar-hero h1 { color: white; justify-content: center; }
+    .daftar-hero-toko { background: linear-gradient(135deg, #1a56db, #1e40af); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-toko h1 { color: white; justify-content: center; }
+    .daftar-hero-ojek { background: linear-gradient(135deg, #ea580c, #c2410c); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-ojek h1 { color: white; justify-content: center; }
     .reset-akun-btn { background: #fef3c7; color: #92400e; border: 2px dashed #d97706; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; width: 100%; }
     .reset-akun-btn:hover { background: #fde68a; }
+    .pilihan-daftar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
     @media (max-width: 768px) {
-      .dashboard { flex-direction: column; }
-      .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
-      .content { padding: 15px; }
-      table { font-size: 12px; }
-      th,td { padding: 6px 8px; }
-      .install-banner { flex-wrap: wrap; padding: 12px 15px; }
-      .landing-page { padding: 10px; }
-      .hero-section h1 { font-size: 22px; }
-      .produk-order-item { flex-direction: column; text-align: center; }
+      .dashboard { flex-direction: column; } .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
+      .content { padding: 15px; } table { font-size: 12px; } th,td { padding: 6px 8px; }
+      .install-banner { flex-wrap: wrap; padding: 12px 15px; } .landing-page { padding: 10px; }
+      .hero-section h1 { font-size: 22px; } .produk-order-item { flex-direction: column; text-align: center; }
       .produk-order-item img { width: 120px; height: 120px; }
     }
   </style>
 </head>
 <body>
   <div id="offlineBanner" class="offline-banner">📡 Anda sedang offline. Data akan disimpan lokal dan otomatis sinkron saat online.</div>
-  <div id="trialWarningBanner" class="trial-warning-banner">⏰ Masa trial akan segera berakhir! Semua data akan otomatis terhapus. Segera hubungi Super Admin untuk aktivasi permanen.</div>
+  <div id="trialWarningBanner" class="trial-warning-banner">⏰ Masa trial akan segera berakhir! Semua data akan otomatis terhapus. Segera hubungi Admin untuk aktivasi permanen.</div>
   <div id="installBanner" class="install-banner">
     <div class="install-icon">📲</div>
     <div class="install-text"><strong>Install Toko Online App</strong><span>Akses cepat tanpa buka browser. Data tetap aman.</span></div>
@@ -217,9 +204,8 @@
         <h2>⏰ MASA TRIAL BERAKHIR</h2>
         <p style="margin-bottom:15px;">Semua data toko Anda telah <strong>dihapus otomatis</strong> oleh sistem.</p>
         <div class="warning-box">⚠️ Produk, transaksi, kasbon, anggaran, dan semua data telah dihapus permanen.</div>
-        <p style="margin-top:15px;"><strong>Segera hubungi Super Admin</strong> untuk aktivasi permanen.</p>
-        <a href="https://wa.me/6281220285226" target="_blank" class="wa-button" style="display:inline-flex; margin:15px 0;">💬 WA Dede Bintang</a>
-        <p style="font-size:12px; color:#6b7280;">📱 0812 2028 5226</p>
+        <p style="margin-top:15px;"><strong>Segera hubungi Admin</strong> untuk aktivasi permanen.</p>
+        <a href="https://wa.me/6281220285226" target="_blank" class="wa-button" style="display:inline-flex; margin:15px 0;">💬 WA Admin</a>
         <button onclick="document.getElementById('trialExpiredModal').classList.add('hidden'); goToLanding();" class="btn-sm btn-blue" style="margin-top:10px;">Kembali ke Halaman Utama</button>
       </div>
     </div>
@@ -228,24 +214,24 @@
   <!-- LANDING PAGE -->
   <div id="landingPage" class="landing-page">
     <div class="hero-section"><h1>🏪 Aplikasi Toko Online</h1><p class="subtitle">Solusi Kasir & Manajemen Toko Modern</p><p class="subtitle" style="font-size:14px;">Bisa Offline • Bisa Install di HP • Multi Device • Ojek Terdaftar</p></div>
-    <div class="trial-info"><h4>🎉 UJI COBA GRATIS 3 HARI! - SIAP PAKAI DI SEMUA HP</h4><p style="margin-bottom:10px;">Akun trial otomatis dibuat di setiap HP. Langsung login:</p><div class="trial-credentials"><div>👑 <strong>Super Admin:</strong> superadmin / tokoonlineapp</div><div>🏬 <strong>Pemilik Toko:</strong> user / user</div><div>🛵 <strong>Ojek:</strong> ojek1 / ojek123</div><div>👥 <strong>Pelanggan:</strong> cust001 / pelanggan123</div></div></div>
+    <div class="trial-info"><h4>🎉 UJI COBA GRATIS 3 HARI! - SIAP PAKAI DI SEMUA HP</h4><p style="margin-bottom:10px;">Akun trial otomatis dibuat di setiap HP. Langsung login:</p><div class="trial-credentials"><div>🏬 <strong>Pemilik Toko:</strong> user / user</div><div>🛵 <strong>Ojek:</strong> ojek1 / ojek123</div><div>👥 <strong>Pelanggan:</strong> cust001 / pelanggan123</div><div style="color:#dc2626; font-size:11px; margin-top:5px;">🔒 Akun Super Admin dirahasiakan demi keamanan</div></div></div>
     <div class="login-section"><button onclick="goToLogin()">🔐 Masuk / Login Aplikasi</button></div>
     <div style="text-align:center; margin: 15px 0; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
       <button onclick="bukaDirektori()" class="btn-sm btn-teal" style="font-size:16px; padding:12px 25px;">🏪 Lihat Direktori Toko</button>
-      <button onclick="showDaftarPage()" class="btn-sm btn-pink" style="font-size:16px; padding:12px 25px;">📝 Daftar Jadi Pelanggan</button>
+      <button onclick="showDaftarPage()" class="btn-sm btn-pink" style="font-size:16px; padding:12px 25px;">📝 Daftar Akun Baru</button>
     </div>
     <div class="price-card promo" style="margin-top:20px;"><h3>💎 Harga Promo Berlangganan</h3><div id="landingPriceList"></div></div>
     <button class="feature-toggle-btn" onclick="toggleFeatures()" id="featureToggleBtn">📋 Tampilkan Semua Kelebihan Fitur (55+)</button>
     <div id="featuresContainer" class="features-list hidden">
       <h3>🌟 SEMUA KELEBIHAN & FITUR LENGKAP</h3>
-      <div class="feature-category"><h4>📱 MULTI DEVICE (BARU!)</h4><ul><li>Buka di HP mana pun, akun trial langsung tersedia</li><li>Pelanggan bisa daftar mandiri</li><li>Reset akun trial dengan 1 tombol</li></ul></div>
-      <div class="feature-category"><h4>📦 MANAJEMEN PRODUK</h4><ul><li>Scan barcode, upload foto, edit, hapus</li></ul></div>
+      <div class="feature-category"><h4>📱 MULTI DEVICE</h4><ul><li>Buka di HP mana pun, akun trial langsung tersedia</li><li>Pelanggan, Toko, Ojek bisa daftar mandiri</li><li>Reset akun trial dengan 1 tombol</li></ul></div>
+      <div class="feature-category"><h4>📦 PRODUK & TRANSAKSI</h4><ul><li>Scan barcode, upload foto, edit, hapus</li><li>Transaksi cepat, hitung kembalian, struk digital</li></ul></div>
       <div class="feature-category"><h4>🛒 ONLINE ORDER + OJEK</h4><ul><li>Katalog online, link share, konfirmasi WA</li><li>Ojek terdaftar, auto-assign, tracking</li></ul></div>
-      <div class="feature-category"><h4>👥 PELANGGAN - DAFTAR MANDIRI</h4><ul><li>Daftar sendiri dari HP, langsung aktif</li><li>Riwayat pesanan, tracking order</li></ul></div>
-      <div class="feature-category"><h4>🏪 DIREKTORI + TRANSAKSI + LAPORAN</h4><ul><li>Direktori toko, pencarian, filter</li><li>Kasir, kasbon, anggaran, laporan lengkap</li></ul></div>
+      <div class="feature-category"><h4>👥 DAFTAR MANDIRI</h4><ul><li>Pelanggan, Toko, Ojek bisa daftar sendiri</li><li>Langsung aktif tanpa verifikasi</li></ul></div>
+      <div class="feature-category"><h4>🏪 DIREKTORI + LAPORAN</h4><ul><li>Direktori toko, pencarian, filter</li><li>Kasbon, anggaran, laporan lengkap</li></ul></div>
     </div>
-    <div class="contact-section"><h3>📞 Hubungi Super Admin</h3><a href="https://wa.me/6281220285226" target="_blank" class="wa-button">💬 WA Dede Bintang</a></div>
-    <p style="text-align:center; font-size:12px; color:#9ca3af; margin:20px 0;">© 2025 Toko Online App • v3.5 • All Rights Reserved</p>
+    <div class="contact-section"><h3>📞 Hubungi Admin</h3><a href="https://wa.me/6281220285226" target="_blank" class="wa-button">💬 WA Admin</a></div>
+    <p style="text-align:center; font-size:12px; color:#9ca3af; margin:20px 0;">© 2025 Toko Online App • v3.6 • All Rights Reserved</p>
   </div>
 
   <!-- LOGIN -->
@@ -261,26 +247,63 @@
     <div style="text-align:center; margin-top:10px;"><span class="link" onclick="goToLanding()">← Kembali ke Halaman Utama</span></div>
   </div>
 
-  <!-- HALAMAN DAFTAR PELANGGAN MANDIRI -->
+  <!-- HALAMAN PILIH DAFTAR -->
   <div id="daftarPage" class="container hidden" style="max-width:500px;">
+    <h2 style="justify-content:center;">📝 Daftar Akun Baru</h2>
+    <p style="text-align:center; margin-bottom:20px;">Pilih jenis akun yang ingin didaftarkan:</p>
+    <div class="pilihan-daftar">
+      <button onclick="showDaftarPelanggan()" class="btn-sm btn-pink" style="font-size:18px; padding:20px; flex:1;">👥 Pelanggan<br><small>Untuk berbelanja</small></button>
+      <button onclick="showDaftarToko()" class="btn-sm btn-blue" style="font-size:18px; padding:20px; flex:1;">🏬 Toko<br><small>Trial 3 Hari</small></button>
+      <button onclick="showDaftarOjek()" class="btn-sm btn-orange" style="font-size:18px; padding:20px; flex:1;">🛵 Ojek<br><small>Jadi Kurir</small></button>
+    </div>
+    <div style="text-align:center; margin-top:15px;"><span class="link" onclick="showLogin()">← Sudah punya akun? Login</span></div>
+  </div>
+
+  <!-- HALAMAN DAFTAR PELANGGAN -->
+  <div id="daftarPelangganPage" class="container hidden" style="max-width:500px;">
     <div class="daftar-hero"><h1>📝 Daftar Pelanggan Baru</h1><p>Isi data untuk membuat akun belanja</p></div>
-    <div id="daftarError" class="error hidden"></div>
-    <div id="daftarSuccess" class="success hidden"></div>
-    <input type="text" id="daftarNama" placeholder="Nama Lengkap *">
-    <input type="text" id="daftarNoHp" placeholder="No HP / WA *">
-    <textarea id="daftarAlamat" placeholder="Alamat Lengkap *" rows="2"></textarea>
-    <input type="text" id="daftarDesa" placeholder="Desa/Kelurahan *">
-    <input type="text" id="daftarKecamatan" placeholder="Kecamatan *">
-    <input type="text" id="daftarKabupaten" placeholder="Kabupaten/Kota *">
-    <input type="text" id="daftarUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="daftarPassword" placeholder="Password *">
-    <input type="password" id="daftarConfirmPassword" placeholder="Konfirmasi Password *">
+    <div id="daftarPelangganError" class="error hidden"></div>
+    <div id="daftarPelangganSuccess" class="success hidden"></div>
+    <input type="text" id="dpNama" placeholder="Nama Lengkap *"><input type="text" id="dpNoHp" placeholder="No HP / WA *">
+    <textarea id="dpAlamat" placeholder="Alamat Lengkap *" rows="2"></textarea>
+    <input type="text" id="dpDesa" placeholder="Desa/Kelurahan *"><input type="text" id="dpKecamatan" placeholder="Kecamatan *">
+    <input type="text" id="dpKabupaten" placeholder="Kabupaten/Kota *"><input type="text" id="dpUsername" placeholder="Username untuk Login *" autocomplete="off">
+    <input type="password" id="dpPassword" placeholder="Password *"><input type="password" id="dpConfirmPassword" placeholder="Konfirmasi Password *">
     <button onclick="daftarPelanggan()" class="btn-sm btn-pink" style="font-size:18px; padding:15px;">📝 Daftar Sekarang</button>
     <p style="text-align:center; font-size:12px; color:#6b7280; margin-top:10px;">* Wajib diisi. Akun langsung aktif setelah daftar.</p>
-    <div style="text-align:center; margin-top:10px;"><span class="link" onclick="showLogin()">← Sudah punya akun? Login</span></div>
+    <div style="text-align:center; margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
+  </div>
+
+  <!-- HALAMAN DAFTAR TOKO -->
+  <div id="daftarTokoPage" class="container hidden" style="max-width:500px;">
+    <div class="daftar-hero-toko"><h1>🏬 Daftar Toko Baru</h1><p>Langsung dapat trial 3 hari gratis</p></div>
+    <div id="daftarTokoError" class="error hidden"></div>
+    <div id="daftarTokoSuccess" class="success hidden"></div>
+    <input type="text" id="dtNamaToko" placeholder="Nama Toko *"><input type="text" id="dtPemilik" placeholder="Nama Pemilik *">
+    <input type="text" id="dtNoHp" placeholder="No HP / WA *"><textarea id="dtAlamat" placeholder="Alamat Toko *" rows="2"></textarea>
+    <input type="email" id="dtEmail" placeholder="Email (contoh: toko@mail.com) *"><input type="text" id="dtUsername" placeholder="Username untuk Login *" autocomplete="off">
+    <input type="password" id="dtPassword" placeholder="Password *"><input type="password" id="dtConfirmPassword" placeholder="Konfirmasi Password *">
+    <button onclick="daftarToko()" class="btn-sm btn-blue" style="font-size:18px; padding:15px;">🏬 Daftar Toko (Trial 3 Hari)</button>
+    <p style="text-align:center; font-size:12px; color:#6b7280; margin-top:10px;">* Wajib diisi. Akun langsung aktif dengan masa trial 3 hari.</p>
+    <div style="text-align:center; margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
+  </div>
+
+  <!-- HALAMAN DAFTAR OJEK -->
+  <div id="daftarOjekPage" class="container hidden" style="max-width:500px;">
+    <div class="daftar-hero-ojek"><h1>🛵 Daftar Ojek Baru</h1><p>Jadi kurir terdaftar untuk toko-toko</p></div>
+    <div id="daftarOjekError" class="error hidden"></div>
+    <div id="daftarOjekSuccess" class="success hidden"></div>
+    <input type="text" id="doNama" placeholder="Nama Lengkap *"><input type="text" id="doNoHp" placeholder="No HP / WA *">
+    <input type="text" id="doNoKendaraan" placeholder="No Kendaraan (contoh: B 1234 XYZ) *">
+    <input type="text" id="doDesa" placeholder="Desa/Kelurahan *"><input type="text" id="doKecamatan" placeholder="Kecamatan *">
+    <input type="text" id="doKabupaten" placeholder="Kabupaten/Kota *"><input type="text" id="doUsername" placeholder="Username untuk Login *" autocomplete="off">
+    <input type="password" id="doPassword" placeholder="Password *"><input type="password" id="doConfirmPassword" placeholder="Konfirmasi Password *">
+    <button onclick="daftarOjek()" class="btn-sm btn-orange" style="font-size:18px; padding:15px;">🛵 Daftar Ojek</button>
+    <p style="text-align:center; font-size:12px; color:#6b7280; margin-top:10px;">* Wajib diisi. Akun langsung aktif, status awal offline.</p>
+    <div style="text-align:center; margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
   </div>
 <!-- MODAL KONTAK -->
-<div id="modalKontak" class="modal hidden"><div class="modal-content" style="max-width:400px; text-align:center;"><h3>📞 Hubungi Super Admin</h3><p style="margin:10px 0;">Untuk pembuatan akun toko, aktivasi, dan bantuan teknis:</p><div style="background:#f9fafb; padding:15px; border-radius:8px; margin:15px 0; text-align:left;"><p>📱 <strong>HP/WA:</strong> 0812 2028 5226</p><p>✉️ <strong>Email:</strong> dedesugiono.ai@gmail.com</p></div><button onclick="document.getElementById('modalKontak').classList.add('hidden')" class="btn-sm btn-blue">Tutup</button></div></div>
+<div id="modalKontak" class="modal hidden"><div class="modal-content" style="max-width:400px; text-align:center;"><h3>📞 Hubungi Admin</h3><p style="margin:10px 0;">Untuk aktivasi toko dan bantuan teknis:</p><div style="background:#f9fafb; padding:15px; border-radius:8px; margin:15px 0; text-align:left;"><p>📱 <strong>HP/WA:</strong> 0812 2028 5226</p><p>✉️ <strong>Email:</strong> dedesugiono.ai@gmail.com</p></div><button onclick="document.getElementById('modalKontak').classList.add('hidden')" class="btn-sm btn-blue">Tutup</button></div></div>
 
 <!-- LUPA PASSWORD -->
 <div id="lupaPage" class="container hidden"><h1>🔑 Lupa Password</h1><p>Masukkan username, lalu verifikasi.</p><div id="lupaError" class="error hidden"></div><input type="text" id="lupaUsername" placeholder="Username"><button onclick="cekUsernameLupa()">Lanjutkan</button><div style="text-align:center; margin-top:10px;"><span class="link" onclick="showLogin()">← Kembali ke Login</span></div></div>
@@ -482,72 +505,20 @@
     function getLandingData(){let d=localStorage.getItem('landing_data');if(!d){localStorage.setItem('landing_data',JSON.stringify(DEFAULT_LANDING));return DEFAULT_LANDING}try{return JSON.parse(d)}catch(e){return DEFAULT_LANDING}}
     function saveLandingData(d){localStorage.setItem('landing_data',JSON.stringify(d))}
 
-    // ==================== RESET AKUN TRIAL (v3.5 - MULTI DEVICE) ====================
+    // ==================== RESET AKUN TRIAL (v3.6 - AMAN) ====================
     function resetSemuaAkunTrial(){
-      if(!confirm('Reset semua akun trial? Data toko & transaksi akan terhapus. Akun trial akan kembali seperti semula.'))return;
-      
-      // Reset Super Admin
+      if(!confirm('Reset semua akun trial? Data akan terhapus. Akun trial akan kembali seperti semula.'))return;
       localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
-      
-      // Reset Toko Trial
-      const tokoTrial = [{
-        id: 'toko_trial_default',
-        namaToko: 'Toko Trial',
-        pemilik: 'Pemilik Trial',
-        noHp: '081234567890',
-        alamat: 'Jl. Merdeka No.1',
-        email: 'toko@trial.com',
-        username: 'user',
-        password: 'user',
-        aktivasi: {status:'aktif', tipe:'gratis', mulai:Date.now(), berakhir:Date.now()+3*24*60*60*1000},
-        kasir: [{username:'kasir1', password:'kasir123'}]
-      }];
+      const tokoTrial = [{id:'toko_trial_default',namaToko:'Toko Trial',pemilik:'Pemilik Trial',noHp:'081234567890',alamat:'Jl. Merdeka No.1',email:'toko@trial.com',username:'user',password:'user',aktivasi:{status:'aktif',tipe:'gratis',mulai:Date.now(),berakhir:Date.now()+3*24*60*60*1000},kasir:[{username:'kasir1',password:'kasir123'}]}];
       saveTokoList(tokoTrial);
-      
-      // Hapus data toko trial
-      ['produk_toko_trial_default','keranjang_toko_trial_default','transaksi_toko_trial_default','keuangan_toko_trial_default','pemeriksaan_toko_trial_default','kasbon_toko_trial_default','anggaran_toko_trial_default','keuntungan_toko_trial_default','barangHilang_toko_trial_default','pesananOnline_toko_trial_default','pengiriman_toko_trial_default'].forEach(k => localStorage.removeItem(k));
-      
-      // Reset Ojek Trial
-      const ojekTrial = [{
-        id: 'ojek_trial_default',
-        nama: 'Ojek Trial',
-        noHp: '081234567890',
-        noKendaraan: 'B 1234 XYZ',
-        desa: 'Sukamaju',
-        kecamatan: 'Cibadak',
-        kabupaten: 'Lebak',
-        username: 'ojek1',
-        password: 'ojek123',
-        status: 'offline',
-        rating: 0,
-        totalOrder: 0
-      }];
+      ['produk_toko_trial_default','keranjang_toko_trial_default','transaksi_toko_trial_default','keuangan_toko_trial_default','pemeriksaan_toko_trial_default','kasbon_toko_trial_default','anggaran_toko_trial_default','keuntungan_toko_trial_default','barangHilang_toko_trial_default','pesananOnline_toko_trial_default','pengiriman_toko_trial_default'].forEach(k=>localStorage.removeItem(k));
+      const ojekTrial = [{id:'ojek_trial_default',nama:'Ojek Trial',noHp:'081234567890',noKendaraan:'B 1234 XYZ',desa:'Sukamaju',kecamatan:'Cibadak',kabupaten:'Lebak',username:'ojek1',password:'ojek123',status:'offline',rating:0,totalOrder:0}];
       saveOjekList(ojekTrial);
-      
-      // Reset Pelanggan Trial
-      const pelTrial = [{
-        id: 'cust_trial_default',
-        nama: 'Pelanggan Trial',
-        noHp: '081298765432',
-        alamat: 'Jl. Mawar No.12',
-        desa: 'Sukamaju',
-        kecamatan: 'Cibadak',
-        kabupaten: 'Lebak',
-        username: 'cust001',
-        password: 'pelanggan123',
-        status: 'aktif'
-      }];
+      const pelTrial = [{id:'cust_trial_default',nama:'Pelanggan Trial',noHp:'081298765432',alamat:'Jl. Mawar No.12',desa:'Sukamaju',kecamatan:'Cibadak',kabupaten:'Lebak',username:'cust001',password:'pelanggan123',status:'aktif'}];
       savePelangganList(pelTrial);
-      
-      // Reset Direktori
-      const dirData = {};
-      dirData['toko_trial_default'] = {tokoId:'toko_trial_default', namaDesa:'', namaKecamatan:'', namaKabupaten:'', namaProvinsi:''};
-      saveDirektoriData(dirData);
-      
-      // Hapus session
+      const dirData={};dirData['toko_trial_default']={tokoId:'toko_trial_default',namaDesa:'',namaKecamatan:'',namaKabupaten:'',namaProvinsi:''};saveDirektoriData(dirData);
       clearSession();
-      
-      alert('✅ Akun trial berhasil direset!\n\nSilakan login dengan:\n• Super Admin: superadmin / tokoonlineapp\n• Pemilik Toko: user / user\n• Kasir: kasir1 / kasir123\n• Ojek: ojek1 / ojek123\n• Pelanggan: cust001 / pelanggan123');
+      alert('✅ Akun trial berhasil direset!\n\n• Pemilik Toko: user / user\n• Kasir: kasir1 / kasir123\n• Ojek: ojek1 / ojek123\n• Pelanggan: cust001 / pelanggan123\n\n🔒 Super Admin: Hubungi Admin');
       location.reload();
     }
 
@@ -559,19 +530,13 @@
       for (const t of tokoList) {
         if (t.id !== excludeTokoId && t.username === username) return true;
         if (t.kasir && Array.isArray(t.kasir)) {
-          for (const k of t.kasir) {
-            if (k.username === username) return true;
-          }
+          for (const k of t.kasir) { if (k.username === username) return true; }
         }
       }
       const ojekList = getOjekList();
-      for (const o of ojekList) {
-        if (o.id !== excludeOjekId && o.username === username) return true;
-      }
+      for (const o of ojekList) { if (o.id !== excludeOjekId && o.username === username) return true; }
       const pelangganList = getPelangganList();
-      for (const p of pelangganList) {
-        if (p.id !== excludePelangganId && p.username === username) return true;
-      }
+      for (const p of pelangganList) { if (p.id !== excludePelangganId && p.username === username) return true; }
       return false;
     }
 
@@ -586,44 +551,56 @@
     async function ambilBuktiDariDB(id){const d=await openDB();return new Promise((resolve,reject)=>{const tx=d.transaction('bukti_pengiriman','readonly');const req=tx.objectStore('bukti_pengiriman').get(id);req.onsuccess=()=>resolve(req.result?req.result.blob:null);req.onerror=()=>reject('Gagal')})}
 
     // ==================== UI ====================
-    function hideAll(){['landingPage','loginPage','daftarPage','lupaPage','verifikasiPage','resetPage','superAdminDashboard','tokoDashboard','ojekDashboard','pelangganDashboard','katalogOnlinePage','modalAktivasi','scanModal','modalPilihProduk','modalStruk','modalBayarKasbon','modalKontak','modalKonfirmasiOnline','trialExpiredModal','direktoriPage','katalogTokoPage','modalEditProfilDirektori','modalAssignOjek','modalTracking'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden')})}
+    function hideAll(){['landingPage','loginPage','daftarPage','daftarPelangganPage','daftarTokoPage','daftarOjekPage','lupaPage','verifikasiPage','resetPage','superAdminDashboard','tokoDashboard','ojekDashboard','pelangganDashboard','katalogOnlinePage','modalAktivasi','scanModal','modalPilihProduk','modalStruk','modalBayarKasbon','modalKontak','modalKonfirmasiOnline','trialExpiredModal','direktoriPage','katalogTokoPage','modalEditProfilDirektori','modalAssignOjek','modalTracking'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden')})}
     function goToLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden');document.getElementById('loginUsername').value='';document.getElementById('loginPassword').value='';document.getElementById('loginError').classList.add('hidden')}
     function goToLanding(){hideAll();document.getElementById('landingPage').classList.remove('hidden');renderLandingPrices()}
     function showLogin(){goToLogin()}
-    function showDaftarPage(){hideAll();document.getElementById('daftarPage').classList.remove('hidden');document.getElementById('daftarError').classList.add('hidden');document.getElementById('daftarSuccess').classList.add('hidden')}
+    function showDaftarPage(){hideAll();document.getElementById('daftarPage').classList.remove('hidden')}
+    function showDaftarPelanggan(){hideAll();document.getElementById('daftarPelangganPage').classList.remove('hidden');document.getElementById('daftarPelangganError').classList.add('hidden');document.getElementById('daftarPelangganSuccess').classList.add('hidden')}
+    function showDaftarToko(){hideAll();document.getElementById('daftarTokoPage').classList.remove('hidden');document.getElementById('daftarTokoError').classList.add('hidden');document.getElementById('daftarTokoSuccess').classList.add('hidden')}
+    function showDaftarOjek(){hideAll();document.getElementById('daftarOjekPage').classList.remove('hidden');document.getElementById('daftarOjekError').classList.add('hidden');document.getElementById('daftarOjekSuccess').classList.add('hidden')}
     function showContactInfo(){document.getElementById('modalKontak').classList.remove('hidden')}
     function renderLandingPrices(){const ld=getLandingData();const c=document.getElementById('landingPriceList');if(!c)return;c.innerHTML=ld.prices.map(p=>`<div class="price-item"><span class="duration">📅 ${p.durasi}</span><span class="price">Rp ${p.harga.toLocaleString('id-ID')}</span></div>`).join('')}
     function toggleFeatures(){const c=document.getElementById('featuresContainer');const b=document.getElementById('featureToggleBtn');if(c.classList.contains('hidden')){c.classList.remove('hidden');b.textContent='📋 Sembunyikan Fitur';c.scrollIntoView({behavior:'smooth'})}else{c.classList.add('hidden');b.textContent='📋 Tampilkan Semua Kelebihan Fitur (55+)'}}
 
-    // ==================== PENDAFTARAN PELANGGAN MANDIRI (v3.5) ====================
+    // ==================== PENDAFTARAN MANDIRI (v3.6) ====================
     function daftarPelanggan(){
-      const nama=document.getElementById('daftarNama').value.trim();
-      const noHp=document.getElementById('daftarNoHp').value.trim();
-      const alamat=document.getElementById('daftarAlamat').value.trim();
-      const desa=document.getElementById('daftarDesa').value.trim();
-      const kecamatan=document.getElementById('daftarKecamatan').value.trim();
-      const kabupaten=document.getElementById('daftarKabupaten').value.trim();
-      const username=document.getElementById('daftarUsername').value.trim();
-      const password=document.getElementById('daftarPassword').value;
-      const confirmPassword=document.getElementById('daftarConfirmPassword').value;
-      
-      document.getElementById('daftarError').classList.add('hidden');
-      document.getElementById('daftarSuccess').classList.add('hidden');
-      
-      if(!nama||!noHp||!alamat||!desa||!kecamatan||!kabupaten||!username||!password){document.getElementById('daftarError').textContent='Semua field wajib diisi.';document.getElementById('daftarError').classList.remove('hidden');return}
-      if(password.length<4){document.getElementById('daftarError').textContent='Password minimal 4 karakter.';document.getElementById('daftarError').classList.remove('hidden');return}
-      if(password!==confirmPassword){document.getElementById('daftarError').textContent='Konfirmasi password tidak cocok.';document.getElementById('daftarError').classList.remove('hidden');return}
-      if(isUsernameExist(username)){document.getElementById('daftarError').textContent='Username sudah digunakan. Silakan pilih username lain.';document.getElementById('daftarError').classList.remove('hidden');return}
-      
-      let list=getPelangganList();
-      list.push({id:Date.now().toString(),nama,noHp,alamat,desa,kecamatan,kabupaten,username,password,status:'aktif'});
-      savePelangganList(list);
-      
-      document.getElementById('daftarSuccess').innerHTML=`✅ Pendaftaran berhasil!<br>Silakan login dengan username: <strong>${username}</strong>`;
-      document.getElementById('daftarSuccess').classList.remove('hidden');
-      
-      ['daftarNama','daftarNoHp','daftarAlamat','daftarDesa','daftarKecamatan','daftarKabupaten','daftarUsername','daftarPassword','daftarConfirmPassword'].forEach(id=>document.getElementById(id).value='');
-      
+      const nama=document.getElementById('dpNama').value.trim(),noHp=document.getElementById('dpNoHp').value.trim(),alamat=document.getElementById('dpAlamat').value.trim(),desa=document.getElementById('dpDesa').value.trim(),kecamatan=document.getElementById('dpKecamatan').value.trim(),kabupaten=document.getElementById('dpKabupaten').value.trim(),username=document.getElementById('dpUsername').value.trim(),password=document.getElementById('dpPassword').value,confirmPassword=document.getElementById('dpConfirmPassword').value;
+      document.getElementById('daftarPelangganError').classList.add('hidden');document.getElementById('daftarPelangganSuccess').classList.add('hidden');
+      if(!nama||!noHp||!alamat||!desa||!kecamatan||!kabupaten||!username||!password){document.getElementById('daftarPelangganError').textContent='Semua field wajib diisi.';document.getElementById('daftarPelangganError').classList.remove('hidden');return}
+      if(password.length<4){document.getElementById('daftarPelangganError').textContent='Password minimal 4 karakter.';document.getElementById('daftarPelangganError').classList.remove('hidden');return}
+      if(password!==confirmPassword){document.getElementById('daftarPelangganError').textContent='Konfirmasi password tidak cocok.';document.getElementById('daftarPelangganError').classList.remove('hidden');return}
+      if(isUsernameExist(username)){document.getElementById('daftarPelangganError').textContent='Username sudah digunakan.';document.getElementById('daftarPelangganError').classList.remove('hidden');return}
+      let list=getPelangganList();list.push({id:Date.now().toString(),nama,noHp,alamat,desa,kecamatan,kabupaten,username,password,status:'aktif'});savePelangganList(list);
+      document.getElementById('daftarPelangganSuccess').innerHTML=`✅ Pendaftaran berhasil!<br>Silakan login dengan username: <strong>${username}</strong>`;document.getElementById('daftarPelangganSuccess').classList.remove('hidden');
+      ['dpNama','dpNoHp','dpAlamat','dpDesa','dpKecamatan','dpKabupaten','dpUsername','dpPassword','dpConfirmPassword'].forEach(id=>document.getElementById(id).value='');
+      setTimeout(()=>{showLogin();document.getElementById('loginUsername').value=username;},3000);
+    }
+
+    function daftarToko(){
+      const namaToko=document.getElementById('dtNamaToko').value.trim(),pemilik=document.getElementById('dtPemilik').value.trim(),noHp=document.getElementById('dtNoHp').value.trim(),alamat=document.getElementById('dtAlamat').value.trim(),email=document.getElementById('dtEmail').value.trim(),username=document.getElementById('dtUsername').value.trim(),password=document.getElementById('dtPassword').value,confirmPassword=document.getElementById('dtConfirmPassword').value;
+      document.getElementById('daftarTokoError').classList.add('hidden');document.getElementById('daftarTokoSuccess').classList.add('hidden');
+      if(!namaToko||!pemilik||!noHp||!alamat||!email||!username||!password){document.getElementById('daftarTokoError').textContent='Semua field wajib diisi.';document.getElementById('daftarTokoError').classList.remove('hidden');return}
+      if(!email.includes('@')||!email.includes('.')){document.getElementById('daftarTokoError').textContent='Format email tidak valid.';document.getElementById('daftarTokoError').classList.remove('hidden');return}
+      if(password.length<4){document.getElementById('daftarTokoError').textContent='Password minimal 4 karakter.';document.getElementById('daftarTokoError').classList.remove('hidden');return}
+      if(password!==confirmPassword){document.getElementById('daftarTokoError').textContent='Konfirmasi password tidak cocok.';document.getElementById('daftarTokoError').classList.remove('hidden');return}
+      if(isUsernameExist(username)){document.getElementById('daftarTokoError').textContent='Username sudah digunakan.';document.getElementById('daftarTokoError').classList.remove('hidden');return}
+      let list=getTokoList();list.push({id:Date.now().toString(),namaToko,pemilik,noHp,alamat,email,username,password,aktivasi:{status:'aktif',tipe:'gratis',mulai:Date.now(),berakhir:Date.now()+3*24*60*60*1000},kasir:[]});saveTokoList(list);
+      document.getElementById('daftarTokoSuccess').innerHTML=`✅ Toko berhasil didaftarkan!<br>Trial 3 hari aktif. Silakan login dengan username: <strong>${username}</strong>`;document.getElementById('daftarTokoSuccess').classList.remove('hidden');
+      ['dtNamaToko','dtPemilik','dtNoHp','dtAlamat','dtEmail','dtUsername','dtPassword','dtConfirmPassword'].forEach(id=>document.getElementById(id).value='');
+      setTimeout(()=>{showLogin();document.getElementById('loginUsername').value=username;},3000);
+    }
+
+    function daftarOjek(){
+      const nama=document.getElementById('doNama').value.trim(),noHp=document.getElementById('doNoHp').value.trim(),noKendaraan=document.getElementById('doNoKendaraan').value.trim(),desa=document.getElementById('doDesa').value.trim(),kecamatan=document.getElementById('doKecamatan').value.trim(),kabupaten=document.getElementById('doKabupaten').value.trim(),username=document.getElementById('doUsername').value.trim(),password=document.getElementById('doPassword').value,confirmPassword=document.getElementById('doConfirmPassword').value;
+      document.getElementById('daftarOjekError').classList.add('hidden');document.getElementById('daftarOjekSuccess').classList.add('hidden');
+      if(!nama||!noHp||!noKendaraan||!desa||!kecamatan||!kabupaten||!username||!password){document.getElementById('daftarOjekError').textContent='Semua field wajib diisi.';document.getElementById('daftarOjekError').classList.remove('hidden');return}
+      if(password.length<4){document.getElementById('daftarOjekError').textContent='Password minimal 4 karakter.';document.getElementById('daftarOjekError').classList.remove('hidden');return}
+      if(password!==confirmPassword){document.getElementById('daftarOjekError').textContent='Konfirmasi password tidak cocok.';document.getElementById('daftarOjekError').classList.remove('hidden');return}
+      if(isUsernameExist(username)){document.getElementById('daftarOjekError').textContent='Username sudah digunakan.';document.getElementById('daftarOjekError').classList.remove('hidden');return}
+      let list=getOjekList();list.push({id:Date.now().toString(),nama,noHp,noKendaraan,desa,kecamatan,kabupaten,username,password,status:'offline',rating:0,totalOrder:0});saveOjekList(list);
+      document.getElementById('daftarOjekSuccess').innerHTML=`✅ Ojek berhasil didaftarkan!<br>Silakan login dengan username: <strong>${username}</strong>`;document.getElementById('daftarOjekSuccess').classList.remove('hidden');
+      ['doNama','doNoHp','doNoKendaraan','doDesa','doKecamatan','doKabupaten','doUsername','doPassword','doConfirmPassword'].forEach(id=>document.getElementById(id).value='');
       setTimeout(()=>{showLogin();document.getElementById('loginUsername').value=username;},3000);
     }
 
@@ -673,7 +650,7 @@
     function renderTokoList(){const l=getTokoList();const c=document.getElementById('tokoList');if(l.length===0){c.innerHTML='<p>Belum ada toko.</p>';return}c.innerHTML=l.map(t=>`<div class="card"><h3>${escapeHtml(t.namaToko)}</h3><p>👤 ${escapeHtml(t.pemilik)}</p><p>📞 ${escapeHtml(t.noHp)}</p><p>📍 ${escapeHtml(t.alamat)}</p><p>🔑 ${escapeHtml(t.username)}</p>${t.aktivasi?`<p>📅 ${formatDate(t.aktivasi.berakhir)}</p>`:'<p>❌ Belum aktivasi</p>'}<div style="display:flex;gap:8px;margin-top:10px;"><button class="btn-sm btn-blue" onclick="bukaModalAktivasi('${t.id}')">⚡ Aktivasi</button>${t.aktivasi&&t.aktivasi.status==='aktif'?`<button class="btn-sm btn-danger" onclick="nonaktifkanToko('${t.id}')">⛔ Nonaktifkan</button>`:''}<button class="btn-sm btn-gray" onclick="hapusToko('${t.id}')">🗑️</button></div></div>`).join('')}
     function showBuatTokoForm(){document.getElementById('buatTokoPage').classList.remove('hidden');document.getElementById('superTokoPage').classList.add('hidden')}
     function hideBuatTokoForm(){document.getElementById('buatTokoPage').classList.add('hidden');document.getElementById('superTokoPage').classList.remove('hidden')}
-    function simpanToko(){const nama=document.getElementById('namaToko').value.trim(),pemilik=document.getElementById('pemilikToko').value.trim(),noHp=document.getElementById('noHpToko').value.trim(),alamat=document.getElementById('alamatToko').value.trim(),email=document.getElementById('emailToko').value.trim(),username=document.getElementById('usernameToko').value.trim(),password=document.getElementById('passwordToko').value.trim();if(!nama||!pemilik||!noHp||!alamat||!email||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username)){alert('Username sudah digunakan oleh akun lain (Toko/Ojek/Pelanggan/Kasir). Silakan gunakan username lain.');return}const l=getTokoList();l.push({id:Date.now().toString(),namaToko:nama,pemilik,noHp,alamat,email,username,password,aktivasi:null,kasir:[]});saveTokoList(l);hideBuatTokoForm();renderTokoList()}
+    function simpanToko(){const nama=document.getElementById('namaToko').value.trim(),pemilik=document.getElementById('pemilikToko').value.trim(),noHp=document.getElementById('noHpToko').value.trim(),alamat=document.getElementById('alamatToko').value.trim(),email=document.getElementById('emailToko').value.trim(),username=document.getElementById('usernameToko').value.trim(),password=document.getElementById('passwordToko').value.trim();if(!nama||!pemilik||!noHp||!alamat||!email||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username)){alert('Username sudah digunakan.');return}const l=getTokoList();l.push({id:Date.now().toString(),namaToko:nama,pemilik,noHp,alamat,email,username,password,aktivasi:null,kasir:[]});saveTokoList(l);hideBuatTokoForm();renderTokoList()}
     function hapusToko(id){if(!confirm('Hapus toko ini?'))return;saveTokoList(getTokoList().filter(t=>t.id!==id));['produk_','keranjang_','transaksi_','keuangan_','pemeriksaan_','kasbon_','anggaran_','keuntungan_','barangHilang_','pesananOnline_','pengiriman_'].forEach(p=>localStorage.removeItem(p+id));renderTokoList()}
     let currentAktivasiTokoId=null;
     function bukaModalAktivasi(id){currentAktivasiTokoId=id;const t=getTokoList().find(t=>t.id===id);if(!t)return;document.getElementById('modalNamaToko').textContent='Toko: '+t.namaToko;document.getElementById('modalAktivasi').classList.remove('hidden')}
@@ -691,7 +668,7 @@
     function showTambahOjekForm(){document.getElementById('formOjekSuper').classList.remove('hidden');document.getElementById('editOjekId').value='';document.getElementById('judulFormOjek').textContent='Tambah Ojek';['namaOjek','noHpOjek','noKendaraanOjek','desaOjek','kecamatanOjek','kabupatenOjek','usernameOjek','passwordOjek'].forEach(id=>document.getElementById(id).value='');document.getElementById('passwordOjek').value='ojek123'}
     function hideFormOjek(){document.getElementById('formOjekSuper').classList.add('hidden')}
     function editOjek(id){const o=getOjekList().find(o=>o.id===id);if(!o)return;document.getElementById('formOjekSuper').classList.remove('hidden');document.getElementById('editOjekId').value=o.id;document.getElementById('judulFormOjek').textContent='Edit Ojek';document.getElementById('namaOjek').value=o.nama;document.getElementById('noHpOjek').value=o.noHp;document.getElementById('noKendaraanOjek').value=o.noKendaraan;document.getElementById('desaOjek').value=o.desa;document.getElementById('kecamatanOjek').value=o.kecamatan;document.getElementById('kabupatenOjek').value=o.kabupaten;document.getElementById('usernameOjek').value=o.username;document.getElementById('passwordOjek').value=o.password}
-    function simpanOjek(){const id=document.getElementById('editOjekId').value;const nama=document.getElementById('namaOjek').value.trim(),noHp=document.getElementById('noHpOjek').value.trim(),noKendaraan=document.getElementById('noKendaraanOjek').value.trim(),desa=document.getElementById('desaOjek').value.trim(),kecamatan=document.getElementById('kecamatanOjek').value.trim(),kabupaten=document.getElementById('kabupatenOjek').value.trim(),username=document.getElementById('usernameOjek').value.trim(),password=document.getElementById('passwordOjek').value.trim();if(!nama||!noHp||!noKendaraan||!desa||!kecamatan||!kabupaten||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username,null,id)){alert('Username sudah digunakan oleh akun lain (Toko/Ojek/Pelanggan/Kasir). Silakan gunakan username lain.');return}let list=getOjekList();if(id){list=list.map(o=>o.id===id?{...o,nama,noHp,noKendaraan,desa,kecamatan,kabupaten,username,password}:o)}else{list.push({id:Date.now().toString(),nama,noHp,noKendaraan,desa,kecamatan,kabupaten,username,password,status:'offline',rating:0,totalOrder:0})}saveOjekList(list);hideFormOjek();renderDaftarOjekSuper()}
+    function simpanOjek(){const id=document.getElementById('editOjekId').value;const nama=document.getElementById('namaOjek').value.trim(),noHp=document.getElementById('noHpOjek').value.trim(),noKendaraan=document.getElementById('noKendaraanOjek').value.trim(),desa=document.getElementById('desaOjek').value.trim(),kecamatan=document.getElementById('kecamatanOjek').value.trim(),kabupaten=document.getElementById('kabupatenOjek').value.trim(),username=document.getElementById('usernameOjek').value.trim(),password=document.getElementById('passwordOjek').value.trim();if(!nama||!noHp||!noKendaraan||!desa||!kecamatan||!kabupaten||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username,null,id)){alert('Username sudah digunakan.');return}let list=getOjekList();if(id){list=list.map(o=>o.id===id?{...o,nama,noHp,noKendaraan,desa,kecamatan,kabupaten,username,password}:o)}else{list.push({id:Date.now().toString(),nama,noHp,noKendaraan,desa,kecamatan,kabupaten,username,password,status:'offline',rating:0,totalOrder:0})}saveOjekList(list);hideFormOjek();renderDaftarOjekSuper()}
     function hapusOjek(id){if(!confirm('Hapus ojek?'))return;saveOjekList(getOjekList().filter(o=>o.id!==id));renderDaftarOjekSuper()}
     function toggleSuspendOjek(id){let list=getOjekList();const idx=list.findIndex(o=>o.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='suspended'?'offline':'suspended';saveOjekList(list);renderDaftarOjekSuper()}
 
@@ -700,12 +677,12 @@
     function showTambahPelangganForm(){document.getElementById('formPelangganSuper').classList.remove('hidden');document.getElementById('editPelangganId').value='';document.getElementById('judulFormPelanggan').textContent='Tambah Pelanggan';['namaPelangganInput','noHpPelanggan','alamatPelangganInput','desaPelanggan','kecamatanPelanggan','kabupatenPelanggan','usernamePelanggan','passwordPelanggan'].forEach(id=>document.getElementById(id).value='');document.getElementById('passwordPelanggan').value='pelanggan123'}
     function hideFormPelanggan(){document.getElementById('formPelangganSuper').classList.add('hidden')}
     function editPelanggan(id){const p=getPelangganList().find(p=>p.id===id);if(!p)return;document.getElementById('formPelangganSuper').classList.remove('hidden');document.getElementById('editPelangganId').value=p.id;document.getElementById('judulFormPelanggan').textContent='Edit Pelanggan';document.getElementById('namaPelangganInput').value=p.nama;document.getElementById('noHpPelanggan').value=p.noHp;document.getElementById('alamatPelangganInput').value=p.alamat;document.getElementById('desaPelanggan').value=p.desa;document.getElementById('kecamatanPelanggan').value=p.kecamatan;document.getElementById('kabupatenPelanggan').value=p.kabupaten;document.getElementById('usernamePelanggan').value=p.username;document.getElementById('passwordPelanggan').value=p.password}
-    function simpanPelanggan(){const id=document.getElementById('editPelangganId').value;const nama=document.getElementById('namaPelangganInput').value.trim(),noHp=document.getElementById('noHpPelanggan').value.trim(),alamat=document.getElementById('alamatPelangganInput').value.trim(),desa=document.getElementById('desaPelanggan').value.trim(),kecamatan=document.getElementById('kecamatanPelanggan').value.trim(),kabupaten=document.getElementById('kabupatenPelanggan').value.trim(),username=document.getElementById('usernamePelanggan').value.trim(),password=document.getElementById('passwordPelanggan').value.trim();if(!nama||!noHp||!alamat||!desa||!kecamatan||!kabupaten||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username,null,null,id)){alert('Username sudah digunakan oleh akun lain (Toko/Ojek/Pelanggan/Kasir). Silakan gunakan username lain.');return}let list=getPelangganList();if(id){list=list.map(p=>p.id===id?{...p,nama,noHp,alamat,desa,kecamatan,kabupaten,username,password}:p)}else{list.push({id:Date.now().toString(),nama,noHp,alamat,desa,kecamatan,kabupaten,username,password,status:'aktif'})}savePelangganList(list);hideFormPelanggan();renderDaftarPelangganSuper()}
+    function simpanPelanggan(){const id=document.getElementById('editPelangganId').value;const nama=document.getElementById('namaPelangganInput').value.trim(),noHp=document.getElementById('noHpPelanggan').value.trim(),alamat=document.getElementById('alamatPelangganInput').value.trim(),desa=document.getElementById('desaPelanggan').value.trim(),kecamatan=document.getElementById('kecamatanPelanggan').value.trim(),kabupaten=document.getElementById('kabupatenPelanggan').value.trim(),username=document.getElementById('usernamePelanggan').value.trim(),password=document.getElementById('passwordPelanggan').value.trim();if(!nama||!noHp||!alamat||!desa||!kecamatan||!kabupaten||!username||!password){alert('Lengkapi semua data.');return}if(isUsernameExist(username,null,null,id)){alert('Username sudah digunakan.');return}let list=getPelangganList();if(id){list=list.map(p=>p.id===id?{...p,nama,noHp,alamat,desa,kecamatan,kabupaten,username,password}:p)}else{list.push({id:Date.now().toString(),nama,noHp,alamat,desa,kecamatan,kabupaten,username,password,status:'aktif'})}savePelangganList(list);hideFormPelanggan();renderDaftarPelangganSuper()}
     function hapusPelanggan(id){if(!confirm('Hapus pelanggan?'))return;savePelangganList(getPelangganList().filter(p=>p.id!==id));renderDaftarPelangganSuper()}
     function toggleSuspendPelanggan(id){let list=getPelangganList();const idx=list.findIndex(p=>p.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='suspended'?'aktif':'suspended';savePelangganList(list);renderDaftarPelangganSuper()}
 
     // ==================== TAMBAH KASIR (VALIDASI GLOBAL) ====================
-    function tambahKasir(){const s=getSession();const u=document.getElementById('usernameKasir').value.trim(),p=document.getElementById('passwordKasir').value.trim();if(!u||!p){alert('Isi username dan password.');return}if(isUsernameExist(u)){alert('Username sudah digunakan oleh akun lain (Toko/Ojek/Pelanggan/Kasir). Silakan gunakan username lain.');return}const list=getTokoList();const idx=list.findIndex(t=>t.id===s.tokoId);if(idx===-1)return;const toko=list[idx];if(!toko.kasir)toko.kasir=[];if(toko.kasir.find(k=>k.username===u)){alert('Username kasir sudah ada di toko ini.');return}toko.kasir.push({username:u,password:p});saveTokoList(list);document.getElementById('usernameKasir').value='';document.getElementById('passwordKasir').value='';renderDaftarKasir()}
+    function tambahKasir(){const s=getSession();const u=document.getElementById('usernameKasir').value.trim(),p=document.getElementById('passwordKasir').value.trim();if(!u||!p){alert('Isi username dan password.');return}if(isUsernameExist(u)){alert('Username sudah digunakan.');return}const list=getTokoList();const idx=list.findIndex(t=>t.id===s.tokoId);if(idx===-1)return;const toko=list[idx];if(!toko.kasir)toko.kasir=[];if(toko.kasir.find(k=>k.username===u)){alert('Username kasir sudah ada di toko ini.');return}toko.kasir.push({username:u,password:p});saveTokoList(list);document.getElementById('usernameKasir').value='';document.getElementById('passwordKasir').value='';renderDaftarKasir()}
 // ==================== ANALITIK ====================
 function hitungLabaRugi(tokoId){
   const transaksi=getTransaksiToko(tokoId),keuangan=getKeuanganToko(tokoId),keuntungan=getKeuntunganToko(tokoId),barangHilang=getBarangHilangToko(tokoId);
@@ -974,9 +951,9 @@ function gantiPasswordPelanggan(){const s=getSession();const newP=document.getEl
     }
     function logout(){clearSession();goToLanding();renderLandingPrices()}
 
-    // ==================== INIT (v3.5 - MULTI DEVICE AUTO TRIAL) ====================
+    // ==================== INIT (v3.6 - MULTI DEVICE + DAFTAR MANDIRI) ====================
     function initApp(){
-      // Auto-create trial accounts if not exists (MULTI DEVICE SUPPORT)
+      // Auto-create trial accounts if not exists
       if(!localStorage.getItem('super_admin')){
         localStorage.setItem('super_admin', JSON.stringify(SUPER_ADMIN));
       }
