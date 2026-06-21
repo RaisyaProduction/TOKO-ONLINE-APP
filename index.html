@@ -12,580 +12,297 @@
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f2f5;color:#333}.no-select{user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}.no-copy{-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.devtools-hide{display:none}.offline-banner{background:#fef3c7;color:#92400e;text-align:center;padding:8px;font-weight:600;font-size:14px;display:none}.offline-banner.show{display:block}.install-banner{background:linear-gradient(135deg,#1a56db,#1e40af);color:#fff;padding:16px 20px;display:none;align-items:center;justify-content:space-between;gap:12px;position:fixed;bottom:0;left:0;right:0;z-index:9999;box-shadow:0 -4px 20px rgba(0,0,0,0.2);animation:slideUp .4s ease-out}@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}.install-banner.show{display:flex}.install-banner .install-icon{font-size:32px;flex-shrink:0}.install-banner .install-text{flex:1}.install-banner .install-text strong{font-size:16px;display:block}.install-banner .install-text span{font-size:13px;opacity:.9}.install-banner button{padding:10px 20px;font-size:14px;font-weight:600;border:2px solid #fff;background:#fff;color:#1a56db;border-radius:25px;cursor:pointer;white-space:nowrap;width:auto;margin:0}.install-banner .install-close{background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:5px 10px;width:auto;margin:0}.container{max-width:500px;margin:80px auto;padding:30px;background:#fff;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.1)}h1,h2,h3{color:#1a56db;margin-bottom:20px;display:flex;align-items:center;gap:8px}input,textarea,select,button{width:100%;padding:12px;margin-bottom:15px;border:1px solid #d1d5db;border-radius:8px;font-size:16px}input:focus,textarea:focus,select:focus{outline:none;border-color:#1a56db;box-shadow:0 0 0 3px rgba(26,86,219,0.2)}button{background:#1a56db;color:#fff;font-weight:600;border:none;cursor:pointer;transition:.2s}button:hover{background:#1e40af}.error{color:#dc2626;background:#fee2e2;padding:10px;border-radius:6px;margin-bottom:15px}.success{color:#059669;background:#d1fae5;padding:10px;border-radius:6px;margin-bottom:15px}.warning-box{color:#92400e;background:#fef3c7;padding:10px;border-radius:6px;margin-bottom:15px}.info-box{color:#1e40af;background:#dbeafe;padding:10px;border-radius:6px;margin-bottom:15px}.link{color:#1a56db;text-decoration:none;font-size:14px;cursor:pointer}.link:hover{text-decoration:underline}.hidden{display:none!important}.landing-page{max-width:600px;margin:0 auto;padding:20px}.hero-section{background:linear-gradient(135deg,#1a56db,#1e40af);color:#fff;text-align:center;padding:40px 20px;border-radius:16px;margin-bottom:20px;box-shadow:0 8px 25px rgba(26,86,219,0.3)}.hero-section h1{color:#fff;font-size:28px;margin-bottom:10px;justify-content:center}.hero-section .subtitle{font-size:16px;opacity:.9;margin-bottom:5px}.price-card{background:#fff;border-radius:16px;padding:25px;margin-bottom:20px;box-shadow:0 4px 15px rgba(0,0,0,0.08);border:2px solid #e5e7eb}.price-card.promo{border:2px solid #f59e0b;background:#fffbeb;position:relative;overflow:hidden}.price-card.promo::before{content:"PROMO";position:absolute;top:15px;right:-30px;background:#f59e0b;color:#fff;padding:5px 35px;font-size:11px;font-weight:700;transform:rotate(45deg)}.price-item{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;margin-bottom:8px;border-radius:10px;background:#f9fafb;transition:.2s}.price-item:hover{background:#eff6ff;transform:translateX(5px)}.price-item .duration{font-weight:600;font-size:15px}.price-item .price{font-weight:700;color:#059669;font-size:18px}.login-section{text-align:center;margin:20px 0}.login-section button{background:#1a56db;color:#fff;padding:15px 40px;border-radius:50px;font-size:18px;font-weight:700;width:auto;display:inline-flex;align-items:center;gap:10px}.dashboard{display:flex;min-height:100vh}.sidebar{width:250px;background:#fff;box-shadow:2px 0 8px rgba(0,0,0,0.05);padding:20px;display:flex;flex-direction:column;overflow-y:auto}.sidebar h2{font-size:20px;margin-bottom:30px}.sidebar nav a{display:flex;align-items:center;gap:10px;padding:12px 15px;margin-bottom:8px;border-radius:8px;color:#374151;text-decoration:none;font-weight:500}.sidebar nav a.active,.sidebar nav a:hover{background:#eff6ff;color:#1a56db}.content{flex:1;padding:40px;background:#f9fafb;overflow-y:auto}.card{background:#fff;padding:25px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);margin-bottom:20px}.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px}.grid-produk{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px}.produk-item{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;transition:transform .2s;cursor:pointer}.produk-item:hover{transform:translateY(-3px)}.produk-item img{width:100%;height:150px;object-fit:cover;background:#f3f4f6;display:block}.produk-item .info{padding:12px}.btn-sm{padding:6px 15px;font-size:14px;width:auto;display:inline-flex;align-items:center;gap:6px;border:none;border-radius:8px;font-weight:600;cursor:pointer;white-space:nowrap}.btn-success{background:#059669;color:#fff}.btn-success:hover{background:#047857}.btn-danger{background:#dc2626;color:#fff}.btn-danger:hover{background:#b91c1c}.btn-warning{background:#d97706;color:#fff}.btn-warning:hover{background:#b45309}.btn-gray{background:#6b7280;color:#fff}.btn-gray:hover{background:#4b5563}.btn-blue{background:#1a56db;color:#fff}.btn-blue:hover{background:#1e40af}.btn-teal{background:#0d9488;color:#fff}.btn-teal:hover{background:#0f766e}.badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600}.badge-active{background:#d1fae5;color:#065f46}.badge-inactive{background:#fee2e2;color:#991b1b}.badge-online{background:#d1fae5;color:#065f46}.badge-offline{background:#f3f4f6;color:#6b7280}.badge-suspend{background:#fee2e2;color:#991b1b;border:1px solid #dc2626}.badge-lunas{background:#d1fae5;color:#065f46}.badge-belum{background:#fee2e2;color:#991b1b}.profile-photo{width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #1a56db;margin-bottom:10px}.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:1000}.modal-content{background:#fff;padding:30px;border-radius:12px;max-width:600px;width:95%;max-height:85vh;overflow-y:auto}.chat-container{max-height:400px;overflow-y:auto;padding:10px;background:#f9fafb;border-radius:8px}.chat-msg{padding:10px 14px;margin-bottom:8px;border-radius:12px;max-width:80%;word-wrap:break-word}.chat-msg.sent{background:#1a56db;color:#fff;align-self:flex-end;margin-left:auto}.chat-msg.received{background:#e5e7eb;color:#333;align-self:flex-start;margin-right:auto}.chat-msg .time{font-size:10px;opacity:.7;margin-top:4px;display:block}.chat-msg .sender{font-size:12px;font-weight:600;margin-bottom:4px;display:block}.chat-user-list{max-height:300px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:8px}.chat-user-item{padding:12px 15px;border-bottom:1px solid #e5e7eb;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.2s}.chat-user-item:hover{background:#eff6ff}.chat-user-item:last-child{border-bottom:none}.chat-user-item .avatar{width:40px;height:40px;border-radius:50%;background:#1a56db;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;flex-shrink:0;overflow:hidden}.chat-user-item .info{flex:1}.chat-user-item .info .name{font-weight:600;font-size:14px}.chat-user-item .chat-select-btn{background:#1a56db;color:#fff;border:none;padding:6px 15px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600}.chat-user-item .chat-select-btn:hover{background:#1e40af}.app-off-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;z-index:99999;color:#fff;text-align:center}.app-off-overlay .content{background:#1e40af;padding:40px;border-radius:16px;max-width:400px}.app-off-overlay h1{color:#fff;justify-content:center;font-size:28px}.app-off-overlay .sub{font-size:16px;opacity:.8;margin-top:10px}.app-off-overlay .btn-super{margin-top:20px;background:#fff;color:#1a56db;padding:12px 30px;border-radius:25px;font-weight:700;border:none;cursor:pointer;width:auto}.app-off-overlay .btn-super:hover{background:#e5e7eb}.direktori-hero{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff;text-align:center;padding:30px 20px;border-radius:16px;margin-bottom:20px}.direktori-hero h1{color:#fff;justify-content:center}.direktori-toko-card{background:#fff;border-radius:12px;padding:20px;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-left:5px solid #0d9488;transition:transform .2s}.direktori-toko-card:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.1)}.direktori-toko-card .profil-toko h3{color:#0f766e;margin-bottom:10px}.direktori-toko-card .profil-toko p{font-size:14px;margin:4px 0;color:#4b5563}.btn-lihat-katalog{background:#0d9488;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:5px;width:auto;border:none;cursor:pointer}.btn-lihat-katalog:hover{background:#0f766e}.search-bar-direktori{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}.search-bar-direktori input{flex:2;min-width:200px}.search-bar-direktori select{flex:1;min-width:150px}.produk-katalog-item{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);padding:15px;display:flex;flex-direction:column;align-items:center;text-align:center;cursor:pointer;transition:.2s}.produk-katalog-item:hover{transform:scale(1.02)}.produk-katalog-item img{width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:10px;background:#f3f4f6}.trial-credentials{background:#fff;border-radius:8px;padding:15px;margin:10px 0;text-align:left;font-family:'Courier New',monospace;font-size:14px;line-height:1.8}.trial-info{background:#dbeafe;border-radius:12px;padding:20px;margin-top:15px;text-align:center;border:2px dashed #1a56db}.contact-section{background:#fff;border-radius:16px;padding:25px;margin-bottom:20px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.08)}.wa-button{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:15px 30px;border-radius:50px;text-decoration:none;font-weight:700;font-size:18px;margin:10px 0;transition:.3s;width:auto}.wa-button:hover{background:#128C7E;transform:scale(1.05)}.pilihan-daftar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:15px 0}.reset-akun-btn{background:#fef3c7;color:#92400e;border:2px dashed #d97706;padding:10px;border-radius:8px;text-align:center;cursor:pointer;font-size:13px;width:100%}.reset-akun-btn:hover{background:#fde68a}.login-info{font-size:13px;color:#6b7280;margin-top:15px;text-align:center;background:#f9fafb;padding:12px;border-radius:8px;border:1px solid #e5e7eb}table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;margin-top:15px;font-size:14px}th,td{padding:10px 12px;border-bottom:1px solid #e5e7eb;text-align:left}th{background:#f8fafc;font-weight:600}@media(max-width:768px){.dashboard{flex-direction:column}.sidebar{width:100%;box-shadow:none;border-bottom:1px solid #e5e7eb}.content{padding:15px}.container{margin:40px auto;padding:20px}table{font-size:12px}th,td{padding:6px 8px}}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; color: #333; }
+    /* ANTI COPY/INSPECT ELEMENT */
+    .no-select { user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+    .no-copy { -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+    /* HIDE DEV TOOLS - akan diaktifkan di JS */
+    .devtools-hide { display: none; }
+    .offline-banner { background: #fef3c7; color: #92400e; text-align: center; padding: 8px; font-weight: 600; font-size: 14px; display: none; }
+    .offline-banner.show { display: block; }
+    .install-banner { background: linear-gradient(135deg, #1a56db, #1e40af); color: white; padding: 16px 20px; display: none; align-items: center; justify-content: space-between; gap: 12px; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); animation: slideUp 0.4s ease-out; }
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .install-banner.show { display: flex; }
+    .install-banner .install-icon { font-size: 32px; flex-shrink: 0; }
+    .install-banner .install-text { flex: 1; }
+    .install-banner .install-text strong { font-size: 16px; display: block; }
+    .install-banner .install-text span { font-size: 13px; opacity: 0.9; }
+    .install-banner button { padding: 10px 20px; font-size: 14px; font-weight: 600; border: 2px solid white; background: white; color: #1a56db; border-radius: 25px; cursor: pointer; white-space: nowrap; width: auto; margin: 0; }
+    .install-banner .install-close { background: transparent; border: none; color: white; font-size: 20px; cursor: pointer; padding: 5px 10px; width: auto; margin: 0; }
+    .trial-warning-banner { background: #fee2e2; color: #991b1b; text-align: center; padding: 10px; font-weight: 600; font-size: 13px; display: none; border-bottom: 2px solid #dc2626; }
+    .trial-warning-banner.show { display: block; animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+    .trial-expired-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; }
+    .trial-expired-content { background: white; padding: 30px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .trial-expired-content h2 { color: #dc2626; margin-bottom: 15px; justify-content: center; }
+    .container { max-width: 500px; margin: 80px auto; padding: 30px; background: #fff; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    h1,h2,h3 { color: #1a56db; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    input,textarea,select,button { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 16px; }
+    input:focus,textarea:focus,select:focus { outline: none; border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.2); }
+    button { background: #1a56db; color: white; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+    button:hover { background: #1e40af; }
+    .error { color: #dc2626; background: #fee2e2; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .success { color: #059669; background: #d1fae5; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .warning-box { color: #92400e; background: #fef3c7; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .info-box { color: #1e40af; background: #dbeafe; padding: 10px; border-radius: 6px; margin-bottom: 15px; }
+    .link { color: #1a56db; text-decoration: none; font-size: 14px; cursor: pointer; }
+    .link:hover { text-decoration: underline; }
+    .hidden { display: none !important; }
+    .landing-page { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .hero-section { background: linear-gradient(135deg,#1a56db,#1e40af); color: white; text-align: center; padding: 40px 20px; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(26,86,219,0.3); }
+    .hero-section h1 { color: white; font-size: 28px; margin-bottom: 10px; justify-content: center; }
+    .hero-section .subtitle { font-size: 16px; opacity: 0.9; margin-bottom: 5px; }
+    .price-card { background: white; border-radius: 16px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 2px solid #e5e7eb; }
+    .price-card.promo { border: 2px solid #f59e0b; background: #fffbeb; position: relative; overflow: hidden; }
+    .price-card.promo::before { content: "PROMO"; position: absolute; top: 15px; right: -30px; background: #f59e0b; color: white; padding: 5px 35px; font-size: 11px; font-weight: 700; transform: rotate(45deg); }
+    .price-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; margin-bottom: 8px; border-radius: 10px; background: #f9fafb; transition: 0.2s; }
+    .price-item:hover { background: #eff6ff; transform: translateX(5px); }
+    .price-item .duration { font-weight: 600; font-size: 15px; }
+    .price-item .price { font-weight: 700; color: #059669; font-size: 18px; }
+    .price-item .edit-actions { display: flex; gap: 5px; }
+    .price-item .edit-actions button { width: auto; padding: 4px 10px; font-size: 12px; margin: 0; }
+    .trial-info { background: #dbeafe; border-radius: 12px; padding: 20px; margin-top: 15px; text-align: center; border: 2px dashed #1a56db; }
+    .trial-credentials { background: white; border-radius: 8px; padding: 15px; margin: 10px 0; text-align: left; font-family: 'Courier New', monospace; font-size: 14px; line-height: 1.8; }
+    .contact-section { background: white; border-radius: 16px; padding: 25px; margin-bottom: 20px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+    .wa-button { display: inline-flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 18px; margin: 10px 0; transition: 0.3s; width: auto; }
+    .wa-button:hover { background: #128C7E; transform: scale(1.05); }
+    .feature-toggle-btn { background: linear-gradient(135deg,#7c3aed,#6d28d9); color: white; padding: 15px 25px; border-radius: 12px; font-weight: 700; font-size: 16px; cursor: pointer; text-align: center; margin: 15px 0; transition: 0.3s; width: 100%; }
+    .feature-toggle-btn:hover { background: linear-gradient(135deg,#6d28d9,#5b21b6); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124,58,237,0.3); }
+    .features-list { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-top: 15px; max-height: 500px; overflow-y: auto; }
+    .feature-category { margin-bottom: 20px; }
+    .feature-category h4 { color: #1a56db; font-size: 16px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #e5e7eb; }
+    .feature-category ul { list-style: none; padding: 0; }
+    .feature-category ul li { padding: 8px 0; font-size: 14px; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; gap: 8px; }
+    .feature-category ul li::before { content: "✅"; flex-shrink: 0; }
+    .login-section { text-align: center; margin: 20px 0; }
+    .login-section button { background: #1a56db; color: white; padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: 700; width: auto; display: inline-flex; align-items: center; gap: 10px; }
+    .dashboard { display: flex; min-height: 100vh; }
+    .sidebar { width: 250px; background: #fff; box-shadow: 2px 0 8px rgba(0,0,0,0.05); padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+    .sidebar h2 { font-size: 20px; margin-bottom: 30px; }
+    .sidebar nav a { display: flex; align-items: center; gap: 10px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; color: #374151; text-decoration: none; font-weight: 500; }
+    .sidebar nav a.active, .sidebar nav a:hover { background: #eff6ff; color: #1a56db; }
+    .sidebar .sync-status { font-size: 11px; padding: 8px; margin-top: 10px; border-radius: 8px; text-align: center; }
+    .sidebar .sync-status.online { background: #d1fae5; color: #065f46; }
+    .sidebar .sync-status.offline { background: #fee2e2; color: #991b1b; }
+    .sidebar .install-app-btn { margin-top: 8px; background: #1a56db; color: white; font-size: 12px; padding: 8px; border-radius: 8px; text-align: center; cursor: pointer; width: 100%; border: none; font-weight: 600; }
+    .content { flex: 1; padding: 40px; background: #f9fafb; overflow-y: auto; }
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .grid-produk { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
+    .produk-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; transition: transform 0.2s; cursor: pointer; }
+    .produk-item:hover { transform: translateY(-3px); }
+    .produk-item img { width: 100%; height: 150px; object-fit: cover; background: #f3f4f6; display: block; }
+    .produk-item .info { padding: 12px; }
+    .produk-item .info h4 { font-size: 16px; margin-bottom: 5px; }
+    .produk-item .info p { font-size: 14px; color: #4b5563; }
+    .btn-sm { padding: 6px 15px; font-size: 14px; width: auto; display: inline-flex; align-items: center; gap: 6px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+    .btn-success { background: #059669; color: white; } .btn-success:hover { background: #047857; }
+    .btn-danger { background: #dc2626; color: white; } .btn-danger:hover { background: #b91c1c; }
+    .btn-warning { background: #d97706; color: white; } .btn-warning:hover { background: #b45309; }
+    .btn-gray { background: #6b7280; color: white; } .btn-gray:hover { background: #4b5563; }
+    .btn-blue { background: #1a56db; color: white; } .btn-blue:hover { background: #1e40af; }
+    .btn-purple { background: #7c3aed; color: white; } .btn-purple:hover { background: #6d28d9; }
+    .btn-teal { background: #0d9488; color: white; } .btn-teal:hover { background: #0f766e; }
+    .btn-orange { background: #ea580c; color: white; } .btn-orange:hover { background: #c2410c; }
+    .btn-pink { background: #db2777; color: white; } .btn-pink:hover { background: #be185d; }
+    .btn-indigo { background: #4f46e5; color: white; } .btn-indigo:hover { background: #4338ca; }
+    .btn-gold { background: #d97706; color: white; } .btn-gold:hover { background: #b45309; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+    .badge-active { background: #d1fae5; color: #065f46; } .badge-inactive { background: #fee2e2; color: #991b1b; }
+    .badge-lunas { background: #d1fae5; color: #065f46; } .badge-belum { background: #fee2e2; color: #991b1b; }
+    .badge-sebagian { background: #fef3c7; color: #92400e; } .badge-online { background: #d1fae5; color: #065f46; }
+    .badge-offline { background: #f3f4f6; color: #6b7280; } .badge-mengirim { background: #fef3c7; color: #92400e; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-target { background: #dbeafe; color: #1e40af; }
+    .badge-libur { background: #fef3c7; color: #92400e; }
+    .badge-suspend { background: #fee2e2; color: #991b1b; border: 1px solid #dc2626; }
+    .badge-lunas-tagihan { background: #d1fae5; color: #065f46; }
+    .badge-belum-tagihan { background: #fee2e2; color: #991b1b; }
+    .badge-terlambat { background: #fef3c7; color: #92400e; }
+    .badge-gaji { background: #dbeafe; color: #1e40af; }
+    .badge-gaji-dibayar { background: #d1fae5; color: #065f46; }
+    .badge-gaji-belum { background: #fee2e2; color: #991b1b; }
+    .badge-cod { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+    .profile-info p { margin: 8px 0; font-size: 15px; }
+    .profile-info strong { display: inline-block; width: 120px; }
+    .profile-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #1a56db; margin-bottom: 10px; }
+    .profile-photo-large { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid #1a56db; margin: 10px auto; display: block; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; margin-top: 15px; font-size: 14px; }
+    th,td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; }
+    th { background: #f8fafc; font-weight: 600; }
+    .stok-input { width: 80px; padding: 6px; text-align: center; border: 1px solid #d1d5db; border-radius: 4px; font-size: 14px; }
+    .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-content { background: white; padding: 30px; border-radius: 12px; max-width: 600px; width: 95%; max-height: 85vh; overflow-y: auto; }
+    .preview-img { width: 120px; height: 120px; object-fit: cover; border-radius: 8px; border: 1px solid #d1d5db; margin-bottom: 10px; }
+    .total-box { font-size: 18px; font-weight: bold; margin: 10px 0; padding: 12px; background: #e0f2fe; border-radius: 8px; }
+    .kembalian-box { font-size: 18px; font-weight: bold; margin: 10px 0; padding: 12px; background: #d1fae5; border-radius: 8px; }
+    .ringkasan-box { font-size: 15px; margin: 10px 0; padding: 15px; background: #fef3c7; border-radius: 8px; line-height: 1.8; }
+    .tab-nav { display: flex; gap: 5px; margin-bottom: 15px; flex-wrap: wrap; }
+    .tab-nav button { width: auto; padding: 8px 16px; background: #e5e7eb; color: #374151; border: none; border-radius: 20px; cursor: pointer; white-space: nowrap; }
+    .tab-nav button.active { background: #1a56db; color: white; }
+    .struk-preview { background: white; font-family: 'Courier New', monospace; padding: 20px; border: 2px dashed #333; border-radius: 8px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; font-size: 13px; line-height: 1.6; }
+    .anggaran-progress { height: 10px; background: #e5e7eb; border-radius: 5px; margin: 8px 0; overflow: hidden; }
+    .anggaran-progress .bar { height: 100%; border-radius: 5px; transition: width 0.5s; }
+    .anggaran-progress .bar.aman { background: #059669; } .anggaran-progress .bar.warning { background: #d97706; }
+    .anggaran-progress .bar.bahaya { background: #dc2626; }
+    .profit-card { background: linear-gradient(135deg, #059669, #047857); color: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
+    .profit-card.rugi { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+    .profit-card .amount { font-size: 36px; font-weight: 800; } .profit-card .label { font-size: 14px; opacity: 0.9; }
+    .online-order-header { background: linear-gradient(135deg,#059669,#047857); color: white; text-align: center; padding: 20px; border-radius: 16px; margin-bottom: 20px; }
+    .online-order-header h1 { color: white; font-size: 22px; margin-bottom: 5px; justify-content: center; }
+    .toko-info-card { background: #f0fdf4; border: 2px solid #059669; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+    .toko-info-card p { margin: 5px 0; font-size: 14px; }
+    .produk-order-item { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 15px; cursor: pointer; transition: 0.2s; }
+    .produk-order-item:hover { transform: translateX(3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .produk-order-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: #f3f4f6; }
+    .produk-order-item .order-info { flex: 1; } .produk-order-item .order-info h4 { margin-bottom: 5px; font-size: 16px; }
+    .produk-order-item .order-info .price { color: #059669; font-weight: 700; font-size: 18px; }
+    .produk-order-item .order-info .stock { font-size: 12px; color: #6b7280; }
+    .keranjang-order { background: white; border-radius: 12px; padding: 20px; margin-top: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .keranjang-order h3 { color: #059669; }
+    .keranjang-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #e5e7eb; flex-wrap: wrap; gap: 8px; }
+    .keranjang-total { font-size: 20px; font-weight: 700; text-align: right; padding: 15px; color: #059669; }
+    .wa-order-btn { background: #25D366; color: white; padding: 15px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; }
+    .wa-order-btn:hover { background: #128C7E; }
+    .pesanan-online-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #1a56db; }
+    .pesanan-online-card.diproses { border-left-color: #d97706; } .pesanan-online-card.selesai { border-left-color: #059669; }
+    .login-info { font-size: 13px; color: #6b7280; margin-top: 15px; text-align: center; background: #f9fafb; padding: 12px; border-radius: 8px; border: 1px solid #e5e7eb; }
+    .share-link-box { background: #f0fdf4; border: 2px dashed #059669; border-radius: 12px; padding: 20px; text-align: center; margin-bottom: 20px; }
+    .share-link-box .link-url { background: white; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 14px; word-break: break-all; margin: 10px 0; border: 1px solid #d1d5db; text-align: left; }
+    .direktori-hero { background: linear-gradient(135deg, #0d9488, #0f766e); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .direktori-hero h1 { color: white; justify-content: center; }
+    .direktori-toko-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-left: 5px solid #0d9488; transition: transform 0.2s; }
+    .direktori-toko-card:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .direktori-toko-card .profil-toko h3 { color: #0f766e; margin-bottom: 10px; }
+    .direktori-toko-card .profil-toko p { font-size: 14px; margin: 4px 0; color: #4b5563; }
+    .btn-lihat-katalog { background: #0d9488; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; width: auto; border: none; cursor: pointer; }
+    .btn-lihat-katalog:hover { background: #0f766e; }
+    .search-bar-direktori { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+    .search-bar-direktori input { flex: 2; min-width: 200px; } .search-bar-direktori select { flex: 1; min-width: 150px; }
+    .produk-katalog-item { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; cursor: pointer; transition: 0.2s; }
+    .produk-katalog-item:hover { transform: scale(1.02); }
+    .produk-katalog-item img { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; background: #f3f4f6; }
+    .edit-profil-toko-section { background: #f9fafb; padding: 15px; border-radius: 8px; margin-top: 15px; }
+    .btn-kembali-direktori { background: #6b7280; color: white; padding: 8px 15px; border-radius: 8px; cursor: pointer; border: none; width: auto; margin-bottom: 15px; font-size: 14px; }
+    .tracking-timeline { padding: 15px 0; }
+    .tracking-item { display: flex; gap: 12px; padding: 10px 0; border-left: 3px solid #d1d5db; margin-left: 10px; padding-left: 20px; position: relative; }
+    .tracking-item.aktif { border-left-color: #059669; } .tracking-item.selesai { border-left-color: #059669; }
+    .tracking-item.gagal { border-left-color: #dc2626; }
+    .tracking-item::before { content: ''; position: absolute; left: -7px; top: 15px; width: 12px; height: 12px; border-radius: 50%; background: #d1d5db; }
+    .tracking-item.aktif::before { background: #f59e0b; } .tracking-item.selesai::before { background: #059669; }
+    .tracking-item.gagal::before { background: #dc2626; }
+    .notif-badge { background: #dc2626; color: white; border-radius: 50%; padding: 2px 6px; font-size: 11px; position: relative; top: -5px; }
+    .daftar-hero { background: linear-gradient(135deg, #db2777, #be185d); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero h1 { color: white; justify-content: center; }
+    .daftar-hero-toko { background: linear-gradient(135deg, #1a56db, #1e40af); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-toko h1 { color: white; justify-content: center; }
+    .daftar-hero-ojek { background: linear-gradient(135deg, #ea580c, #c2410c); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-ojek h1 { color: white; justify-content: center; }
+    .daftar-hero-marketing { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-marketing h1 { color: white; justify-content: center; }
+    .daftar-hero-marketing-free { background: linear-gradient(135deg, #0d9488, #0f766e); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-marketing-free h1 { color: white; justify-content: center; }
+    .daftar-hero-cod { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; text-align: center; padding: 30px 20px; border-radius: 16px; margin-bottom: 20px; }
+    .daftar-hero-cod h1 { color: white; justify-content: center; }
+    .reset-akun-btn { background: #fef3c7; color: #92400e; border: 2px dashed #d97706; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-size: 13px; width: 100%; }
+    .reset-akun-btn:hover { background: #fde68a; }
+    .pilihan-daftar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin: 15px 0; }
+    /* CHAT STYLES - FIX */
+    .chat-container { max-height: 400px; overflow-y: auto; padding: 10px; background: #f9fafb; border-radius: 8px; }
+    .chat-msg { padding: 10px 14px; margin-bottom: 8px; border-radius: 12px; max-width: 80%; word-wrap: break-word; }
+    .chat-msg.sent { background: #1a56db; color: white; align-self: flex-end; margin-left: auto; }
+    .chat-msg.received { background: #e5e7eb; color: #333; align-self: flex-start; margin-right: auto; }
+    .chat-msg .time { font-size: 10px; opacity: 0.7; margin-top: 4px; display: block; }
+    .chat-msg .sender { font-size: 12px; font-weight: 600; margin-bottom: 4px; display: block; }
+    .chat-user-list { max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
+    .chat-user-item { padding: 12px 15px; border-bottom: 1px solid #e5e7eb; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; }
+    .chat-user-item:hover { background: #eff6ff; }
+    .chat-user-item:last-child { border-bottom: none; }
+    .chat-user-item .avatar { width: 40px; height: 40px; border-radius: 50%; background: #1a56db; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; overflow: hidden; }
+    .chat-user-item .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .chat-user-item .info { flex: 1; }
+    .chat-user-item .info .name { font-weight: 600; font-size: 14px; }
+    .chat-user-item .info .role-badge { font-size: 11px; color: #6b7280; }
+    .chat-user-item .chat-select-btn { background: #1a56db; color: white; border: none; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 600; }
+    .chat-user-item .chat-select-btn:hover { background: #1e40af; }
+    /* HELLO FRIENDS STYLES */
+    .hello-post { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .hello-post .post-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .hello-post .post-header .avatar { width: 40px; height: 40px; border-radius: 50%; background: #1a56db; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; overflow: hidden; }
+    .hello-post .post-header .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .hello-post .post-header .username { font-weight: 600; font-size: 14px; }
+    .hello-post .post-header .time { font-size: 12px; color: #6b7280; }
+    .hello-post .post-content { font-size: 15px; margin: 10px 0; }
+    .hello-post .post-media { width: 100%; max-height: 300px; object-fit: cover; border-radius: 8px; margin: 10px 0; }
+    .hello-post .post-actions { display: flex; gap: 15px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #e5e7eb; }
+    .hello-post .post-actions button { width: auto; padding: 6px 15px; font-size: 13px; background: transparent; color: #374151; border: 1px solid #e5e7eb; border-radius: 20px; cursor: pointer; }
+    .hello-post .post-actions button:hover { background: #f3f4f6; }
+    .hello-post .post-actions button.liked { color: #dc2626; border-color: #dc2626; }
+    /* TOKO TERDEKAT STYLES */
+    .toko-terdekat-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 4px solid #059669; display: flex; gap: 15px; align-items: center; cursor: pointer; transition: 0.2s; }
+    .toko-terdekat-card:hover { transform: translateX(3px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .toko-terdekat-card .info { flex: 1; }
+    .toko-terdekat-card .info h4 { margin-bottom: 5px; }
+    .toko-terdekat-card .info p { font-size: 13px; color: #6b7280; margin: 3px 0; }
+    .toko-terdekat-card .jarak { font-size: 14px; font-weight: 600; color: #059669; }
+    .toko-terdekat-card .status { font-size: 12px; }
+    /* DATABASE USER STYLES */
+    .db-search { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .db-search input { flex: 2; min-width: 200px; }
+    .db-search select { flex: 1; min-width: 150px; }
+    /* POSISI ONLINE STYLES */
+    .posisi-online { font-size: 12px; padding: 2px 8px; border-radius: 12px; display: inline-block; }
+    .posisi-online.online { background: #d1fae5; color: #065f46; }
+    .posisi-online.offline { background: #f3f4f6; color: #6b7280; }
+    .posisi-online.sedang-kirim { background: #fef3c7; color: #92400e; }
+    .posisi-online.suspended { background: #fee2e2; color: #991b1b; }
+    /* GAJI STYLES */
+    .gaji-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 4px solid #4f46e5; }
+    .gaji-card.dibayar { border-left-color: #059669; }
+    .gaji-card.belum { border-left-color: #dc2626; }
+    /* REKENING STYLES */
+    .rekening-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 4px solid #1a56db; }
+    /* COD STYLES */
+    .cod-card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 4px solid #f59e0b; }
+    /* KEAMANAN STYLES */
+    .security-alert { background: #fee2e2; color: #991b1b; padding: 10px; border-radius: 8px; border: 1px solid #dc2626; margin-bottom: 10px; }
+    .security-alert .btn-sm { margin-top: 5px; }
+    .app-off-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 99999; color: white; text-align: center; }
+    .app-off-overlay .content { background: #1e40af; padding: 40px; border-radius: 16px; max-width: 400px; }
+    .app-off-overlay h1 { color: white; justify-content: center; font-size: 28px; }
+    /* CARA MEMPERGUNAKAN */
+    .tutorial-step { display: flex; gap: 15px; align-items: flex-start; margin-bottom: 15px; padding: 15px; background: #f9fafb; border-radius: 8px; }
+    .tutorial-step .number { width: 40px; height: 40px; border-radius: 50%; background: #1a56db; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+    .tutorial-step .content { flex: 1; }
+    @media (max-width: 768px) {
+      .dashboard { flex-direction: column; } .sidebar { width: 100%; box-shadow: none; border-bottom: 1px solid #e5e7eb; }
+      .content { padding: 15px; } table { font-size: 12px; } th,td { padding: 6px 8px; }
+      .install-banner { flex-wrap: wrap; padding: 12px 15px; } .landing-page { padding: 10px; }
+      .hero-section h1 { font-size: 22px; } .produk-order-item { flex-direction: column; text-align: center; }
+      .produk-order-item img { width: 120px; height: 120px; }
+      .toko-terdekat-card { flex-direction: column; text-align: center; }
+    }
   </style>
 </head>
 <body>
+    <!-- ===== BANNER ===== -->
   <div id="offlineBanner" class="offline-banner">📡 Anda sedang offline. Data akan disimpan lokal dan otomatis sinkron saat online.</div>
+  <div id="trialWarningBanner" class="trial-warning-banner">⏰ Masa trial akan segera berakhir! Semua data akan otomatis terhapus. Segera hubungi Admin untuk aktivasi permanen.</div>
   <div id="installBanner" class="install-banner">
     <div class="install-icon">📲</div>
     <div class="install-text"><strong>Install Toko Online App</strong><span>Akses cepat tanpa buka browser. Data tetap aman.</span></div>
     <button id="installBtn" onclick="installApp()">📥 Install</button>
     <button class="install-close" onclick="closeInstallBanner()">✕</button>
   </div>
-  <div id="appOffOverlay" class="app-off-overlay hidden">
-    <div class="content">
-      <h1>🔧 PEMELIHARAAN</h1>
-      <p class="sub">Aplikasi sedang dalam pemeliharaan oleh Super Admin.</p>
-      <p class="sub" style="margin-top:10px;font-size:14px;">Hanya Super Admin yang dapat mengakses saat ini.</p>
-      <button class="btn-super" onclick="handleLoginSuper()">⭐ Login Super Admin</button>
-    </div>
-  </div>
-  <div id="landingPage" class="landing-page">
-    <div class="hero-section">
-      <h1>🏪 Aplikasi Toko Online</h1>
-      <p class="subtitle">Solusi Kasir & Manajemen Toko Modern</p>
-      <p class="subtitle" style="font-size:14px;">Bisa Offline • Bisa Install di HP • Multi Device • Ojek Terdaftar • Jasa Antar Jemput • Marketing • Tagihan Otomatis • Gaji Otomatis • COD</p>
-    </div>
-    <div class="trial-info">
-      <h4>🎉 UJI COBA GRATIS 3 HARI! - SIAP PAKAI DI SEMUA HP</h4>
-      <p style="margin-bottom:10px;">Akun trial otomatis dibuat di setiap HP. Langsung login:</p>
-      <div class="trial-credentials">
-        <div>⭐ <strong>Super Admin:</strong> super / admin123</div>
-        <div>🏬 <strong>Pemilik Toko:</strong> user / user</div>
-        <div>🛵 <strong>Ojek:</strong> ojek1 / ojek123</div>
-        <div>👥 <strong>Pelanggan:</strong> cust001 / pelanggan123</div>
-        <div>📊 <strong>Marketing:</strong> marketing1 / marketing123</div>
-        <div>📊 <strong>Marketing Free:</strong> mktfree1 / mktfree123</div>
-        <div>🔄 <strong>COD:</strong> cod1 / cod123</div>
-        <div>👤 <strong>Kasir:</strong> kasir1 / kasir123</div>
-      </div>
-    </div>
-    <div class="login-section"><button onclick="goToLogin()">🔐 Masuk / Login Aplikasi</button></div>
-    <div style="text-align:center;margin:15px 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
-      <button onclick="bukaDirektori()" class="btn-sm btn-teal" style="font-size:16px;padding:12px 25px;">🏪 Lihat Direktori Toko</button>
-    </div>
-    <div class="price-card promo" style="margin-top:20px;">
-      <h3>💎 Harga Promo Berlangganan</h3>
-      <div id="landingPriceList"></div>
-    </div>
-    <div class="contact-section">
-      <h3>📞 Hubungi Admin</h3>
-      <div id="contactInfoDisplay">
-        <a href="https://wa.me/6281220285226" target="_blank" class="wa-button">💬 WA Admin</a>
-        <p style="margin-top:5px;font-size:13px;color:#6b7280;">✉️ dedesugiono.ai@gmail.com</p>
-      </div>
-    </div>
-    <p style="text-align:center;font-size:12px;color:#9ca3af;margin:20px 0;">© 2025 Toko Online App • v4.3 Final • All Rights Reserved</p>
-  </div>
-  <div id="loginPage" class="container hidden">
-    <h1>🔐 Login Toko Online App</h1>
-    <div id="loginError" class="error hidden"></div>
-    <input type="text" id="loginUsername" placeholder="Username" autocomplete="off">
-    <input type="password" id="loginPassword" placeholder="Password">
-    <button onclick="handleLogin()">Masuk</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showLupaPassword()">Lupa Password?</span></div>
-    <div class="login-info">
-      <p>🔒 <strong>Akses Login</strong></p>
-      <p style="margin-top:8px;">Belum punya akun? <span class="link" onclick="showDaftarPage()" style="color:#db2777;font-weight:600;">📝 Daftar di sini</span></p>
-    </div>
-    <button onclick="resetSemuaAkunTrial()" class="reset-akun-btn" style="margin-top:10px;">🔄 Reset Akun Trial</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="goToLanding()">← Kembali ke Halaman Utama</span></div>
-  </div>
-  <div id="lupaPage" class="container hidden">
-    <h1>🔑 Lupa Password</h1>
-    <p>Masukkan username, lalu verifikasi.</p>
-    <div id="lupaError" class="error hidden"></div>
-    <input type="text" id="lupaUsername" placeholder="Username">
-    <button onclick="cekUsernameLupa()">Lanjutkan</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showLogin()">← Kembali ke Login</span></div>
-  </div>
-  <div id="resetPage" class="container hidden">
-    <h1>🔒 Reset Password</h1>
-    <div id="resetError" class="error hidden"></div>
-    <div id="resetSuccess" class="success hidden"></div>
-    <input type="password" id="newPassword" placeholder="Password Baru">
-    <input type="password" id="confirmNewPassword" placeholder="Konfirmasi Password Baru">
-    <button onclick="resetPassword()">Simpan</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showLogin()">← Kembali ke Login</span></div>
-  </div>
-  <div id="daftarPage" class="container hidden" style="max-width:500px;">
-    <h2 style="justify-content:center;">📝 Daftar Akun Baru</h2>
-    <p style="text-align:center;margin-bottom:20px;">Pilih jenis akun yang ingin didaftarkan:</p>
-    <div class="pilihan-daftar">
-      <button onclick="showDaftarPelanggan()" class="btn-sm" style="font-size:18px;padding:20px;flex:1;background:#db2777;color:#fff;">👥 Pelanggan</button>
-      <button onclick="showDaftarToko()" class="btn-sm" style="font-size:18px;padding:20px;flex:1;background:#1a56db;color:#fff;">🏬 Toko</button>
-      <button onclick="showDaftarOjek()" class="btn-sm" style="font-size:18px;padding:20px;flex:1;background:#ea580c;color:#fff;">🛵 Ojek</button>
-      <button onclick="showDaftarMarketing()" class="btn-sm" style="font-size:18px;padding:20px;flex:1;background:#7c3aed;color:#fff;">📊 Marketing</button>
-      <button onclick="showDaftarCOD()" class="btn-sm" style="font-size:18px;padding:20px;flex:1;background:#d97706;color:#fff;">🔄 COD</button>
-    </div>
-    <div style="text-align:center;margin-top:15px;"><span class="link" onclick="showLogin()">← Sudah punya akun? Login</span></div>
-  </div>
-  <div id="daftarPelangganPage" class="container hidden" style="max-width:500px;">
-    <h2>📝 Daftar Pelanggan</h2>
-    <div id="daftarPelangganError" class="error hidden"></div>
-    <div id="daftarPelangganSuccess" class="success hidden"></div>
-    <input type="text" id="dpNama" placeholder="Nama Lengkap *">
-    <input type="email" id="dpEmail" placeholder="Email *">
-    <input type="text" id="dpNoHp" placeholder="No HP / WA *">
-    <input type="text" id="dpUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="dpPassword" placeholder="Password *">
-    <input type="password" id="dpConfirmPassword" placeholder="Konfirmasi Password *">
-    <button onclick="daftarPelanggan()" class="btn-sm" style="font-size:18px;padding:15px;background:#db2777;color:#fff;">📝 Daftar Sekarang</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
-  </div>
-  <div id="daftarTokoPage" class="container hidden" style="max-width:500px;">
-    <h2>🏬 Daftar Toko Baru</h2>
-    <div id="daftarTokoError" class="error hidden"></div>
-    <div id="daftarTokoSuccess" class="success hidden"></div>
-    <input type="text" id="dtNamaToko" placeholder="Nama Toko *">
-    <input type="text" id="dtPemilik" placeholder="Nama Pemilik *">
-    <input type="email" id="dtEmail" placeholder="Email *">
-    <input type="text" id="dtNoHp" placeholder="No HP / WA *">
-    <input type="text" id="dtUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="dtPassword" placeholder="Password *">
-    <input type="password" id="dtConfirmPassword" placeholder="Konfirmasi Password *">
-    <button onclick="daftarToko()" class="btn-sm" style="font-size:18px;padding:15px;background:#1a56db;color:#fff;">🏬 Daftar Toko (Trial 3 Hari)</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
-  </div>
-  <div id="daftarOjekPage" class="container hidden" style="max-width:500px;">
-    <h2>🛵 Daftar Ojek Baru</h2>
-    <div id="daftarOjekError" class="error hidden"></div>
-    <div id="daftarOjekSuccess" class="success hidden"></div>
-    <input type="text" id="doNama" placeholder="Nama Lengkap *">
-    <input type="email" id="doEmail" placeholder="Email *">
-    <input type="text" id="doNoHp" placeholder="No HP / WA *">
-    <input type="text" id="doUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="doPassword" placeholder="Password *">
-    <input type="password" id="doConfirmPassword" placeholder="Konfirmasi Password *">
-    <button onclick="daftarOjek()" class="btn-sm" style="font-size:18px;padding:15px;background:#ea580c;color:#fff;">🛵 Daftar Ojek</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
-  </div>
-  <div id="daftarMarketingPage" class="container hidden" style="max-width:500px;">
-    <h2>📊 Daftar Marketing Baru</h2>
-    <div id="daftarMarketingError" class="error hidden"></div>
-    <div id="daftarMarketingSuccess" class="success hidden"></div>
-    <input type="text" id="dmNama" placeholder="Nama Lengkap *">
-    <input type="email" id="dmEmail" placeholder="Email *">
-    <input type="text" id="dmNoHp" placeholder="No HP / WA *">
-    <input type="text" id="dmUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="dmPassword" placeholder="Password *">
-    <input type="password" id="dmConfirmPassword" placeholder="Konfirmasi Password *">
-    <button onclick="daftarMarketing()" class="btn-sm" style="font-size:18px;padding:15px;background:#7c3aed;color:#fff;">📊 Daftar Marketing</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
-  </div>
-  <div id="daftarCODPage" class="container hidden" style="max-width:500px;">
-    <h2>🔄 Daftar Akun COD</h2>
-    <div id="daftarCODError" class="error hidden"></div>
-    <div id="daftarCODSuccess" class="success hidden"></div>
-    <input type="text" id="dcNama" placeholder="Nama Lengkap *">
-    <input type="email" id="dcEmail" placeholder="Email *">
-    <input type="text" id="dcNoHp" placeholder="No HP / WA *">
-    <input type="text" id="dcUsername" placeholder="Username untuk Login *" autocomplete="off">
-    <input type="password" id="dcPassword" placeholder="Password *">
-    <input type="password" id="dcConfirmPassword" placeholder="Konfirmasi Password *">
-    <button onclick="daftarCOD()" class="btn-sm" style="font-size:18px;padding:15px;background:#d97706;color:#fff;">🔄 Daftar COD</button>
-    <div style="text-align:center;margin-top:10px;"><span class="link" onclick="showDaftarPage()">← Pilih jenis akun lain</span></div>
-  </div>
-  <div id="direktoriPage" class="landing-page hidden">
-    <div class="direktori-hero">
-      <h1>🏪 Direktori Toko Online</h1>
-      <p>Belanja langsung dari toko-toko terpercaya di daerah Anda</p>
-      <p style="font-size:13px;opacity:.8;">💬 Chat dengan toko • 🛵 Pesan antar • 📦 Belanja online • 📊 Status toko</p>
-    </div>
-    <div class="search-bar-direktori">
-      <input type="text" id="cariTokoDirektori" placeholder="🔍 Cari toko..." oninput="filterTokoDirektori()">
-    </div>
-    <div id="daftarTokoDirektori"></div>
-    <div style="text-align:center;margin-top:20px;">
-      <button onclick="goToLanding()" class="btn-sm btn-gray">← Kembali ke Halaman Utama</button>
-    </div>
-  </div>
-  <div id="katalogTokoPage" class="landing-page hidden">
-    <div id="katalogTokoHeader"></div>
-    <div id="katalogTokoContent" class="grid-produk" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr));"></div>
-    <div style="margin-top:15px;">
-      <button id="btnKembaliKeDirektori" class="btn-sm btn-gray" onclick="kembaliKeDirektori()">← Kembali ke Direktori</button>
-    </div>
-  </div>
-  <div id="superAdminDashboard" class="dashboard hidden">
-    <aside class="sidebar">
-      <h2>⭐ SUPER ADMIN</h2>
-      <nav id="superAdminNav">
-        <a href="#" class="active" data-page="toko" onclick="navigateSuper('toko')">📋 Manajemen Toko</a>
-        <a href="#" data-page="pelanggan" onclick="navigateSuper('pelanggan')">👥 Pelanggan</a>
-        <a href="#" data-page="ojek" onclick="navigateSuper('ojek')">🛵 Ojek</a>
-        <a href="#" data-page="marketing" onclick="navigateSuper('marketing')">📊 Marketing</a>
-        <a href="#" data-page="marketingFree" onclick="navigateSuper('marketingFree')">📊 Marketing Free</a>
-        <a href="#" data-page="cod" onclick="navigateSuper('cod')">🔄 Akun COD</a>
-        <a href="#" data-page="database" onclick="navigateSuper('database')">📊 Database User</a>
-        <a href="#" data-page="direktori" onclick="navigateSuper('direktori')">🏪 Direktori</a>
-        <a href="#" data-page="chat" onclick="navigateSuper('chat')">💬 Chat</a>
-        <a href="#" data-page="history" onclick="navigateSuper('history')">📜 History</a>
-        <a href="#" data-page="pantau" onclick="navigateSuper('pantau')">👁️ Pantau</a>
-        <a href="#" data-page="suspend" onclick="navigateSuper('suspend')">🚫 Suspend</a>
-        <a href="#" data-page="tagihan" onclick="navigateSuper('tagihan')">💳 Tagihan</a>
-        <a href="#" data-page="gaji" onclick="navigateSuper('gaji')">💰 Gaji</a>
-        <a href="#" data-page="pengaturan" onclick="navigateSuper('pengaturan')">⚙️ Pengaturan</a>
-        <a href="#" data-page="profile" onclick="navigateSuper('profile')">👤 Profile</a>
-      </nav>
-      <div style="margin-top:auto;">
-        <button onclick="logout()" style="background:#dc2626;margin-top:20px;">🚪 Keluar</button>
-      </div>
-    </aside>
-    <main class="content">
-      <div id="superTokoPage">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
-          <h2>📋 Daftar Toko</h2>
-          <button class="btn-sm btn-success" onclick="showBuatTokoForm()">+ Buat Toko Baru</button>
-        </div>
-        <div id="tokoList" class="grid-2"></div>
-      </div>
-      <div id="superPelangganPage" class="hidden">
-        <h2>👥 Manajemen Pelanggan</h2>
-        <div id="daftarPelangganSuper"></div>
-      </div>
-      <div id="superOjekPage" class="hidden">
-        <h2>🛵 Manajemen Ojek</h2>
-        <div id="daftarOjekSuper"></div>
-      </div>
-      <div id="superMarketingPage" class="hidden">
-        <h2>📊 Manajemen Marketing</h2>
-        <div id="daftarMarketingSuper"></div>
-      </div>
-      <div id="superMarketingFreePage" class="hidden">
-        <h2>📊 Manajemen Marketing Free</h2>
-        <div id="daftarMarketingFreeSuper"></div>
-      </div>
-      <div id="superCODPage" class="hidden">
-        <h2>🔄 Manajemen Akun COD</h2>
-        <div id="daftarCODSuper"></div>
-      </div>
-      <div id="superDatabasePage" class="hidden">
-        <h2>📊 Database Semua User</h2>
-        <div id="databaseUserContent"></div>
-      </div>
-      <div id="superDirektoriPage" class="hidden">
-        <h2>🏪 Kelola Direktori Toko</h2>
-        <div id="superDirektoriContent"></div>
-      </div>
-      <div id="superChatPage" class="hidden">
-        <h2>💬 Manajemen Chat</h2>
-        <div id="superChatList"></div>
-        <div class="card">
-          <h3>🚫 Blokir User</h3>
-          <input type="text" id="blockUserId" placeholder="Username atau ID">
-          <button class="btn-sm btn-danger" onclick="blockUserSuper()">🚫 Blokir</button>
-          <button class="btn-sm btn-success" onclick="unblockUserSuper()">✅ Buka Blokir</button>
-          <div id="blockedUserList"></div>
-        </div>
-      </div>
-      <div id="superHistoryPage" class="hidden">
-        <h2>📜 History Aktivitas</h2>
-        <div id="historyAktivitasList"></div>
-      </div>
-      <div id="superPantauPage" class="hidden">
-        <h2>👁️ Pantau Aktifitas User</h2>
-        <div id="pantauAktifitasList"></div>
-        <div class="card">
-          <h3>🔘 OFF/ON Aplikasi</h3>
-          <p style="font-size:14px;color:#6b7280;">Matikan akses semua user (Super Admin tetap bisa masuk)</p>
-          <button id="toggleAppBtn" class="btn-sm btn-danger" onclick="toggleAppOff()">🔴 OFF Aplikasi</button>
-          <div id="appStatusResult" class="hidden" style="margin-top:10px;"></div>
-        </div>
-        <div class="card">
-          <h3>💾 Simpan Pengaturan</h3>
-          <button class="btn-sm btn-teal" onclick="saveAppSettings()">💾 Simpan Pengaturan</button>
-        </div>
-      </div>
-      <div id="superSuspendPage" class="hidden">
-        <h2>🚫 Manajemen Suspend</h2>
-        <div id="suspendList"></div>
-        <div id="pengajuanBukaAkunList"></div>
-      </div>
-      <div id="superTagihanPage" class="hidden">
-        <h2>💳 Tagihan Komisi</h2>
-        <div id="tagihanTokoList"></div>
-        <div id="tagihanOjekList"></div>
-        <div id="riwayatPembayaranList"></div>
-      </div>
-      <div id="superGajiPage" class="hidden">
-        <h2>💰 Gaji</h2>
-        <div id="daftarGajiList"></div>
-        <div id="historyGajiList"></div>
-      </div>
-      <div id="superPengaturanPage" class="hidden">
-        <h2>⚙️ Pengaturan</h2>
-        <div class="card">
-          <h3>📞 Edit Hubungi Admin</h3>
-          <input type="text" id="editWaAdmin" placeholder="Nomor WA">
-          <input type="email" id="editEmailAdmin" placeholder="Email Admin">
-          <button onclick="simpanHubungiAdmin()" class="btn-sm btn-success">💾 Simpan</button>
-        </div>
-      </div>
-      <div id="superProfilePage" class="hidden">
-        <h2>👤 Profile Super Admin</h2>
-        <div id="superProfileInfo" class="card profile-info"></div>
-      </div>
-      <div id="buatTokoPage" class="hidden card" style="max-width:500px;">
-        <h2>➕ Buat Toko Baru</h2>
-        <input type="text" id="namaToko" placeholder="Nama Toko">
-        <input type="text" id="pemilikToko" placeholder="Pemilik Toko">
-        <input type="email" id="emailToko" placeholder="Email">
-        <input type="text" id="noHpToko" placeholder="Nomor HP">
-        <input type="text" id="usernameToko" placeholder="Username Login">
-        <input type="password" id="passwordToko" placeholder="Password" value="user">
-        <div style="display:flex;gap:10px;">
-          <button onclick="simpanToko()" class="btn-sm btn-success">💾 Simpan</button>
-          <button onclick="hideBuatTokoForm()" class="btn-sm btn-gray">Batal</button>
-        </div>
-      </div>
-    </main>
-  </div>
-  <div id="modalChat" class="modal hidden">
-    <div class="modal-content" style="max-width:500px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
-        <h3 style="margin:0;">💬 Chat dengan <span id="chatWithName"></span></h3>
-        <button onclick="document.getElementById('modalChat').classList.add('hidden')" style="width:auto;background:transparent;color:#333;font-size:24px;padding:0 10px;">✕</button>
-      </div>
-      <div id="chatMessages" class="chat-container" style="max-height:350px;overflow-y:auto;padding:10px;background:#f9fafb;border-radius:8px;"></div>
-      <div style="display:flex;gap:10px;margin-top:10px;">
-        <input type="text" id="chatInput" placeholder="Tulis pesan..." style="flex:1;margin:0;">
-        <input type="hidden" id="chatTarget">
-        <button onclick="sendChatMessage()" class="btn-sm btn-blue" style="margin:0;">Kirim</button>
-      </div>
-    </div>
-  </div>
-  <div id="modalSuspend" class="modal hidden">
-    <div class="modal-content" style="max-width:500px;">
-      <h3>🚫 Akun Tersuspend</h3>
-      <div id="suspendContent"></div>
-      <button onclick="document.getElementById('modalSuspend').classList.add('hidden')" class="btn-sm btn-gray">Tutup</button>
-    </div>
-  </div>
-  <div id="modalPengajuanBukaAkun" class="modal hidden">
-    <div class="modal-content" style="max-width:500px;">
-      <h3>📤 Ajukan Buka Akun</h3>
-      <p style="font-size:14px;color:#6b7280;">Tulis perjanjian Anda untuk dibuka kembali akunnya.</p>
-      <textarea id="pengajuanBukaAkunText" rows="4" style="width:100%;"></textarea>
-      <button onclick="kirimPengajuanBukaAkun()" class="btn-sm btn-success">📤 Kirim</button>
-      <button onclick="document.getElementById('modalPengajuanBukaAkun').classList.add('hidden')" class="btn-sm btn-gray">Batal</button>
-    </div>
-  </div>
-  <script>
-    // ============================================================
-    //  SUPER ADMIN - username: super, password: admin123
-    // ============================================================
-    const SUPER_ADMIN = { 
-      username: 'super', 
-      password: 'admin123',
-      nama: 'Super Admin',
-      noHp: '081220285126',
-      email: 'dedesugiono.ai@gmail.com'
-    };
-
-    const DEFAULT_HUBUNGI_ADMIN = { wa: '6281220285226', email: 'dedesugiono.ai@gmail.com' };
-    const DEFAULT_LANDING = {
-      harga: [
-        { id: '1bulan', label: '1 Bulan', harga: 25000 },
-        { id: '3bulan', label: '3 Bulan', harga: 50000 },
-        { id: '6bulan', label: '6 Bulan', harga: 75000 },
-        { id: '1tahun', label: '1 Tahun', harga: 100000 }
-      ]
-    };
-
-    function getTokoList(){return JSON.parse(localStorage.getItem('toko_list')||'[]')}
-    function saveTokoList(d){localStorage.setItem('toko_list',JSON.stringify(d))}
-    function getOjekList(){return JSON.parse(localStorage.getItem('ojek_list')||'[]')}
-    function saveOjekList(d){localStorage.setItem('ojek_list',JSON.stringify(d))}
-    function getPelangganList(){return JSON.parse(localStorage.getItem('pelanggan_list')||'[]')}
-    function savePelangganList(d){localStorage.setItem('pelanggan_list',JSON.stringify(d))}
-    function getMarketingList(){return JSON.parse(localStorage.getItem('marketing_list')||'[]')}
-    function saveMarketingList(d){localStorage.setItem('marketing_list',JSON.stringify(d))}
-    function getMarketingFreeList(){return JSON.parse(localStorage.getItem('marketing_free_list')||'[]')}
-    function saveMarketingFreeList(d){localStorage.setItem('marketing_free_list',JSON.stringify(d))}
-    function getCODList(){return JSON.parse(localStorage.getItem('cod_list')||'[]')}
-    function saveCODList(d){localStorage.setItem('cod_list',JSON.stringify(d))}
-    function getDirektoriData(){return JSON.parse(localStorage.getItem('direktori_data')||'{}')}
-    function saveDirektoriData(d){localStorage.setItem('direktori_data',JSON.stringify(d))}
-    function getChatData(){return JSON.parse(localStorage.getItem('chat_data')||'[]')}
-    function saveChatData(d){localStorage.setItem('chat_data',JSON.stringify(d))}
-    function getBlockedUsers(){return JSON.parse(localStorage.getItem('blocked_users')||'[]')}
-    function saveBlockedUsers(d){localStorage.setItem('blocked_users',JSON.stringify(d))}
-    function getHistoryAktivitas(){return JSON.parse(localStorage.getItem('history_aktivitas')||'[]')}
-    function saveHistoryAktivitas(d){localStorage.setItem('history_aktivitas',JSON.stringify(d))}
-    function getSuspendList(){return JSON.parse(localStorage.getItem('suspend_list')||'[]')}
-    function saveSuspendList(d){localStorage.setItem('suspend_list',JSON.stringify(d))}
-    function getPengajuanBukaAkun(){return JSON.parse(localStorage.getItem('pengajuan_buka_akun')||'[]')}
-    function savePengajuanBukaAkun(d){localStorage.setItem('pengajuan_buka_akun',JSON.stringify(d))}
-    function getTagihan(){return JSON.parse(localStorage.getItem('tagihan')||'[]')}
-    function saveTagihan(d){localStorage.setItem('tagihan',JSON.stringify(d))}
-    function getRiwayatPembayaran(){return JSON.parse(localStorage.getItem('riwayat_pembayaran')||'[]')}
-    function saveRiwayatPembayaran(d){localStorage.setItem('riwayat_pembayaran',JSON.stringify(d))}
-    function getGajiList(){return JSON.parse(localStorage.getItem('gaji_list')||'[]')}
-    function saveGajiList(d){localStorage.setItem('gaji_list',JSON.stringify(d))}
-    function getHistoryGaji(){return JSON.parse(localStorage.getItem('history_gaji')||'[]')}
-    function saveHistoryGaji(d){localStorage.setItem('history_gaji',JSON.stringify(d))}
-    function getLandingData(){return JSON.parse(localStorage.getItem('landing_data')||JSON.stringify(DEFAULT_LANDING))}
-    function saveLandingData(d){localStorage.setItem('landing_data',JSON.stringify(d))}
-    function getHubungiAdmin(){return JSON.parse(localStorage.getItem('hubungi_admin')||JSON.stringify(DEFAULT_HUBUNGI_ADMIN))}
-    function saveHubungiAdmin(d){localStorage.setItem('hubungi_admin',JSON.stringify(d))}
-    function getAppOffStatus(){return localStorage.getItem('app_off')==='true'}
-    function setAppOffStatus(s){localStorage.setItem('app_off',s?'true':'false')}
-    function getSession(){try{const d=localStorage.getItem('session');if(!d)return null;const s=JSON.parse(d);if(s.expiry&&Date.now()>s.expiry){clearSession();return null}return s}catch(e){return null}}
-    function saveSession(d){d.expiry=Date.now()+7*24*60*60*1000;localStorage.setItem('session',JSON.stringify(d))}
-    function clearSession(){localStorage.removeItem('session')}
-    function generateNMO(){const p='NMO';const l=localStorage.getItem('last_nmo')||'00000';const n=parseInt(l)+1;const r=String(n).padStart(5,'0');localStorage.setItem('last_nmo',r);return p+r}
-    function escapeHtml(s){if(!s)return '';return String(s).replace(/[&<>"]/g,function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';if(m==='"')return '&quot;';return m})}
-    function formatDateTime(ts){if(!ts)return '-';return new Date(ts).toLocaleString('id-ID',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})}
-    function isTokoActive(t){if(!t||!t.aktivasi)return false;if(t.aktivasi.status!=='aktif')return false;return Date.now()<t.aktivasi.berakhir}
-    function getUserById(id){if(id==='SUPER_ADMIN')return{id:'SUPER_ADMIN',nama:'Super Admin',role:'super'};const t=getTokoList().find(x=>x.id===id);if(t)return{...t,role:'toko'};const o=getOjekList().find(x=>x.id===id);if(o)return{...o,role:'ojek'};const p=getPelangganList().find(x=>x.id===id);if(p)return{...p,role:'pelanggan'};const m=getMarketingList().find(x=>x.id===id);if(m)return{...m,role:'marketing'};const f=getMarketingFreeList().find(x=>x.id===id);if(f)return{...f,role:'marketingfree'};const c=getCODList().find(x=>x.id===id);if(c)return{...c,role:'cod'};return null}
-    function sendMessage(from,to,pesan){if(!from||!to||!pesan)return false;const d=getChatData();d.push({id:'msg_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),from:from,to:to,pesan:pesan,waktu:Date.now()});saveChatData(d);tambahHistoryAktivitas('chat','Pesan dari '+from+' ke '+to+': '+pesan.substring(0,50)+'...');return true}
-    function tambahHistoryAktivitas(tipe,deskripsi){const s=getSession();const h=getHistoryAktivitas();h.push({id:'hist_'+Date.now(),tipe:tipe,deskripsi:deskripsi,user:s?s.username:'system',tanggal:Date.now()});if(h.length>1000)h.splice(0,h.length-1000);saveHistoryAktivitas(h)}
-
-    // NAVIGASI
-    function hideAll(){['landingPage','loginPage','daftarPage','daftarPelangganPage','daftarTokoPage','daftarOjekPage','daftarMarketingPage','daftarCODPage','lupaPage','resetPage','direktoriPage','katalogTokoPage','superAdminDashboard'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden')})}
-    function goToLanding(){hideAll();document.getElementById('landingPage').classList.remove('hidden');renderLandingPrices();renderHubungiAdminDisplay();checkAppOff()}
-    function goToLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden');document.getElementById('loginError').classList.add('hidden')}
-    function showLogin(){hideAll();document.getElementById('loginPage').classList.remove('hidden')}
-    function showDaftarPage(){hideAll();document.getElementById('daftarPage').classList.remove('hidden')}
-    function showDaftarPelanggan(){hideAll();document.getElementById('daftarPelangganPage').classList.remove('hidden')}
-    function showDaftarToko(){hideAll();document.getElementById('daftarTokoPage').classList.remove('hidden')}
-    function showDaftarOjek(){hideAll();document.getElementById('daftarOjekPage').classList.remove('hidden')}
-    function showDaftarMarketing(){hideAll();document.getElementById('daftarMarketingPage').classList.remove('hidden')}
-    function showDaftarCOD(){hideAll();document.getElementById('daftarCODPage').classList.remove('hidden')}
-    function showLupaPassword(){hideAll();document.getElementById('lupaPage').classList.remove('hidden')}
-    function renderLandingPrices(){const d=getLandingData();const c=document.getElementById('landingPriceList');if(!d.harga||d.harga.length===0){c.innerHTML='<p>Data harga belum tersedia.</p>';return}c.innerHTML=d.harga.map(h=>'<div class="price-item"><span class="duration">'+h.label+'</span><span class="price">Rp '+h.harga.toLocaleString('id-ID')+'</span></div>').join('')}
-    function renderHubungiAdminDisplay(){const d=getHubungiAdmin();const el=document.getElementById('contactInfoDisplay');if(el){el.innerHTML='<a href="https://wa.me/'+d.wa+'" target="_blank" class="wa-button">💬 WA Admin</a><p style="margin-top:5px;font-size:13px;color:#6b7280;">✉️ '+d.email+'</p>'}}
-
-    // APP OFF
-    function checkAppOff(){const off=getAppOffStatus();const overlay=document.getElementById('appOffOverlay');const s=getSession();if(off&&(!s||s.role!=='super')){overlay.classList.remove('hidden');document.getElementById('landingPage').classList.add('hidden');document.getElementById('loginPage').classList.add('hidden')}else{overlay.classList.add('hidden')}}
-    function handleLoginSuper(){const overlay=document.getElementById('appOffOverlay');overlay.classList.add('hidden');goToLogin();document.getElementById('loginUsername').value='super';document.getElementById('loginPassword').value='admin123';document.getElementById('loginError').classList.add('hidden')}
-    function toggleAppOff(){const off=getAppOffStatus();const n=!off;setAppOffStatus(n);const btn=document.getElementById('toggleAppBtn');btn.textContent=n?'🟢 ON Aplikasi':'🔴 OFF Aplikasi';btn.className=n?'btn-sm btn-success':'btn-sm btn-danger';const r=document.getElementById('appStatusResult');r.classList.remove('hidden');r.innerHTML='<div class="success">✅ Aplikasi '+(n?'dinyalakan':'dimatikan')+'! '+(n?'Semua user bisa masuk.':'Hanya Super Admin yang bisa masuk.')+'</div>';tambahHistoryAktivitas('pengaturan','Aplikasi '+(n?'ON':'OFF')+' oleh Super Admin');setTimeout(()=>r.classList.add('hidden'),5000);checkAppOff()}
-
-    // SAVE SETTINGS (tanpa reset)
-    function saveAppSettings(){const s={hubungiAdmin:getHubungiAdmin(),landingData:getLandingData(),appOff:getAppOffStatus(),timestamp:Date.now()};localStorage.setItem('app_settings_backup',JSON.stringify(s));const r=document.getElementById('appStatusResult');if(r){r.classList.remove('hidden');r.innerHTML='<div class="success">✅ Pengaturan berhasil disimpan!</div>';setTimeout(()=>r.classList.add('hidden'),3000)}alert('✅ Pengaturan berhasil disimpan!')}
-
-    // LOGIN
-    function handleLogin(){if(getAppOffStatus()){const s=getSession();if(!s||s.role!=='super'){alert('⚠️ Aplikasi sedang dalam pemeliharaan. Hanya Super Admin yang bisa masuk.');document.getElementById('appOffOverlay').classList.remove('hidden');return}}const u=document.getElementById('loginUsername').value.trim();const p=document.getElementById('loginPassword').value.trim();const err=document.getElementById('loginError');err.classList.add('hidden');if(!u||!p){err.textContent='Isi username dan password.';err.classList.remove('hidden');return}if(getBlockedUsers().includes(u)){err.textContent='⚠️ Akun Anda diblokir oleh Super Admin. Hubungi admin untuk bantuan.';err.classList.remove('hidden');return}const suspended=getSuspendList();const sus=suspended.find(s=>s.username===u&&s.status==='suspend');if(sus){err.textContent='🚫 Akun Anda tersuspend. Alasan: '+sus.alasan;err.classList.remove('hidden');document.getElementById('modalSuspend').classList.remove('hidden');document.getElementById('suspendContent').innerHTML='<p><strong>Username:</strong> '+sus.username+'</p><p><strong>Alasan Suspend:</strong> '+sus.alasan+'</p><p><strong>Tanggal Suspend:</strong> '+formatDateTime(sus.tanggal)+'</p><p style="color:#dc2626;font-weight:600;">Akun Anda tidak dapat digunakan sampai Super Admin membukanya.</p><button class="btn-sm btn-warning" onclick="ajukanBukaAkun()">📤 Ajukan Buka Akun</button>';return}if(u===SUPER_ADMIN.username&&p===SUPER_ADMIN.password){saveSession({role:'super',username:u});showSuperDashboard();return}const tokoList=getTokoList();for(const t of tokoList){if(t.username===u&&t.password===p){if(!isTokoActive(t)){err.textContent='Toko tidak aktif atau masa trial berakhir.';err.classList.remove('hidden');return}saveSession({role:'pemilik',tokoId:t.id,username:u});err.textContent='Dashboard Toko belum tersedia di versi ini.';err.classList.remove('hidden');return}}const ojekList=getOjekList();for(const o of ojekList){if(o.username===u&&o.password===p){saveSession({role:'ojek',ojekId:o.id,username:u});err.textContent='Dashboard Ojek belum tersedia di versi ini.';err.classList.remove('hidden');return}}const pelangganList=getPelangganList();for(const pl of pelangganList){if(pl.username===u&&pl.password===p){saveSession({role:'pelanggan',pelangganId:pl.id,username:u});err.textContent='Dashboard Pelanggan belum tersedia di versi ini.';err.classList.remove('hidden');return}}const marketingList=getMarketingList();for(const m of marketingList){if(m.username===u&&m.password===p){saveSession({role:'marketing',marketingId:m.id,username:u});err.textContent='Dashboard Marketing belum tersedia di versi ini.';err.classList.remove('hidden');return}}const mfList=getMarketingFreeList();for(const m of mfList){if(m.username===u&&m.password===p){saveSession({role:'marketingfree',marketingFreeId:m.id,username:u});err.textContent='Dashboard Marketing Free belum tersedia di versi ini.';err.classList.remove('hidden');return}}const codList=getCODList();for(const c of codList){if(c.username===u&&c.password===p){if(c.status==='suspended'){err.textContent='Akun COD dinonaktifkan.';err.classList.remove('hidden');return}if(c.status==='menunggu'){err.textContent='Akun COD menunggu persetujuan Super Admin.';err.classList.remove('hidden');return}saveSession({role:'cod',codId:c.id,username:u});err.textContent='Dashboard COD belum tersedia di versi ini.';err.classList.remove('hidden');return}}err.textContent='Username atau password salah.';err.classList.remove('hidden')}
-
-    // RESET AKUN TRIAL
-    function resetSemuaAkunTrial(){if(!confirm('Reset semua akun trial ke default?'))return;const t=[{id:generateNMO(),namaToko:'Toko Trial',pemilik:'Pemilik Trial',noHp:'081234567890',email:'toko@trial.com',username:'user',password:'user',aktivasi:{status:'aktif',tipe:'gratis',mulai:Date.now(),berakhir:Date.now()+3*24*60*60*1000},kasir:[]}];saveTokoList(t);const o=[{id:generateNMO(),nama:'Ojek Trial',noHp:'081234567890',email:'ojek@trial.com',username:'ojek1',password:'ojek123',status:'offline'}];saveOjekList(o);const p=[{id:generateNMO(),nama:'Pelanggan Trial',noHp:'081298765432',email:'pelanggan@trial.com',username:'cust001',password:'pelanggan123',status:'aktif'}];savePelangganList(p);const m=[{id:generateNMO(),nama:'Marketing Trial',noHp:'081234567891',email:'marketing@trial.com',username:'marketing1',password:'marketing123',status:'aktif'}];saveMarketingList(m);const f=[{id:generateNMO(),nama:'Marketing Free Trial',noHp:'081234567892',email:'mktfree@trial.com',username:'mktfree1',password:'mktfree123',status:'aktif'}];saveMarketingFreeList(f);const c=[{id:generateNMO(),nama:'COD Trial',noHp:'081234567893',email:'cod@trial.com',username:'cod1',password:'cod123',status:'aktif'}];saveCODList(c);const d={};d[t[0].id]={tokoId:t[0].id,namaDesa:'',namaKecamatan:'',namaKabupaten:'',namaProvinsi:'',status:'online'};saveDirektoriData(d);alert('✅ Akun trial direset! Silakan login dengan user/user');clearSession();goToLanding()}
-
-    // REGISTER
-    function cekEmailHpUnik(email,noHp,username){const all=[];getTokoList().forEach(t=>{all.push({email:t.email,noHp:t.noHp,username:t.username})});getOjekList().forEach(o=>{all.push({email:o.email,noHp:o.noHp,username:o.username})});getPelangganList().forEach(p=>{all.push({email:p.email,noHp:p.noHp,username:p.username})});getMarketingList().forEach(m=>{all.push({email:m.email,noHp:m.noHp,username:m.username})});getMarketingFreeList().forEach(m=>{all.push({email:m.email,noHp:m.noHp,username:m.username})});getCODList().forEach(c=>{all.push({email:c.email,noHp:c.noHp,username:c.username})});if(all.some(u=>u.email===email))return{valid:false,msg:'Email sudah terdaftar!'};if(all.some(u=>u.noHp===noHp))return{valid:false,msg:'Nomor HP sudah terdaftar!'};if(all.some(u=>u.username===username))return{valid:false,msg:'Username sudah dipakai!'};return{valid:true}}
-    function daftarPelanggan(){const n=document.getElementById('dpNama').value.trim();const e=document.getElementById('dpEmail').value.trim();const h=document.getElementById('dpNoHp').value.trim();const u=document.getElementById('dpUsername').value.trim();const p=document.getElementById('dpPassword').value.trim();const c=document.getElementById('dpConfirmPassword').value.trim();const err=document.getElementById('daftarPelangganError');const suc=document.getElementById('daftarPelangganSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(!n||!e||!h||!u||p.length<4||p!==c){err.textContent='Lengkapi semua data. Password minimal 4 karakter.';err.classList.remove('hidden');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){err.textContent=cek.msg;err.classList.remove('hidden');return}const id=generateNMO();const list=getPelangganList();list.push({id:id,nama:n,email:e,noHp:h,username:u,password:p,status:'aktif'});savePelangganList(list);suc.textContent='✅ Pendaftaran berhasil! ID: '+id+' Silakan login.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-    function daftarToko(){const n=document.getElementById('dtNamaToko').value.trim();const p=document.getElementById('dtPemilik').value.trim();const e=document.getElementById('dtEmail').value.trim();const h=document.getElementById('dtNoHp').value.trim();const u=document.getElementById('dtUsername').value.trim();const pw=document.getElementById('dtPassword').value.trim();const c=document.getElementById('dtConfirmPassword').value.trim();const err=document.getElementById('daftarTokoError');const suc=document.getElementById('daftarTokoSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(!n||!p||!e||!h||!u||pw.length<4||pw!==c){err.textContent='Lengkapi semua data. Password minimal 4 karakter.';err.classList.remove('hidden');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){err.textContent=cek.msg;err.classList.remove('hidden');return}const id=generateNMO();const list=getTokoList();list.push({id:id,namaToko:n,pemilik:p,email:e,noHp:h,username:u,password:pw,aktivasi:{status:'aktif',tipe:'gratis',mulai:Date.now(),berakhir:Date.now()+3*24*60*60*1000},kasir:[]});saveTokoList(list);const d=getDirektoriData();d[id]={tokoId:id,namaDesa:'',namaKecamatan:'',namaKabupaten:'',namaProvinsi:'',status:'online'};saveDirektoriData(d);suc.textContent='✅ Toko berhasil didaftar! ID: '+id+' Trial 3 hari. Silakan login.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-    function daftarOjek(){const n=document.getElementById('doNama').value.trim();const e=document.getElementById('doEmail').value.trim();const h=document.getElementById('doNoHp').value.trim();const u=document.getElementById('doUsername').value.trim();const p=document.getElementById('doPassword').value.trim();const c=document.getElementById('doConfirmPassword').value.trim();const err=document.getElementById('daftarOjekError');const suc=document.getElementById('daftarOjekSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(!n||!e||!h||!u||p.length<4||p!==c){err.textContent='Lengkapi semua data. Password minimal 4 karakter.';err.classList.remove('hidden');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){err.textContent=cek.msg;err.classList.remove('hidden');return}const id=generateNMO();const list=getOjekList();list.push({id:id,nama:n,email:e,noHp:h,username:u,password:p,status:'offline'});saveOjekList(list);suc.textContent='✅ Pendaftaran Ojek berhasil! ID: '+id+' Silakan login.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-    function daftarMarketing(){const n=document.getElementById('dmNama').value.trim();const e=document.getElementById('dmEmail').value.trim();const h=document.getElementById('dmNoHp').value.trim();const u=document.getElementById('dmUsername').value.trim();const p=document.getElementById('dmPassword').value.trim();const c=document.getElementById('dmConfirmPassword').value.trim();const err=document.getElementById('daftarMarketingError');const suc=document.getElementById('daftarMarketingSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(!n||!e||!h||!u||p.length<4||p!==c){err.textContent='Lengkapi semua data. Password minimal 4 karakter.';err.classList.remove('hidden');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){err.textContent=cek.msg;err.classList.remove('hidden');return}const id=generateNMO();const list=getMarketingList();list.push({id:id,nama:n,email:e,noHp:h,username:u,password:p,status:'aktif'});saveMarketingList(list);suc.textContent='✅ Pendaftaran Marketing berhasil! ID: '+id+' Silakan login.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-    function daftarCOD(){const n=document.getElementById('dcNama').value.trim();const e=document.getElementById('dcEmail').value.trim();const h=document.getElementById('dcNoHp').value.trim();const u=document.getElementById('dcUsername').value.trim();const p=document.getElementById('dcPassword').value.trim();const c=document.getElementById('dcConfirmPassword').value.trim();const err=document.getElementById('daftarCODError');const suc=document.getElementById('daftarCODSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(!n||!e||!h||!u||p.length<4||p!==c){err.textContent='Lengkapi semua data. Password minimal 4 karakter.';err.classList.remove('hidden');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){err.textContent=cek.msg;err.classList.remove('hidden');return}const id=generateNMO();const list=getCODList();list.push({id:id,nama:n,email:e,noHp:h,username:u,password:p,status:'menunggu',tanggalDaftar:Date.now()});saveCODList(list);sendMessage(id,'SUPER_ADMIN','📝 Pendaftaran Akun COD Baru\nNama: '+n+'\nUsername: '+u+'\nMenunggu persetujuan Super Admin.');suc.textContent='✅ Pendaftaran COD berhasil! ID: '+id+' Menunggu persetujuan Super Admin.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-
-    // SUPER ADMIN DASHBOARD
-    function showSuperDashboard(){hideAll();document.getElementById('superAdminDashboard').classList.remove('hidden');navigateSuper('toko')}
-    function navigateSuper(page){document.querySelectorAll('#superAdminNav a').forEach(a=>a.classList.toggle('active',a.dataset.page===page));['superTokoPage','superPelangganPage','superOjekPage','superMarketingPage','superMarketingFreePage','superCODPage','superDatabasePage','superDirektoriPage','superChatPage','superHistoryPage','superPantauPage','superSuspendPage','superTagihanPage','superGajiPage','superPengaturanPage','superProfilePage','buatTokoPage'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('hidden')});if(page==='toko'){document.getElementById('superTokoPage').classList.remove('hidden');renderSuperToko()}else if(page==='pelanggan'){document.getElementById('superPelangganPage').classList.remove('hidden');renderSuperPelanggan()}else if(page==='ojek'){document.getElementById('superOjekPage').classList.remove('hidden');renderSuperOjek()}else if(page==='marketing'){document.getElementById('superMarketingPage').classList.remove('hidden');renderSuperMarketing()}else if(page==='marketingFree'){document.getElementById('superMarketingFreePage').classList.remove('hidden');renderSuperMarketingFree()}else if(page==='cod'){document.getElementById('superCODPage').classList.remove('hidden');renderSuperCOD()}else if(page==='database'){document.getElementById('superDatabasePage').classList.remove('hidden');renderDatabaseUser()}else if(page==='direktori'){document.getElementById('superDirektoriPage').classList.remove('hidden');renderSuperDirektori()}else if(page==='chat'){document.getElementById('superChatPage').classList.remove('hidden');renderSuperChat();renderBlockedUsers()}else if(page==='history'){document.getElementById('superHistoryPage').classList.remove('hidden');renderHistoryAktivitas()}else if(page==='pantau'){document.getElementById('superPantauPage').classList.remove('hidden');renderPantauAktifitas()}else if(page==='suspend'){document.getElementById('superSuspendPage').classList.remove('hidden');renderSuspendSuper()}else if(page==='tagihan'){document.getElementById('superTagihanPage').classList.remove('hidden');renderTagihanSuper()}else if(page==='gaji'){document.getElementById('superGajiPage').classList.remove('hidden');renderGajiSuper()}else if(page==='pengaturan'){document.getElementById('superPengaturanPage').classList.remove('hidden');renderSuperPengaturan()}else if(page==='profile'){document.getElementById('superProfilePage').classList.remove('hidden');renderSuperProfile()}}
-
-    // SUPER TOKO
-    function renderSuperToko(){const list=getTokoList();const c=document.getElementById('tokoList');if(list.length===0){c.innerHTML='<p>Belum ada toko.</p>';return}c.innerHTML=list.map(t=>{const aktif=isTokoActive(t);const blocked=getBlockedUsers().includes(t.username);const suspended=getSuspendList().find(s=>s.username===t.username&&s.status==='suspend');return'<div class="card"><h3>🏬 '+escapeHtml(t.namaToko)+'</h3><p><strong>ID:</strong> '+t.id+'</p><p>👤 '+escapeHtml(t.pemilik)+'</p><p>📞 '+escapeHtml(t.noHp)+'</p><p><span class="badge '+(aktif?'badge-active':'badge-inactive')+'">'+(aktif?'Aktif':'Tidak Aktif')+'</span>'+(blocked?' <span class="badge badge-inactive">🚫 Diblokir</span>':'')+(suspended?' <span class="badge badge-suspend">🚫 Suspend</span>':'')+'</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><button class="btn-sm btn-warning" onclick="bukaAktivasi(\''+t.id+'\')">⚡ Aktivasi</button><button class="btn-sm '+(blocked?'btn-success':'btn-danger')+'" onclick="toggleBlockUser(\''+t.username+'\')">'+(blocked?'✅ Buka Blokir':'🚫 Blokir')+'</button>'+(suspended?'<button class="btn-sm btn-success" onclick="bukaSuspendManual(\''+t.username+'\')">✅ Buka Suspend</button>':'')+'<button class="btn-sm btn-danger" onclick="hapusTokoSuper(\''+t.id+'\')">🗑️ Hapus</button></div></div>'}).join('')}
-    function hapusTokoSuper(id){if(!confirm('Hapus toko ini? Semua data akan hilang.'))return;const list=getTokoList().filter(t=>t.id!==id);saveTokoList(list);localStorage.removeItem('produk_'+id);localStorage.removeItem('transaksi_'+id);renderSuperToko()}
-    function bukaAktivasi(id){const t=getTokoList().find(x=>x.id===id);if(!t)return;const p=prompt('Pilih durasi aktivasi:\n1. 3 Hari (Gratis)\n2. 1 Bulan\n3. 3 Bulan\n4. 6 Bulan\n5. 1 Tahun','1');if(!p)return;const d={'1':3,'2':30,'3':90,'4':180,'5':365};const hari=d[p]||3;const list=getTokoList();const idx=list.findIndex(x=>x.id===id);if(idx===-1)return;list[idx].aktivasi={status:'aktif',tipe:'manual',mulai:Date.now(),berakhir:Date.now()+hari*24*60*60*1000};saveTokoList(list);alert('✅ Aktivasi berhasil!');renderSuperToko()}
-    function showBuatTokoForm(){document.getElementById('buatTokoPage').classList.remove('hidden')}
-    function hideBuatTokoForm(){document.getElementById('buatTokoPage').classList.add('hidden')}
-    function simpanToko(){const n=document.getElementById('namaToko').value.trim();const p=document.getElementById('pemilikToko').value.trim();const e=document.getElementById('emailToko').value.trim();const h=document.getElementById('noHpToko').value.trim();const u=document.getElementById('usernameToko').value.trim();const pw=document.getElementById('passwordToko').value.trim();if(!n||!p||!e||!h||!u||pw.length<4){alert('Lengkapi data!');return}const cek=cekEmailHpUnik(e,h,u);if(!cek.valid){alert(cek.msg);return}const list=getTokoList();const id=generateNMO();list.push({id:id,namaToko:n,pemilik:p,email:e,noHp:h,username:u,password:pw,aktivasi:{status:'aktif',tipe:'gratis',mulai:Date.now(),berakhir:Date.now()+3*24*60*60*1000},kasir:[]});saveTokoList(list);const d=getDirektoriData();d[id]={tokoId:id,namaDesa:'',namaKecamatan:'',namaKabupaten:'',namaProvinsi:'',status:'online'};saveDirektoriData(d);hideBuatTokoForm();alert('✅ Toko dibuat! ID: '+id);renderSuperToko()}
-
-    // SUPER PELANGGAN
-    function renderSuperPelanggan(){const list=getPelangganList();const c=document.getElementById('daftarPelangganSuper');if(list.length===0){c.innerHTML='<p>Belum ada pelanggan.</p>';return}c.innerHTML=list.map(p=>{const blocked=getBlockedUsers().includes(p.username);return'<div class="card"><h4>👤 '+escapeHtml(p.nama)+'</h4><p><strong>ID:</strong> '+p.id+'</p><p>📞 '+escapeHtml(p.noHp)+'</p><p>Status: <span class="badge '+(p.status==='aktif'?'badge-active':'badge-inactive')+'">'+p.status+'</span>'+(blocked?' <span class="badge badge-inactive">🚫 Diblokir</span>':'')+'</p><button class="btn-sm '+(p.status==='suspended'?'btn-success':'btn-warning')+'" onclick="suspendPelanggan(\''+p.id+'\')">'+(p.status==='suspended'?'✅ Aktifkan':'⛔ Suspend')+'</button><button class="btn-sm '+(blocked?'btn-success':'btn-danger')+'" onclick="toggleBlockUser(\''+p.username+'\')">'+(blocked?'✅ Buka Blokir':'🚫 Blokir')+'</button><button class="btn-sm btn-danger" onclick="hapusPelanggan(\''+p.id+'\')">🗑️ Hapus</button></div>'}).join('')}
-    function suspendPelanggan(id){const list=getPelangganList();const idx=list.findIndex(p=>p.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='aktif'?'suspended':'aktif';savePelangganList(list);renderSuperPelanggan()}
-    function hapusPelanggan(id){if(!confirm('Hapus pelanggan ini?'))return;savePelangganList(getPelangganList().filter(p=>p.id!==id));renderSuperPelanggan()}
-
-    // SUPER OJEK
-    function renderSuperOjek(){const list=getOjekList();const c=document.getElementById('daftarOjekSuper');if(list.length===0){c.innerHTML='<p>Belum ada ojek.</p>';return}c.innerHTML=list.map(o=>{const blocked=getBlockedUsers().includes(o.username);return'<div class="card"><h4>🛵 '+escapeHtml(o.nama)+'</h4><p><strong>ID:</strong> '+o.id+'</p><p>📞 '+escapeHtml(o.noHp)+'</p><p>Status: <span class="badge '+(o.status==='online'?'badge-online':o.status==='suspended'?'badge-inactive':'badge-offline')+'">'+o.status+'</span>'+(blocked?' <span class="badge badge-inactive">🚫 Diblokir</span>':'')+'</p><button class="btn-sm '+(o.status==='suspended'?'btn-success':'btn-warning')+'" onclick="suspendOjek(\''+o.id+'\')">'+(o.status==='suspended'?'✅ Aktifkan':'⛔ Suspend')+'</button><button class="btn-sm '+(blocked?'btn-success':'btn-danger')+'" onclick="toggleBlockUser(\''+o.username+'\')">'+(blocked?'✅ Buka Blokir':'🚫 Blokir')+'</button><button class="btn-sm btn-danger" onclick="hapusOjek(\''+o.id+'\')">🗑️</button></div>'}).join('')}
-    function suspendOjek(id){const list=getOjekList();const idx=list.findIndex(o=>o.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='suspended'?'offline':'suspended';saveOjekList(list);renderSuperOjek()}
-    function hapusOjek(id){if(!confirm('Hapus ojek?'))return;saveOjekList(getOjekList().filter(o=>o.id!==id));renderSuperOjek()}
-
-    // SUPER MARKETING
-    function renderSuperMarketing(){const list=getMarketingList();const c=document.getElementById('daftarMarketingSuper');if(list.length===0){c.innerHTML='<p>Belum ada marketing.</p>';return}c.innerHTML=list.map(m=>{const blocked=getBlockedUsers().includes(m.username);return'<div class="card"><h4>📊 '+escapeHtml(m.nama)+'</h4><p><strong>ID:</strong> '+m.id+'</p><p>📞 '+escapeHtml(m.noHp)+'</p><p>Status: <span class="badge '+(m.status==='aktif'?'badge-active':'badge-inactive')+'">'+m.status+'</span>'+(blocked?' <span class="badge badge-inactive">🚫 Diblokir</span>':'')+'</p><button class="btn-sm '+(m.status==='suspended'?'btn-success':'btn-warning')+'" onclick="suspendMarketing(\''+m.id+'\')">'+(m.status==='suspended'?'✅ Aktifkan':'⛔ Suspend')+'</button><button class="btn-sm '+(blocked?'btn-success':'btn-danger')+'" onclick="toggleBlockUser(\''+m.username+'\')">'+(blocked?'✅ Buka Blokir':'🚫 Blokir')+'</button><button class="btn-sm btn-danger" onclick="hapusMarketing(\''+m.id+'\')">🗑️</button></div>'}).join('')}
-    function suspendMarketing(id){const list=getMarketingList();const idx=list.findIndex(m=>m.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='aktif'?'suspended':'aktif';saveMarketingList(list);renderSuperMarketing()}
-    function hapusMarketing(id){if(!confirm('Hapus marketing?'))return;saveMarketingList(getMarketingList().filter(m=>m.id!==id));renderSuperMarketing()}
-
-    // SUPER MARKETING FREE
-    function renderSuperMarketingFree(){const list=getMarketingFreeList();const c=document.getElementById('daftarMarketingFreeSuper');if(list.length===0){c.innerHTML='<p>Belum ada marketing free.</p>';return}c.innerHTML=list.map(m=>{const blocked=getBlockedUsers().includes(m.username);return'<div class="card"><h4>📊 '+escapeHtml(m.nama)+'</h4><p><strong>ID:</strong> '+m.id+'</p><p>📞 '+escapeHtml(m.noHp)+'</p><p>Status: <span class="badge '+(m.status==='aktif'?'badge-active':'badge-inactive')+'">'+m.status+'</span>'+(blocked?' <span class="badge badge-inactive">🚫 Diblokir</span>':'')+'</p><button class="btn-sm '+(m.status==='suspended'?'btn-success':'btn-warning')+'" onclick="suspendMarketingFree(\''+m.id+'\')">'+(m.status==='suspended'?'✅ Aktifkan':'⛔ Suspend')+'</button><button class="btn-sm '+(blocked?'btn-success':'btn-danger')+'" onclick="toggleBlockUser(\''+m.username+'\')">'+(blocked?'✅ Buka Blokir':'🚫 Blokir')+'</button><button class="btn-sm btn-danger" onclick="hapusMarketingFree(\''+m.id+'\')">🗑️</button></div>'}).join('')}
-    function suspendMarketingFree(id){const list=getMarketingFreeList();const idx=list.findIndex(m=>m.id===id);if(idx===-1)return;list[idx].status=list[idx].status==='aktif'?'suspended':'aktif';saveMarketingFreeList(list);renderSuperMarketingFree()}
-    function hapusMarketingFree(id){if(!confirm('Hapus marketing free?'))return;saveMarketingFreeList(getMarketingFreeList().filter(m=>m.id!==id));renderSuperMarketingFree()}
-
-    // SUPER COD
-    function renderSuperCOD(){const list=getCODList();const c=document.getElementById('daftarCODSuper');if(list.length===0){c.innerHTML='<p>Belum ada akun COD.</p>';return}const menunggu=list.filter(x=>x.status==='menunggu');const aktif=list.filter(x=>x.status==='aktif'||x.status==='online');let html='';if(menunggu.length>0){html+='<h4>⏳ Menunggu Persetujuan</h4>';html+=menunggu.map(x=>'<div class="card" style="border-left:4px solid #f59e0b;"><h4>🔄 '+escapeHtml(x.nama)+'</h4><p><strong>ID:</strong> '+x.id+'</p><p>📞 '+escapeHtml(x.noHp)+'</p><button class="btn-sm btn-success" onclick="setujuiCOD(\''+x.id+'\')">✅ Setujui</button><button class="btn-sm btn-danger" onclick="tolakCOD(\''+x.id+'\')">❌ Tolak</button></div>').join('')}if(aktif.length>0){html+='<h4>✅ Aktif</h4>';html+=aktif.map(x=>'<div class="card" style="border-left:4px solid #059669;"><h4>🔄 '+escapeHtml(x.nama)+'</h4><p><strong>ID:</strong> '+x.id+'</p><p>📞 '+escapeHtml(x.noHp)+'</p><button class="btn-sm btn-warning" onclick="suspendCOD(\''+x.id+'\')">⛔ Suspend</button><button class="btn-sm btn-danger" onclick="hapusCOD(\''+x.id+'\')">🗑️ Hapus</button></div>').join('')}c.innerHTML=html}
-    function setujuiCOD(id){const list=getCODList();const idx=list.findIndex(c=>c.id===id);if(idx===-1)return;list[idx].status='aktif';saveCODList(list);sendMessage('SUPER_ADMIN',id,'✅ Akun COD Anda telah disetujui! Silakan login.');renderSuperCOD()}
-    function tolakCOD(id){if(!confirm('Tolak pendaftaran COD ini?'))return;saveCODList(getCODList().filter(c=>c.id!==id));renderSuperCOD()}
-    function suspendCOD(id){const list=getCODList();const idx=list.findIndex(c=>c.id===id);if(idx===-1)return;list[idx].status='suspended';saveCODList(list);renderSuperCOD()}
-    function hapusCOD(id){if(!confirm('Hapus akun COD ini?'))return;saveCODList(getCODList().filter(c=>c.id!==id));renderSuperCOD()}
-
-    // DATABASE USER
-    function renderDatabaseUser(){const all=[];getTokoList().forEach(u=>{all.push({...u,role:'toko',label:'🏬'})});getOjekList().forEach(u=>{all.push({...u,role:'ojek',label:'🛵'})});getPelangganList().forEach(u=>{all.push({...u,role:'pelanggan',label:'👤'})});getMarketingList().forEach(u=>{all.push({...u,role:'marketing',label:'📊'})});getMarketingFreeList().forEach(u=>{all.push({...u,role:'marketingfree',label:'📊'})});getCODList().forEach(u=>{all.push({...u,role:'cod',label:'🔄'})});all.push({id:'SUPER_ADMIN',username:SUPER_ADMIN.username,nama:SUPER_ADMIN.nama,role:'super',label:'⭐',status:'aktif'});const container=document.getElementById('databaseUserContent');if(all.length===0){container.innerHTML='<p>Belum ada user.</p>';return}let html='<table><thead><tr><th>ID</th><th>Nama</th><th>Username</th><th>Role</th><th>Status</th></tr></thead><tbody>';all.forEach(u=>{const status=u.status||'aktif';const sb=status==='aktif'||status==='online'?'<span class="badge badge-active">'+status+'</span>':status==='suspended'?'<span class="badge badge-inactive">'+status+'</span>':'<span class="badge badge-offline">'+status+'</span>';html+='<tr><td>'+u.id+'</td><td>'+escapeHtml(u.nama||u.namaToko||'-')+'</td><td>'+escapeHtml(u.username||'-')+'</td><td>'+u.label+' '+u.role+'</td><td>'+sb+'</td></tr>'});html+='</tbody></table>';container.innerHTML=html}
-
-    // DIREKTORI
-    function renderSuperDirektori(){const tokoList=getTokoList().filter(t=>isTokoActive(t));const dirData=getDirektoriData();document.getElementById('superDirektoriContent').innerHTML=tokoList.map(t=>{const p=dirData[t.id]||{};return'<div class="card" style="margin-bottom:10px;"><strong>'+escapeHtml(t.namaToko)+'</strong><p style="font-size:13px;">📍 '+([p.namaDesa,p.namaKecamatan,p.namaKabupaten].filter(Boolean).join(', ')||'Belum diatur')+'</p><p style="font-size:13px;">Status: <span class="badge '+(p.status==='online'?'badge-online':'badge-offline')+'">'+(p.status==='online'?'🟢 Online':'🔴 Offline')+'</span></p><button class="btn-sm btn-warning" onclick="editProfilDirektori(\''+t.id+'\')">✏️ Edit Profil</button></div>'}).join('')}
-    function editProfilDirektori(id){const t=getTokoList().find(x=>x.id===id);if(!t)return;const d=getDirektoriData();const p=d[id]||{};const ds=prompt('Nama Desa/Kelurahan:',p.namaDesa||'');if(ds===null)return;const kec=prompt('Nama Kecamatan:',p.namaKecamatan||'');if(kec===null)return;const kab=prompt('Nama Kabupaten/Kota:',p.namaKabupaten||'');if(kab===null)return;d[id]={tokoId:id,namaDesa:ds,namaKecamatan:kec,namaKabupaten:kab,namaProvinsi:p.namaProvinsi||'',status:p.status||'online'};saveDirektoriData(d);renderSuperDirektori()}
-
-    // CHAT
-    function renderSuperChat(){const data=getChatData();const c=document.getElementById('superChatList');if(data.length===0){c.innerHTML='<p>Belum ada pesan.</p>';return}const rooms={};data.forEach(msg=>{const key=[msg.from,msg.to].sort().join('_');if(!rooms[key])rooms[key]=[];rooms[key].push(msg)});let html='';for(const[key,msgs]of Object.entries(rooms)){const last=msgs[msgs.length-1];const parts=key.split('_');const names=parts.map(id=>{if(id==='SUPER_ADMIN')return'Super Admin';const u=getUserById(id);return u?u.nama||u.namaToko||id:id});html+='<div class="card" style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;align-items:center;"><strong>💬 '+names.join(' ↔ ')+'</strong><span style="font-size:12px;color:#6b7280;">'+formatDateTime(last.waktu)+'</span></div><p style="font-size:14px;margin-top:5px;">'+escapeHtml(last.pesan)+'</p><button class="btn-sm btn-blue" onclick="lihatDetailChat(\''+key+'\')">📋 Detail</button><button class="btn-sm btn-danger" onclick="hapusRoomChat(\''+key+'\')">🗑️ Hapus</button></div>'}c.innerHTML=html}
-    function lihatDetailChat(key){const data=getChatData();const msgs=data.filter(msg=>{const rk=[msg.from,msg.to].sort().join('_');return rk===key});const parts=key.split('_');const names=parts.map(id=>{if(id==='SUPER_ADMIN')return'Super Admin';const u=getUserById(id);return u?u.nama||u.namaToko||id:id});let html='<div style="max-height:400px;overflow-y:auto;">';msgs.forEach(msg=>{const fromSuper=msg.from==='SUPER_ADMIN';html+='<div class="chat-msg '+(fromSuper?'sent':'received')+'"><span class="sender">'+(fromSuper?'Super Admin':msg.from)+'</span>'+escapeHtml(msg.pesan)+'<span class="time">'+formatDateTime(msg.waktu)+'</span></div>'});html+='</div>';document.getElementById('modalChat').classList.remove('hidden');document.getElementById('chatWithName').textContent=names.join(' ↔ ');document.getElementById('chatMessages').innerHTML=html;document.getElementById('chatTarget').value=parts.find(id=>id!=='SUPER_ADMIN')||''}
-    function sendChatMessage(){const target=document.getElementById('chatTarget').value;const pesan=document.getElementById('chatInput').value.trim();if(!target||!pesan)return;if(sendMessage('SUPER_ADMIN',target,pesan)){document.getElementById('chatInput').value='';lihatDetailChat(['SUPER_ADMIN',target].sort().join('_'))}}
-    function hapusRoomChat(key){if(!confirm('Hapus semua pesan di room ini?'))return;const data=getChatData();const filtered=data.filter(msg=>{const rk=[msg.from,msg.to].sort().join('_');return rk!==key});saveChatData(filtered);renderSuperChat()}
-
-    // BLOKIR
-    function toggleBlockUser(username){if(!username)return;const blocked=getBlockedUsers();const idx=blocked.indexOf(username);if(idx!==-1){blocked.splice(idx,1);alert('✅ '+username+' dibuka blokirnya.')}else{blocked.push(username);alert('🚫 '+username+' diblokir.')}saveBlockedUsers(blocked);const active=document.querySelector('#superAdminNav a.active');if(active)navigateSuper(active.dataset.page)}
-    function blockUserSuper(){const id=document.getElementById('blockUserId').value.trim();if(!id){alert('Masukkan username atau ID.');return}let found=null;const all=[];getTokoList().forEach(t=>all.push({username:t.username,id:t.id}));getOjekList().forEach(o=>all.push({username:o.username,id:o.id}));getPelangganList().forEach(p=>all.push({username:p.username,id:p.id}));getMarketingList().forEach(m=>all.push({username:m.username,id:m.id}));getMarketingFreeList().forEach(m=>all.push({username:m.username,id:m.id}));getCODList().forEach(c=>all.push({username:c.username,id:c.id}));found=all.find(u=>u.username===id||u.id===id);if(!found){alert('User tidak ditemukan.');return}toggleBlockUser(found.username);document.getElementById('blockUserId').value='';renderBlockedUsers()}
-    function unblockUserSuper(){const id=document.getElementById('blockUserId').value.trim();if(!id){alert('Masukkan username atau ID.');return}let found=null;const all=[];getTokoList().forEach(t=>all.push({username:t.username,id:t.id}));getOjekList().forEach(o=>all.push({username:o.username,id:o.id}));getPelangganList().forEach(p=>all.push({username:p.username,id:p.id}));getMarketingList().forEach(m=>all.push({username:m.username,id:m.id}));getMarketingFreeList().forEach(m=>all.push({username:m.username,id:m.id}));getCODList().forEach(c=>all.push({username:c.username,id:c.id}));found=all.find(u=>u.username===id||u.id===id);if(!found){alert('User tidak ditemukan.');return}const blocked=getBlockedUsers();const idx=blocked.indexOf(found.username);if(idx!==-1){blocked.splice(idx,1);saveBlockedUsers(blocked);alert('✅ '+found.username+' dibuka blokirnya.')}else{alert('User ini tidak dalam daftar blokir.')}document.getElementById('blockUserId').value='';renderBlockedUsers()}
-    function renderBlockedUsers(){const blocked=getBlockedUsers();const c=document.getElementById('blockedUserList');if(blocked.length===0){c.innerHTML='<p>Belum ada user yang diblokir.</p>';return}c.innerHTML=blocked.map(u=>'<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #e5e7eb;"><span>🚫 '+escapeHtml(u)+'</span><button class="btn-sm btn-success" onclick="toggleBlockUser(\''+u+'\')">✅ Buka</button></div>').join('')}
-
-    // HISTORY
-    function renderHistoryAktivitas(){const list=getHistoryAktivitas();const c=document.getElementById('historyAktivitasList');if(list.length===0){c.innerHTML='<p>Belum ada history aktivitas.</p>';return}const sorted=[...list].reverse().slice(0,100);let html='<table><thead><tr><th>Tanggal</th><th>User</th><th>Tipe</th><th>Deskripsi</th></tr></thead><tbody>';sorted.forEach(h=>{html+='<tr><td>'+formatDateTime(h.tanggal)+'</td><td>'+escapeHtml(h.user)+'</td><td>'+h.tipe+'</td><td>'+escapeHtml(h.deskripsi)+'</td></tr>'});html+='</tbody></table>';c.innerHTML=html}
-
-    // PANTAU
-    function renderPantauAktifitas(){const all=[];getTokoList().forEach(u=>{all.push({...u,role:'toko',label:'🏬'})});getOjekList().forEach(u=>{all.push({...u,role:'ojek',label:'🛵'})});getPelangganList().forEach(u=>{all.push({...u,role:'pelanggan',label:'👤'})});getMarketingList().forEach(u=>{all.push({...u,role:'marketing',label:'📊'})});getMarketingFreeList().forEach(u=>{all.push({...u,role:'marketingfree',label:'📊'})});getCODList().forEach(u=>{all.push({...u,role:'cod',label:'🔄'})});const c=document.getElementById('pantauAktifitasList');if(all.length===0){c.innerHTML='<p>Belum ada user.</p>';return}const history=getHistoryAktivitas();let html='<table><thead><tr><th>ID</th><th>Nama</th><th>Role</th><th>Status</th><th>Aktivitas Terakhir</th></tr></thead><tbody>';all.forEach(u=>{const uh=history.filter(h=>h.user===u.username||h.user===u.id).slice(0,3);const last=uh.length>0?formatDateTime(uh[0].tanggal):'Belum ada aktivitas';const status=u.status||'aktif';const sb=status==='aktif'||status==='online'?'<span class="badge badge-active">'+status+'</span>':status==='suspended'?'<span class="badge badge-inactive">'+status+'</span>':'<span class="badge badge-offline">'+status+'</span>';html+='<tr><td>'+u.id+'</td><td>'+escapeHtml(u.nama||u.namaToko||'-')+'</td><td>'+u.label+' '+u.role+'</td><td>'+sb+'</td><td>'+last+'</td></tr>'});html+='</tbody></table>';c.innerHTML=html}
-
-    // SUSPEND
-    function renderSuspendSuper(){const list=getSuspendList().filter(s=>s.status==='suspend');const c=document.getElementById('suspendList');if(list.length===0){c.innerHTML='<p>Belum ada user yang tersuspend.</p>'}else{c.innerHTML=list.map(s=>'<div class="card" style="border-left:4px solid #dc2626;"><h4>🚫 '+escapeHtml(s.nama)+' ('+s.role+')</h4><p><strong>Username:</strong> '+escapeHtml(s.username)+'</p><p><strong>Alasan:</strong> '+escapeHtml(s.alasan)+'</p><button class="btn-sm btn-success" onclick="bukaSuspendManual(\''+s.username+'\')">✅ Buka Suspend</button></div>').join('')}const pengajuan=getPengajuanBukaAkun().filter(p=>p.status==='menunggu');const pc=document.getElementById('pengajuanBukaAkunList');if(pengajuan.length===0){pc.innerHTML='<p>Belum ada pengajuan buka akun.</p>'}else{pc.innerHTML=pengajuan.map(p=>'<div class="card" style="border-left:4px solid #f59e0b;"><h4>📤 '+escapeHtml(p.nama)+' ('+p.role+')</h4><p><strong>Perjanjian:</strong> '+escapeHtml(p.perjanjian)+'</p><button class="btn-sm btn-success" onclick="terimaPengajuanBukaAkun(\''+p.id+'\')">✅ Terima</button><button class="btn-sm btn-danger" onclick="tolakPengajuanBukaAkun(\''+p.id+'\')">❌ Tolak</button></div>').join('')}}
-    function bukaSuspendManual(username){if(!confirm('Buka suspend untuk user '+username+'?'))return;const list=getSuspendList();const idx=list.findIndex(s=>s.username===username&&s.status==='suspend');if(idx===-1){alert('User tidak ditemukan dalam daftar suspend.');return}list[idx].status='buka';list[idx].tanggalBuka=Date.now();saveSuspendList(list);const toko=getTokoList().find(t=>t.username===username);if(toko){const tl=getTokoList();const ti=tl.findIndex(t=>t.id===toko.id);if(ti!==-1){tl[ti].status='aktif';saveTokoList(tl)}}const ojek=getOjekList().find(o=>o.username===username);if(ojek){const ol=getOjekList();const oi=ol.findIndex(o=>o.id===ojek.id);if(oi!==-1){ol[oi].status='offline';saveOjekList(ol)}}const pelanggan=getPelangganList().find(p=>p.username===username);if(pelanggan){const pl=getPelangganList();const pi=pl.findIndex(p=>p.id===pelanggan.id);if(pi!==-1){pl[pi].status='aktif';savePelangganList(pl)}}sendMessage('SUPER_ADMIN',username,'✅ Akun Anda telah dibuka kembali dari suspend.');renderSuspendSuper()}
-    function terimaPengajuanBukaAkun(id){const list=getPengajuanBukaAkun();const idx=list.findIndex(p=>p.id===id);if(idx===-1)return;list[idx].status='diterima';savePengajuanBukaAkun(list);bukaSuspendManual(list[idx].username);sendMessage('SUPER_ADMIN',list[idx].userId,'✅ Pengajuan buka akun Anda diterima!');renderSuspendSuper()}
-    function tolakPengajuanBukaAkun(id){const list=getPengajuanBukaAkun();const idx=list.findIndex(p=>p.id===id);if(idx===-1)return;list[idx].status='ditolak';savePengajuanBukaAkun(list);sendMessage('SUPER_ADMIN',list[idx].userId,'❌ Pengajuan buka akun Anda ditolak.');renderSuspendSuper()}
-    function ajukanBukaAkun(){const s=getSession();if(!s)return;const list=getSuspendList();const sus=list.find(su=>su.username===s.username&&su.status==='suspend');if(!sus){alert('Akun Anda tidak dalam status suspend.');return}document.getElementById('modalPengajuanBukaAkun').classList.remove('hidden');document.getElementById('pengajuanBukaAkunText').value='Saya, '+sus.nama+', berjanji tidak akan mengulangi pelanggaran.'}
-    function kirimPengajuanBukaAkun(){const s=getSession();if(!s)return;const text=document.getElementById('pengajuanBukaAkunText').value.trim();if(!text){alert('Tulis perjanjian Anda.');return}const list=getSuspendList();const sus=list.find(su=>su.username===s.username&&su.status==='suspend');if(!sus)return;const pengajuan=getPengajuanBukaAkun();pengajuan.push({id:'pba_'+Date.now(),userId:sus.userId,username:sus.username,nama:sus.nama,role:sus.role,perjanjian:text,tanggal:Date.now(),status:'menunggu'});savePengajuanBukaAkun(pengajuan);document.getElementById('modalPengajuanBukaAkun').classList.add('hidden');sendMessage(s.username,'SUPER_ADMIN','📤 Pengajuan Buka Akun\nUser: '+sus.nama+'\n\nPerjanjian:\n'+text);alert('✅ Pengajuan buka akun telah dikirim.')}
-
-    // TAGIHAN
-    function renderTagihanSuper(){renderTagihanToko();renderTagihanOjek();renderRiwayatPembayaran()}
-    function renderTagihanToko(){const list=getTagihan().filter(tg=>tg.tipe==='toko');const c=document.getElementById('tagihanTokoList');if(list.length===0){c.innerHTML='<p>Belum ada tagihan toko. <button class="btn-sm btn-blue" onclick="generateTagihanToko()">📤 Generate</button></p>';return}const sorted=[...list].reverse();let html='<button class="btn-sm btn-blue" onclick="generateTagihanToko()">📤 Generate Tagihan</button><table><thead><tr><th>Bulan</th><th>Toko</th><th>Jumlah</th><th>Status</th></tr></thead><tbody>';sorted.forEach(tg=>{const sl=tg.status==='lunas'?'<span class="badge badge-lunas">✅ Lunas</span>':'<span class="badge badge-belum">Belum Bayar</span>';const bn=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][tg.bulan];html+='<tr><td>'+bn+' '+tg.tahun+'</td><td>'+escapeHtml(tg.nama)+'</td><td>Rp '+(tg.jumlahTagihan||0).toLocaleString('id-ID')+'</td><td>'+sl+(tg.status!=='lunas'?' <button class="btn-sm btn-success" onclick="konfirmasiBayarTagihan(\''+tg.id+'\')">✅ Bayar</button>':'')+'</td></tr>'});html+='</tbody></table>';c.innerHTML=html}
-    function renderTagihanOjek(){const list=getTagihan().filter(tg=>tg.tipe==='ojek');const c=document.getElementById('tagihanOjekList');if(list.length===0){c.innerHTML='<p>Belum ada tagihan ojek. <button class="btn-sm btn-blue" onclick="generateTagihanOjek()">📤 Generate</button></p>';return}const sorted=[...list].reverse();let html='<button class="btn-sm btn-blue" onclick="generateTagihanOjek()">📤 Generate Tagihan</button><table><thead><tr><th>Bulan</th><th>Ojek</th><th>Jumlah</th><th>Status</th></tr></thead><tbody>';sorted.forEach(tg=>{const sl=tg.status==='lunas'?'<span class="badge badge-lunas">✅ Lunas</span>':'<span class="badge badge-belum">Belum Bayar</span>';const bn=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][tg.bulan];html+='<tr><td>'+bn+' '+tg.tahun+'</td><td>'+escapeHtml(tg.nama)+'</td><td>Rp '+(tg.jumlahTagihan||0).toLocaleString('id-ID')+'</td><td>'+sl+(tg.status!=='lunas'?' <button class="btn-sm btn-success" onclick="konfirmasiBayarTagihan(\''+tg.id+'\')">✅ Bayar</button>':'')+'</td></tr>'});html+='</tbody></table>';c.innerHTML=html}
-    function generateTagihanToko(){const tokoList=getTokoList().filter(t=>isTokoActive(t));const tagihanList=getTagihan();const now=new Date();const bulan=now.getMonth();const tahun=now.getFullYear();let added=0;tokoList.forEach(t=>{const exist=tagihanList.find(tg=>tg.userId===t.id&&tg.tipe==='toko'&&tg.bulan===bulan&&tg.tahun===tahun);if(exist)return;const jumlah=50000;tagihanList.push({id:'tag_'+Date.now()+'_'+t.id,userId:t.id,nama:t.namaToko,tipe:'toko',jumlahTagihan:jumlah,bulan:bulan,tahun:tahun,tanggal:Date.now(),status:'belum_bayar'});added++});saveTagihan(tagihanList);alert('✅ '+added+' tagihan toko berhasil dibuat!');renderTagihanToko()}
-    function generateTagihanOjek(){const ojekList=getOjekList().filter(o=>o.status!=='suspended');const tagihanList=getTagihan();const now=new Date();const bulan=now.getMonth();const tahun=now.getFullYear();let added=0;ojekList.forEach(o=>{const exist=tagihanList.find(tg=>tg.userId===o.id&&tg.tipe==='ojek'&&tg.bulan===bulan&&tg.tahun===tahun);if(exist)return;const jumlah=30000;tagihanList.push({id:'tag_'+Date.now()+'_'+o.id,userId:o.id,nama:o.nama,tipe:'ojek',jumlahTagihan:jumlah,bulan:bulan,tahun:tahun,tanggal:Date.now(),status:'belum_bayar'});added++});saveTagihan(tagihanList);alert('✅ '+added+' tagihan ojek berhasil dibuat!');renderTagihanOjek()}
-    function konfirmasiBayarTagihan(id){const list=getTagihan();const idx=list.findIndex(tg=>tg.id===id);if(idx===-1)return;list[idx].status='lunas';list[idx].tanggalBayar=Date.now();saveTagihan(list);const riwayat=getRiwayatPembayaran();riwayat.push({id:'bay_'+Date.now(),tagihanId:id,userId:list[idx].userId,nama:list[idx].nama,tipe:list[idx].tipe,jumlah:list[idx].jumlahTagihan,tanggal:Date.now()});saveRiwayatPembayaran(riwayat);renderTagihanSuper()}
-    function renderRiwayatPembayaran(){const list=getRiwayatPembayaran();const c=document.getElementById('riwayatPembayaranList');if(list.length===0){c.innerHTML='<p>Belum ada riwayat pembayaran.</p>';return}const sorted=[...list].reverse();let total=0;let html='<table><thead><tr><th>Tanggal</th><th>User</th><th>Tipe</th><th>Jumlah</th></tr></thead><tbody>';sorted.forEach(r=>{total+=r.jumlah||0;html+='<tr><td>'+formatDateTime(r.tanggal)+'</td><td>'+escapeHtml(r.nama)+'</td><td>'+(r.tipe==='toko'?'🏬 Toko':'🛵 Ojek')+'</td><td>Rp '+(r.jumlah||0).toLocaleString('id-ID')+'</td></tr>'});html+='<tr style="font-weight:700;"><td colspan="3" style="text-align:right;">TOTAL</td><td>Rp '+total.toLocaleString('id-ID')+'</td></tr></tbody></table>';c.innerHTML=html}
-
-    // GAJI
-    function renderGajiSuper(){renderDaftarGaji();renderHistoryGaji()}
-    function renderDaftarGaji(){const list=getGajiList().filter(g=>g.status==='belum_dibayar');const c=document.getElementById('daftarGajiList');if(list.length===0){c.innerHTML='<p>Belum ada gaji yang harus dibayar.</p>';return}const sorted=[...list].reverse();c.innerHTML=sorted.map(g=>'<div class="card" style="border-left:4px solid #f59e0b;"><h4>'+escapeHtml(g.nama)+' ('+g.type+')</h4><p>Total: Rp '+(g.total||0).toLocaleString('id-ID')+'</p><button class="btn-sm btn-success" onclick="bayarGaji(\''+g.id+'\')">💰 Bayar</button><button class="btn-sm btn-danger" onclick="hapusGaji(\''+g.id+'\')">🗑️ Hapus</button></div>').join('')}
-    function bayarGaji(id){if(!confirm('Konfirmasi pembayaran gaji ini?'))return;const list=getGajiList();const idx=list.findIndex(g=>g.id===id);if(idx===-1)return;list[idx].status='dibayar';list[idx].tanggalBayar=Date.now();saveGajiList(list);const history=getHistoryGaji();history.push({...list[idx]});saveHistoryGaji(history);renderGajiSuper()}
-    function hapusGaji(id){if(!confirm('Hapus data gaji ini?'))return;saveGajiList(getGajiList().filter(g=>g.id!==id));renderGajiSuper()}
-    function renderHistoryGaji(){const list=getHistoryGaji();const c=document.getElementById('historyGajiList');if(list.length===0){c.innerHTML='<p>Belum ada history gaji.</p>';return}const sorted=[...list].reverse();let total=0;let html='<table><thead><tr><th>Tanggal Bayar</th><th>Nama</th><th>Total</th></tr></thead><tbody>';sorted.forEach(g=>{total+=g.total||0;html+='<tr><td>'+formatDateTime(g.tanggalBayar)+'</td><td>'+escapeHtml(g.nama)+'</td><td>Rp '+(g.total||0).toLocaleString('id-ID')+'</td></tr>'});html+='<tr style="font-weight:700;"><td colspan="2" style="text-align:right;">TOTAL</td><td>Rp '+total.toLocaleString('id-ID')+'</td></tr></tbody></table>';c.innerHTML=html}
-
-    // PENGATURAN
-    function renderSuperPengaturan(){const d=getHubungiAdmin();document.getElementById('editWaAdmin').value=d.wa||'';document.getElementById('editEmailAdmin').value=d.email||''}
-    function simpanHubungiAdmin(){const wa=document.getElementById('editWaAdmin').value.trim();const email=document.getElementById('editEmailAdmin').value.trim();if(!wa||!email){alert('Isi semua data.');return}saveHubungiAdmin({wa,email});renderHubungiAdminDisplay();alert('✅ Data Hubungi Admin tersimpan!')}
-    function renderSuperProfile(){const s=getSession();const info=document.getElementById('superProfileInfo');info.innerHTML='<p><strong>⭐ Username:</strong> '+(s?s.username:'-')+'</p><p><strong>Nama:</strong> '+SUPER_ADMIN.nama+'</p><p><strong>Email:</strong> '+SUPER_ADMIN.email+'</p><p><strong>No HP:</strong> '+SUPER_ADMIN.noHp+'</p>'}
-
-    // DIREKTORI PUBLIK
-    function bukaDirektori(){hideAll();document.getElementById('direktoriPage').classList.remove('hidden');renderDirektori()}
-    function renderDirektori(){const tokoList=getTokoList().filter(t=>isTokoActive(t));const dirData=getDirektoriData();const c=document.getElementById('daftarTokoDirektori');if(tokoList.length===0){c.innerHTML='<p>Belum ada toko yang tersedia.</p>';return}c.innerHTML=tokoList.map(t=>{const p=dirData[t.id]||{};const status=p.status==='online'?'🟢 Online':'🔴 Offline';return'<div class="direktori-toko-card"><div class="profil-toko"><h3>🏬 '+escapeHtml(t.namaToko)+'</h3><p>👤 '+escapeHtml(t.pemilik)+'</p><p>📍 '+([p.namaDesa,p.namaKecamatan,p.namaKabupaten].filter(Boolean).join(', ')||'Alamat tidak tersedia')+'</p><p>📞 '+escapeHtml(t.noHp)+'</p><p>Status: <span class="badge '+(p.status==='online'?'badge-online':'badge-offline')+'">'+status+'</span></p><button class="btn-lihat-katalog" onclick="bukaKatalog(\''+t.id+'\')">🛒 Lihat Katalog</button></div></div>'}).join('')}
-    function filterTokoDirektori(){const kw=document.getElementById('cariTokoDirektori').value.toLowerCase();document.querySelectorAll('.direktori-toko-card').forEach(el=>{el.style.display=el.textContent.toLowerCase().includes(kw)?'':'none'})}
-    function bukaKatalog(id){hideAll();document.getElementById('katalogTokoPage').classList.remove('hidden');const toko=getTokoList().find(t=>t.id===id);if(!toko)return;document.getElementById('katalogTokoHeader').innerHTML='<div class="direktori-hero"><h1>🏬 '+escapeHtml(toko.namaToko)+'</h1><p>'+escapeHtml(toko.pemilik)+'</p><p style="font-size:13px;opacity:.8;">📞 '+escapeHtml(toko.noHp)+'</p></div>';const produk=JSON.parse(localStorage.getItem('produk_'+id)||'[]');const container=document.getElementById('katalogTokoContent');if(produk.length===0){container.innerHTML='<p>Belum ada produk di toko ini.</p>';return}container.innerHTML=produk.map(p=>'<div class="produk-katalog-item"><img src="'+(p.foto||'')+'" onerror="this.src=\'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Crect width=%22120%22 height=%22120%22 fill=%22%23f3f4f6%22/%3E%3Ctext x=%2260%22 y=%2260%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22%3ENo Image%3C/text%3E%3C/svg%3E\'" alt="'+escapeHtml(p.nama)+'"><h4>'+escapeHtml(p.nama)+'</h4><p style="font-weight:700;color:#059669;">Rp '+(p.harga||0).toLocaleString('id-ID')+'</p><p style="font-size:12px;color:#6b7280;">Stok: '+(p.stok||0)+' '+(p.satuan||'pcs')+'</p></div>').join('')}
-    function kembaliKeDirektori(){hideAll();document.getElementById('direktoriPage').classList.remove('hidden');renderDirektori()}
-
-    // LUPA PASSWORD
-    function cekUsernameLupa(){const u=document.getElementById('lupaUsername').value.trim();const err=document.getElementById('lupaError');err.classList.add('hidden');if(!u){err.textContent='Masukkan username.';err.classList.remove('hidden');return}let found=null;if(u===SUPER_ADMIN.username)found=SUPER_ADMIN;if(!found){const t=getTokoList().find(x=>x.username===u);if(t)found=t}if(!found){const o=getOjekList().find(x=>x.username===u);if(o)found=o}if(!found){const p=getPelangganList().find(x=>x.username===u);if(p)found=p}if(!found){err.textContent='Username tidak ditemukan.';err.classList.remove('hidden');return}hideAll();document.getElementById('resetPage').classList.remove('hidden');document.getElementById('resetPage')._username=u;alert('✅ Silakan buat password baru.')}
-    function resetPassword(){const p=document.getElementById('newPassword').value.trim();const c=document.getElementById('confirmNewPassword').value.trim();const err=document.getElementById('resetError');const suc=document.getElementById('resetSuccess');err.classList.add('hidden');suc.classList.add('hidden');if(p.length<4){err.textContent='Password minimal 4 karakter.';err.classList.remove('hidden');return}if(p!==c){err.textContent='Password tidak cocok.';err.classList.remove('hidden');return}const u=document.getElementById('resetPage')._username;if(!u)return;if(u===SUPER_ADMIN.username){alert('Super Admin tidak bisa direset di sini.');return}let found=false;const tList=getTokoList();const ti=tList.findIndex(t=>t.username===u);if(ti!==-1){tList[ti].password=p;saveTokoList(tList);found=true}if(!found){const oList=getOjekList();const oi=oList.findIndex(o=>o.username===u);if(oi!==-1){oList[oi].password=p;saveOjekList(oList);found=true}}if(!found){const pList=getPelangganList();const pi=pList.findIndex(pl=>pl.username===u);if(pi!==-1){pList[pi].password=p;savePelangganList(pList);found=true}}if(!found){err.textContent='User tidak ditemukan.';err.classList.remove('hidden');return}suc.textContent='✅ Password berhasil direset! Silakan login.';suc.classList.remove('hidden');setTimeout(()=>{hideAll();document.getElementById('loginPage').classList.remove('hidden')},2000)}
-
-    // LOGOUT
-    function logout(){if(!confirm('Yakin ingin keluar?'))return;clearSession();goToLanding()}
-
-    // INSTALL
-    function installApp(){if(window.navigator&&window.navigator.standalone){alert('Aplikasi sudah terinstall.');return}const dp=window._deferredPrompt;if(dp){dp.prompt();dp.userChoice.then(result=>{if(result.outcome==='accepted'){alert('✅ Aplikasi berhasil diinstall!')}window._deferredPrompt=null})}else{alert('Silakan install melalui menu browser (Add to Home Screen).')}}
-    function closeInstallBanner(){document.getElementById('installBanner').classList.remove('show');localStorage.setItem('install_banner_closed','true')}
-
-    // INIT
-    window.addEventListener('load',function(){checkAppOff();const s=getSession();if(s){if(s.role==='super'){showSuperDashboard();return}goToLanding();return}goToLanding();if(!localStorage.getItem('install_banner_closed')&&!window.navigator.standalone){setTimeout(()=>{document.getElementById('installBanner').classList.add('show')},3000)}window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window._deferredPrompt=e;document.getElementById('installBtn').style.display='block'})})
-    window.addEventListener('online',function(){document.getElementById('offlineBanner').classList.remove('show')})
-    window.addEventListener('offline',function(){document.getElementById('offlineBanner').classList.add('show')})
-    console.log('📱 Toko Online App v4.3 Final - Siap Digunakan!')
-  </script>
-</body>
-</html>
+  <div id="trialExpiredModal" class="hidden">
+    <div class="trial-expired-modal">
+      <div class="trial-expired-content">
+        <h2>⏰ MASA TRIAL BERAKHIR</h2>
+        <p style="margin-bottom:15px;">Semua data toko Anda telah <strong>dihapus otomatis</strong> oleh sistem.</p>
+        <div class="warning-box">⚠️ Produk, transaksi, kasbon, anggaran, dan semua data telah dihapus permanen.</div>
+        <p style="margin-top:15px;"><strong>Segera hubungi Admin</strong> untuk aktivasi permanen.</p>
+        <a href="https://wa.me/6281220285226" target="_blank" class="wa-button" style="display:inline-flex; margin:15px 0;">💬 WA Admin</a>
+        <button onclick="document.getElementById('trialExpiredModal').classList.add('hidden'); goToLa
